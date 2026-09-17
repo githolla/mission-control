@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { knowledge } from '../data'
-import { Card, SectionHeading } from '../components/ui'
+import { Card, SectionHeading, IconTile } from '../components/ui'
 import { BookIcon, SearchIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
 
@@ -20,45 +20,47 @@ export default function Knowledge() {
   }, [query])
 
   return (
-    <div className="space-y-6">
-      <SectionHeading title="Knowledge" subtitle="The living record of your company — strategy, plans and runbooks." />
+    <div className="space-y-7">
+      <SectionHeading
+        eyebrow="Knowledge"
+        title="Company knowledge"
+        subtitle="The living record of your company — strategy, plans and runbooks."
+      />
 
       <div className="relative max-w-md">
-        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" width={17} height={17} />
+        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" width={16} height={16} />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search knowledge..."
-          className="h-10 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm text-ink-900 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-brand-500/40"
+          className="h-10 w-full rounded-lg border border-line bg-white pl-9 pr-3 text-sm text-ink-900 outline-none transition-colors placeholder:text-slate-400 focus:border-ink-700"
         />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((k) => (
-          <button
-            key={k.id}
-            onClick={() => notify(`Opening “${k.title}”.`)}
-            className="text-left"
-          >
-            <Card className="flex h-full flex-col p-5 transition-shadow hover:shadow-[0_8px_24px_-14px_rgba(15,30,53,0.28)]">
+          <button key={k.id} onClick={() => notify(`Opening “${k.title}”.`)} className="text-left">
+            <Card className="flex h-full flex-col p-5 transition-colors hover:border-line-strong">
               <div className="flex items-center justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
-                  <BookIcon width={18} height={18} />
-                </span>
-                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">
+                <IconTile className="h-9 w-9">
+                  <BookIcon width={17} height={17} />
+                </IconTile>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
                   {k.category}
                 </span>
               </div>
-              <h3 className="mt-4 font-display text-lg font-bold text-ink-900">{k.title}</h3>
-              <p className="mt-1.5 flex-1 text-sm leading-relaxed text-slate-600">{k.summary}</p>
-              <p className="mt-4 text-xs text-slate-400">Updated {k.updated}</p>
+              <h3 className="mt-4 font-display text-base font-semibold text-ink-900">{k.title}</h3>
+              <p className="mt-1.5 flex-1 text-sm leading-relaxed text-[var(--color-muted)]">{k.summary}</p>
+              <p className="mt-4 border-t border-line pt-3 text-[11px] uppercase tracking-[0.1em] text-slate-400">
+                Updated {k.updated}
+              </p>
             </Card>
           </button>
         ))}
       </div>
 
       {list.length === 0 && (
-        <Card className="p-10 text-center text-sm text-slate-500">No documents match “{query}”.</Card>
+        <Card className="p-10 text-center text-sm text-[var(--color-muted)]">No documents match “{query}”.</Card>
       )}
     </div>
   )

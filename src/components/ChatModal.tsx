@@ -56,9 +56,9 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
 
       <div className="relative flex h-[86vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl animate-[sheetIn_.24s_ease-out] sm:h-[640px] sm:rounded-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 bg-ink-950 px-5 py-4 text-white">
+        <div className="flex items-center justify-between bg-ink-950 px-5 py-4 text-white">
           <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-amber-300">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white">
               <SparkleIcon width={19} height={19} />
             </span>
             <div className="leading-tight">
@@ -78,18 +78,18 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
         </div>
 
         {/* Thread */}
-        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-slate-50/60 px-5 py-5">
+        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-[#f7f8fa] px-5 py-5">
           {messages.map((m, i) =>
             m.role === 'user' ? (
               <div key={i} className="flex justify-end">
-                <p className="max-w-[82%] rounded-2xl rounded-br-sm bg-brand-600 px-4 py-2.5 text-sm text-white">{m.text}</p>
+                <p className="max-w-[82%] rounded-xl rounded-br-sm bg-ink-900 px-4 py-2.5 text-sm text-white">{m.text}</p>
               </div>
             ) : (
               <div key={i} className="flex gap-3">
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
-                  <SparkleIcon width={17} height={17} />
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-white text-ink-700">
+                  <SparkleIcon width={16} height={16} />
                 </span>
-                <p className="max-w-[82%] rounded-2xl rounded-tl-sm bg-white px-4 py-3 text-sm leading-relaxed text-ink-800 ring-1 ring-slate-200">
+                <p className="max-w-[82%] rounded-xl rounded-tl-sm border border-line bg-white px-4 py-3 text-sm leading-relaxed text-ink-800">
                   {m.text}
                 </p>
               </div>
@@ -98,27 +98,27 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
 
           {typing && (
             <div className="flex gap-3">
-              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
-                <SparkleIcon width={17} height={17} />
+              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-white text-ink-700">
+                <SparkleIcon width={16} height={16} />
               </span>
-              <div className="flex items-center gap-1 rounded-2xl rounded-tl-sm bg-white px-4 py-3.5 ring-1 ring-slate-200">
-                <span className="h-2 w-2 animate-bounce rounded-full bg-slate-300 [animation-delay:-0.2s]" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-slate-300 [animation-delay:-0.1s]" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-slate-300" />
+              <div className="flex items-center gap-1 rounded-xl rounded-tl-sm border border-line bg-white px-4 py-3.5">
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.2s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.1s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" />
               </div>
             </div>
           )}
         </div>
 
         {/* Composer */}
-        <div className="border-t border-slate-200 bg-white px-5 py-4">
+        <div className="border-t border-line bg-white px-5 py-4">
           {messages.length <= 1 && (
             <div className="mb-3 flex flex-wrap gap-2">
               {suggestedPrompts.map((p) => (
                 <button
                   key={p}
                   onClick={() => send(p)}
-                  className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700"
+                  className="rounded-full border border-line bg-white px-3.5 py-1.5 text-xs font-medium text-[var(--color-muted)] transition-colors hover:border-line-strong hover:text-ink-900"
                 >
                   {p}
                 </button>
@@ -130,9 +130,9 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
               e.preventDefault()
               send(value)
             }}
-            className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 focus-within:ring-2 focus-within:ring-brand-500/40"
+            className="flex items-center gap-3 rounded-xl border border-line bg-white px-4 py-2.5 transition-colors focus-within:border-ink-700"
           >
-            <SparkleIcon className="shrink-0 text-brand-600" width={19} height={19} />
+            <SparkleIcon className="shrink-0 text-ink-700" width={19} height={19} />
             <input
               ref={inputRef}
               value={value}
@@ -143,7 +143,7 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
             <button
               type="submit"
               aria-label="Send"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-brand-600"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-[#f4f5f7] hover:text-ink-900"
             >
               <SendIcon width={18} height={18} />
             </button>

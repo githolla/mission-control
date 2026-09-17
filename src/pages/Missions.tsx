@@ -6,15 +6,15 @@ import { useToast } from '../components/Toast'
 type Filter = 'all' | Status
 
 const filters: { id: Filter; label: string }[] = [
-  { id: 'all', label: 'All missions' },
+  { id: 'all', label: 'All' },
   { id: 'on-track', label: 'On track' },
   { id: 'at-risk', label: 'At risk' },
 ]
 
 const barColor: Record<Status, string> = {
-  'on-track': 'bg-emerald-500',
-  'at-risk': 'bg-amber-500',
-  blocked: 'bg-rose-500',
+  'on-track': 'bg-[var(--color-ok)]',
+  'at-risk': 'bg-[var(--color-warn)]',
+  blocked: 'bg-[var(--color-bad)]',
 }
 
 export default function Missions() {
@@ -28,16 +28,20 @@ export default function Missions() {
   const onTrack = missions.filter((m) => m.status === 'on-track').length
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <SectionHeading title="Missions" subtitle={`${onTrack} of ${missions.length} missions on track this quarter.`} />
-        <div className="flex gap-1 rounded-lg border border-slate-200 bg-white p-1">
+        <SectionHeading
+          eyebrow="Missions"
+          title="Active missions"
+          subtitle={`${onTrack} of ${missions.length} missions on track this quarter.`}
+        />
+        <div className="flex gap-1 rounded-lg border border-line bg-white p-1">
           {filters.map((f) => (
             <button
               key={f.id}
               onClick={() => setFilter(f.id)}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                filter === f.id ? 'bg-brand-600 text-white' : 'text-slate-600 hover:bg-slate-50'
+              className={`rounded-md px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                filter === f.id ? 'bg-ink-900 text-white' : 'text-[var(--color-muted)] hover:text-ink-900'
               }`}
             >
               {f.label}
@@ -51,29 +55,29 @@ export default function Missions() {
           <Card key={m.id} className="p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h3 className="font-display text-lg font-bold text-ink-900">{m.name}</h3>
-                <p className="mt-0.5 text-xs text-slate-400">
-                  {m.team} · Owner {m.owner} · Due {m.due}
+                <h3 className="font-display text-base font-semibold text-ink-900">{m.name}</h3>
+                <p className="mt-1 text-xs uppercase tracking-[0.08em] text-slate-400">
+                  {m.team} · {m.owner} · Due {m.due}
                 </p>
               </div>
               <StatusPill status={m.status} />
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-slate-600">{m.summary}</p>
+            <p className="mt-3 text-sm leading-relaxed text-ink-800">{m.summary}</p>
 
-            <div className="mt-4">
-              <div className="flex items-center justify-between text-xs font-medium text-slate-500">
-                <span>Progress</span>
-                <span>{m.progress}%</span>
+            <div className="mt-5">
+              <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
+                <span className="uppercase tracking-[0.1em]">Progress</span>
+                <span className="tabular-nums text-ink-900">{m.progress}%</span>
               </div>
-              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
+              <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
                 <div className={`h-full rounded-full ${barColor[m.status]}`} style={{ width: `${m.progress}%` }} />
               </div>
             </div>
 
-            <div className="mt-4 flex justify-end">
+            <div className="mt-5 flex justify-end border-t border-line pt-4">
               <button
                 onClick={() => notify(`Opening the “${m.name}” mission workspace.`)}
-                className="text-sm font-semibold text-brand-600 hover:text-brand-700"
+                className="text-sm font-medium text-ink-900 hover:text-black"
               >
                 Open mission →
               </button>
@@ -83,7 +87,7 @@ export default function Missions() {
       </div>
 
       {list.length === 0 && (
-        <Card className="p-10 text-center text-sm text-slate-500">No missions match this filter.</Card>
+        <Card className="p-10 text-center text-sm text-[var(--color-muted)]">No missions match this filter.</Card>
       )}
     </div>
   )

@@ -28,11 +28,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className="pointer-events-auto flex items-start gap-3 rounded-xl border border-slate-200 bg-white/95 p-3.5 shadow-lg backdrop-blur animate-[toastIn_.24s_ease-out]"
+            className="pointer-events-auto flex items-start gap-3 rounded-xl border border-line bg-white/95 p-3.5 shadow-[0_16px_40px_-24px_rgba(10,11,14,0.5)] backdrop-blur animate-[toastIn_.24s_ease-out]"
           >
             <span
-              className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
-                t.tone === 'done' ? 'bg-emerald-50 text-emerald-600' : 'bg-brand-50 text-brand-600'
+              className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border ${
+                t.tone === 'done'
+                  ? 'border-[var(--color-ok)]/30 text-[var(--color-ok)]'
+                  : 'border-line text-ink-700'
               }`}
             >
               {t.tone === 'done' ? <CheckIcon width={16} height={16} /> : <SparkleIcon width={16} height={16} />}

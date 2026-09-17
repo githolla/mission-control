@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { user, today, brief, focus, stats, teams, crossTeamDependency, decisions, activity } from '../data'
-import { Card, StatIcon, TeamIcon, StatusPill, PriorityPill, ActivityIcon } from '../components/ui'
+import { Card, StatIcon, TeamIcon, StatusPill, PriorityPill, ActivityIcon, IconTile } from '../components/ui'
 import { SparkleIcon, ChatIcon, LinkIcon, BranchIcon, CalendarIcon, ArrowRightIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
 import AskBar from '../components/AskBar'
@@ -14,11 +14,6 @@ function greeting() {
   return 'Good evening'
 }
 
-const toneStyles: Record<string, string> = {
-  brand: 'bg-brand-50 text-brand-600',
-  amber: 'bg-amber-50 text-amber-600',
-}
-
 export default function Overview() {
   const { notify } = useToast()
   const navigate = useNavigate()
@@ -26,51 +21,54 @@ export default function Overview() {
   const overviewDecisions = decisions.slice(0, 2)
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-8">
       {/* Greeting */}
       <div>
-        <h1 className="font-display text-4xl font-bold text-ink-900 sm:text-[2.75rem]">
+        <div className="eyebrow mb-2">
+          {today.weekday}, {today.date}
+        </div>
+        <h1 className="font-display text-4xl font-semibold tracking-tight text-ink-900 sm:text-[2.6rem]">
           {greeting()}, {user.firstName}.
         </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          {today.weekday}, {today.date}
-        </p>
       </div>
 
       {/* AI morning brief hero */}
-      <div className="relative overflow-hidden rounded-3xl bg-ink-950 text-white">
-        {/* Space photo backdrop — stretched to cover, bleeding to the top and sides */}
+      <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-ink-950 text-white">
         <div
           className="pointer-events-none absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: 'url(/hero-space.svg)' }}
         />
-        {/* Legibility overlay: darkens the left where the copy sits */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'linear-gradient(90deg, rgba(6,11,22,0.92) 0%, rgba(6,11,22,0.72) 42%, rgba(6,11,22,0.28) 68%, rgba(6,11,22,0.05) 100%)',
+              'linear-gradient(90deg, rgba(8,9,12,0.94) 0%, rgba(8,9,12,0.8) 40%, rgba(8,9,12,0.35) 66%, rgba(8,9,12,0.05) 100%)',
           }}
         />
-        <div className="relative grid gap-8 p-8 lg:grid-cols-[1.6fr_1fr]">
+        <div className="relative grid gap-10 p-8 sm:p-10 lg:grid-cols-[1.6fr_1fr]">
           <div>
-            <div className="flex items-center gap-3 text-brand-100">
-              <SparkleIcon width={18} height={18} className="text-amber-300" />
-              <span className="text-xs font-bold uppercase tracking-[0.2em]">AI Morning Brief</span>
-              <span className="text-xs font-medium text-slate-400">Updated {today.briefUpdated}</span>
+            <div className="flex items-center gap-3">
+              <SparkleIcon width={15} height={15} className="text-white" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-200">
+                AI Morning Brief
+              </span>
+              <span className="h-3 w-px bg-white/20" />
+              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">
+                Updated {today.briefUpdated}
+              </span>
             </div>
-            <h2 className="mt-5 max-w-xl font-display text-3xl font-bold leading-tight sm:text-[2.1rem]">
+            <h2 className="mt-6 max-w-xl font-display text-[1.9rem] font-semibold leading-[1.15] tracking-tight sm:text-[2.15rem]">
               {brief.headline}
             </h2>
-            <div className="mt-4 max-w-xl space-y-3 text-sm leading-relaxed text-slate-300">
+            <div className="mt-4 max-w-xl space-y-2.5 text-sm leading-relaxed text-slate-300">
               {brief.paragraphs.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-8">
               <button
                 onClick={() => setChatOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-500"
+                className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-ink-900 transition-colors hover:bg-slate-200"
               >
                 <ChatIcon width={16} height={16} />
                 Ask about today
@@ -78,31 +76,35 @@ export default function Overview() {
             </div>
           </div>
 
-          <div className="relative flex flex-col justify-between border-white/10 lg:border-l lg:pl-8">
+          <div className="relative lg:border-l lg:border-white/10 lg:pl-8">
             <div>
-              <div className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Your focus today</div>
-              <ol className="mt-4 space-y-4">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+                Your focus today
+              </div>
+              <div className="mt-4 -mx-2">
                 {focus.map((f) => (
-                  <li key={f.n}>
-                    <button
-                      onClick={() => navigate('/decisions')}
-                      className="group flex w-full items-center gap-4 text-left"
-                    >
-                      <span className="font-display text-2xl font-bold text-brand-500">{f.n}</span>
-                      <span className="text-[15px] font-medium text-slate-100 transition-colors group-hover:text-white">
+                  <button
+                    key={f.n}
+                    onClick={() => navigate(f.to)}
+                    className="group flex w-full items-center gap-4 rounded-lg border-t border-white/10 px-2 py-3.5 text-left transition-colors first:border-t-0 hover:bg-white/5"
+                  >
+                    <span className="font-display text-lg font-medium tabular-nums text-slate-500">{f.n}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[15px] font-medium text-slate-100 transition-colors group-hover:text-white">
                         {f.label}
                       </span>
-                    </button>
-                  </li>
+                      <span className="mt-0.5 block truncate text-[11px] uppercase tracking-[0.1em] text-slate-500">
+                        {f.hint}
+                      </span>
+                    </span>
+                    <ArrowRightIcon
+                      width={16}
+                      height={16}
+                      className="shrink-0 text-slate-600 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+                    />
+                  </button>
                 ))}
-              </ol>
-            </div>
-            <div className="mt-8 text-right text-[10px] font-semibold uppercase leading-relaxed tracking-[0.2em] text-slate-500">
-              Bigger
-              <br />
-              People solve
-              <br />
-              Bigger things
+              </div>
             </div>
           </div>
         </div>
@@ -112,97 +114,86 @@ export default function Overview() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((s) => (
           <Card key={s.id} className="p-5">
-            <div className="flex items-start gap-3">
-              <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${toneStyles[s.tone]}`}>
-                <StatIcon name={s.icon} width={20} height={20} />
-              </span>
-              <div className="min-w-0">
-                <div className="text-sm font-medium text-slate-500">{s.label}</div>
-                <div className="mt-0.5 font-display text-3xl font-bold text-ink-900">{s.value}</div>
-              </div>
+            <div className="flex items-center justify-between">
+              <span className="eyebrow">{s.label}</span>
+              <StatIcon name={s.icon} width={17} height={17} className="text-slate-400" />
             </div>
-            <p className="mt-3 text-xs leading-relaxed text-slate-500">{s.detail}</p>
+            <div className="mt-4 font-display text-[2rem] font-semibold tracking-tight text-ink-900">{s.value}</div>
+            <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">{s.detail}</p>
           </Card>
         ))}
       </div>
 
       {/* Company overview + Decisions */}
-      <div className="grid gap-6 lg:grid-cols-[1.55fr_1fr]">
+      <div className="grid gap-8 lg:grid-cols-[1.55fr_1fr]">
         {/* Company overview */}
-        <section className="space-y-4">
+        <section className="space-y-5">
           <div>
-            <h2 className="font-display text-2xl font-bold text-ink-900">Company overview</h2>
-            <p className="mt-1 text-sm text-slate-500">Team signals roll up to your view.</p>
+            <div className="eyebrow mb-2">Company overview</div>
+            <p className="text-sm text-[var(--color-muted)]">Team signals roll up to your view.</p>
           </div>
 
-          <Card className="flex flex-wrap items-center gap-4 px-5 py-4">
-            <div className="flex items-center gap-3">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink-900 text-xs font-semibold text-white">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-line py-3.5">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink-900 text-[11px] font-semibold text-white">
                 {user.initials}
               </span>
-              <div className="text-sm">
+              <span className="text-sm">
                 <span className="font-semibold text-ink-900">Director</span>
                 <span className="mx-2 text-slate-300">·</span>
-                <span className="text-slate-600">{user.name}</span>
-              </div>
+                <span className="text-[var(--color-muted)]">{user.name}</span>
+              </span>
             </div>
-            <div className="hidden h-6 w-px bg-slate-200 sm:block" />
-            <p className="text-sm text-slate-500">{user.mandate}</p>
-          </Card>
+            <span className="hidden text-sm text-[var(--color-muted)] sm:inline">— {user.mandate}</span>
+          </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
             {teams.map((t) => (
               <Link
                 key={t.id}
                 to={`/teams#${t.id}`}
-                className="group block rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_1px_2px_rgba(15,30,53,0.04)] transition-shadow hover:shadow-[0_8px_24px_-14px_rgba(15,30,53,0.28)]"
+                className="card group block p-5 transition-colors hover:border-line-strong"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
-                    <TeamIcon name={t.icon} width={19} height={19} />
-                  </span>
+                  <IconTile className="h-9 w-9">
+                    <TeamIcon name={t.icon} width={18} height={18} />
+                  </IconTile>
                   <StatusPill status={t.status} />
                 </div>
-                <h3 className="mt-4 font-display text-lg font-bold text-ink-900">{t.name}</h3>
-                <p className="mt-0.5 text-xs text-slate-400">
-                  Lead: <span className="font-medium text-slate-600">{t.lead}</span>
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-slate-600">{t.summary}</p>
-                <div className="mt-3 flex items-start gap-2 rounded-lg bg-slate-50 p-2.5">
-                  <SparkleIcon width={15} height={15} className="mt-0.5 shrink-0 text-brand-500" />
-                  <p className="text-xs leading-relaxed text-slate-500">
-                    <span className="font-semibold text-slate-700">AI insight:</span> {t.insight}
+                <h3 className="mt-4 font-display text-base font-semibold text-ink-900">{t.name}</h3>
+                <p className="mt-1 text-xs uppercase tracking-[0.08em] text-slate-400">{t.lead}</p>
+                <p className="mt-3 text-sm leading-relaxed text-ink-800">{t.summary}</p>
+                <div className="mt-4 border-l-2 border-line pl-3">
+                  <p className="text-xs leading-relaxed text-[var(--color-muted)]">
+                    <span className="font-semibold text-ink-700">AI insight</span> — {t.insight}
                   </p>
                 </div>
               </Link>
             ))}
           </div>
 
-          <Card className="flex flex-wrap items-center justify-between gap-4 border-brand-100 bg-brand-50/60 px-5 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-white p-5">
             <div className="flex items-start gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-100 text-brand-600">
-                <LinkIcon width={18} height={18} />
-              </span>
+              <IconTile className="h-9 w-9 shrink-0">
+                <LinkIcon width={17} height={17} />
+              </IconTile>
               <div>
                 <div className="text-sm font-semibold text-ink-900">{crossTeamDependency.title}</div>
-                <p className="mt-0.5 text-sm text-slate-600">{crossTeamDependency.detail}</p>
+                <p className="mt-0.5 text-sm text-[var(--color-muted)]">{crossTeamDependency.detail}</p>
               </div>
             </div>
-            <button
-              onClick={() => navigate('/decisions')}
-              className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
-            >
-              Review proposed schedule
+            <button onClick={() => navigate('/decisions')} className="btn btn-primary">
+              Review schedule
               <ArrowRightIcon width={16} height={16} />
             </button>
-          </Card>
+          </div>
         </section>
 
         {/* Decisions for you */}
-        <section className="space-y-4">
+        <section className="space-y-5">
           <div>
-            <h2 className="font-display text-2xl font-bold text-ink-900">Decisions for you</h2>
-            <p className="mt-1 text-sm text-slate-500">2 items need your decision.</p>
+            <div className="eyebrow mb-2">Decisions for you</div>
+            <p className="text-sm text-[var(--color-muted)]">2 items need your decision.</p>
           </div>
 
           {overviewDecisions.map((d) => {
@@ -210,33 +201,27 @@ export default function Overview() {
             return (
               <Card key={d.id} className="p-5">
                 <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
-                    <Icon width={20} height={20} />
-                  </span>
+                  <IconTile className="h-9 w-9 shrink-0">
+                    <Icon width={18} height={18} />
+                  </IconTile>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-display text-lg font-bold text-ink-900">{d.title}</h3>
+                      <h3 className="font-display text-base font-semibold text-ink-900">{d.title}</h3>
                       <PriorityPill priority={d.priority} />
                     </div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{d.summary}</p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-ink-800">{d.summary}</p>
                     {d.id === 'd-supplier' && (
-                      <p className="mt-1.5 text-sm leading-relaxed text-slate-500">
-                        <span className="font-semibold text-slate-700">AI recommendation:</span> {d.recommendation}
+                      <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
+                        <span className="font-semibold text-ink-700">AI recommendation</span> — {d.recommendation}
                       </p>
                     )}
                   </div>
                 </div>
                 <div className="mt-4 flex gap-2">
-                  <button
-                    onClick={() => navigate('/decisions')}
-                    className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
-                  >
+                  <button onClick={() => navigate('/decisions')} className="btn btn-primary">
                     {d.primaryCta}
                   </button>
-                  <button
-                    onClick={() => notify(`Opening evidence for “${d.title}”.`)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
-                  >
+                  <button onClick={() => notify(`Opening evidence for “${d.title}”.`)} className="btn btn-secondary">
                     {d.secondaryCta}
                   </button>
                 </div>
@@ -247,28 +232,27 @@ export default function Overview() {
       </div>
 
       {/* AI activity latest */}
-      <Card className="flex flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-y border-line py-4">
         <div className="flex items-center gap-2">
-          <SparkleIcon width={18} height={18} className="text-brand-600" />
-          <span className="text-sm font-semibold text-ink-900">AI activity</span>
-          <span className="text-sm text-slate-400">(latest)</span>
+          <SparkleIcon width={16} height={16} className="text-ink-700" />
+          <span className="eyebrow">AI activity</span>
         </div>
         <div className="flex flex-1 flex-wrap items-center gap-x-6 gap-y-2">
           {activity.slice(0, 3).map((a) => (
-            <div key={a.id} className="flex items-center gap-2 text-sm text-slate-600">
-              <ActivityIcon name={a.icon} width={16} height={16} className="text-slate-400" />
+            <div key={a.id} className="flex items-center gap-2 text-sm text-ink-800">
+              <ActivityIcon name={a.icon} width={15} height={15} className="text-slate-400" />
               {a.title}
             </div>
           ))}
         </div>
         <Link
           to="/ai-activity"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-900 hover:text-black"
         >
-          View all activity
-          <ArrowRightIcon width={16} height={16} />
+          View all
+          <ArrowRightIcon width={15} height={15} />
         </Link>
-      </Card>
+      </div>
 
       {/* Ask bar */}
       <div id="ask-anchor" className="scroll-mt-24">

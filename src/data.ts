@@ -54,9 +54,9 @@ export const stats = [
 ] as const
 
 export const focus = [
-  { n: '01', label: 'Approve recovery plan' },
-  { n: '02', label: 'Resolve resource conflict' },
-  { n: '03', label: 'Review partner briefing' },
+  { n: '01', label: 'Approve recovery plan', to: '/decisions', hint: 'Supplier recovery · protects Oct 10' },
+  { n: '02', label: 'Resolve resource conflict', to: '/decisions', hint: 'Engineering allocation · October' },
+  { n: '03', label: 'Review partner briefing', to: '/knowledge', hint: 'Partner demo runbook · Oct 6' },
 ]
 
 export const brief = {
