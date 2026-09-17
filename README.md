@@ -7,19 +7,25 @@ Everything runs in the browser with local demo data; there is **no backend or AP
 
 ## What's inside
 
-A director's-eye view that rolls team signals up into one command surface:
+A flight-director's-eye view that rolls team signals up into one command surface.
+The demo is framed as a mission control for Steve MacLean — a former astronaut
+now running the company from the flight director's console — so it uses authentic
+mission-control language (T‑minus gates, Go / No‑Go readiness, nominal /
+off‑nominal) throughout.
 
-- **Overview** — an AI morning brief, today's focus, headline stats (missions on
-  track, decisions needed, risks, hours saved), a company overview with per-team
-  cards + AI insights, the decisions that need you, and an "Ask Mission Control"
-  bar.
+- **Overview** — a **T‑minus mission clock** to the next gate, an AI morning
+  brief, today's focus, clickable headline stats (missions, decisions, risks,
+  hours saved), a **Flight Readiness (Go / No‑Go) board**, a company overview
+  with per-team cards + AI insights, the decisions that need you, and an
+  "Ask Mission Control" bar.
 - **Missions** — every mission with status, owner, due date and progress;
   filter by _All / On track / At risk_. Each card opens a **mission detail**
   page (`/missions/:id`) with milestones, an at-risk callout, the owning team
   and key facts.
 - **Teams** — Engineering, Operations and Commercial, each with specialty and
   disciplines, **resourcing** (utilization + allocation breakdown + open
-  roles), **past projects** with outcomes, metrics and an AI insight. Overview
+  roles), **past projects** with outcomes, a full **crew roster** (every person
+  with role, current focus and status), metrics and an AI insight. Overview
   team cards deep-link here.
 - **Decisions** — interactive decision cards: pick an option (the AI-recommended
   one is pre-selected) and confirm.

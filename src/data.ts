@@ -7,8 +7,10 @@ export const user = {
   name: 'Steve MacLean',
   firstName: 'Steve',
   role: 'Director',
+  console: 'Flight Director',
+  background: 'Former astronaut · mission specialist',
   initials: 'SM',
-  mandate: 'Setting direction. Removing blockers. Keeping missions on track.',
+  mandate: 'Setting the trajectory. Clearing blockers. Calling Go / No-Go where it counts.',
   quote: 'Complexity is a problem worth solving.',
 }
 
@@ -18,6 +20,46 @@ export const today = {
   briefUpdated: '07:00',
 }
 
+// Upcoming gates (milestones). T-minus is computed in code relative to
+// "today" (Sept 17 of the current year) so the countdown always stays correct.
+export type Gate = { id: string; label: string; month: number; day: number }
+
+export const gates: Gate[] = [
+  { id: 'g-demo', label: 'Partner demo', month: 10, day: 6 },
+  { id: 'g-proto', label: 'Prototype v2 review', month: 10, day: 10 },
+  { id: 'g-hiring', label: 'Q4 hiring close', month: 10, day: 31 },
+  { id: 'g-cert', label: 'Safety certification', month: 12, day: 15 },
+]
+
+/** Whole days from the fixed narrative "today" (Sept 17) to a gate this year. */
+export function daysToGate(g: Gate, now: Date = new Date()): number {
+  const year = now.getFullYear()
+  const today = new Date(year, 8, 17) // September 17
+  const target = new Date(year, g.month - 1, g.day)
+  return Math.round((target.getTime() - today.getTime()) / 86_400_000)
+}
+
+/** Gates still ahead of "today", nearest first. */
+export function upcomingGates(now: Date = new Date()): (Gate & { tMinus: number })[] {
+  return gates
+    .map((g) => ({ ...g, tMinus: daysToGate(g, now) }))
+    .filter((g) => g.tMinus >= 0)
+    .sort((a, b) => a.tMinus - b.tMinus)
+}
+
+// Flight readiness — a classic Go / No-Go poll of every domain, rolled up to
+// the flight director's console. NO-GO / WATCH / GO map to the bad/warn/ok hues.
+export type Readiness = 'go' | 'watch' | 'no-go'
+export type ReadinessItem = { domain: string; status: Readiness; note: string }
+
+export const flightReadiness: ReadinessItem[] = [
+  { domain: 'Engineering', status: 'no-go', note: 'Supplier delay — recovery plan awaiting your go.' },
+  { domain: 'Operations', status: 'go', note: 'Manufacturing readiness nominal for the Q4 gate.' },
+  { domain: 'Commercial', status: 'go', note: 'Partner demo on schedule for Oct 6.' },
+  { domain: 'Finance', status: 'go', note: 'On plan; certification overage sourced.' },
+  { domain: 'Hiring', status: 'go', note: '6 of 10 Q4 roles filled; pipeline healthy.' },
+]
+
 export const stats = [
   {
     id: 'missions',
@@ -26,6 +68,7 @@ export const stats = [
     detail: 'Two missions are at risk, down from three last week.',
     icon: 'target',
     tone: 'brand',
+    to: '/missions',
   },
   {
     id: 'decisions',
@@ -34,14 +77,16 @@ export const stats = [
     detail: 'Three items need your decision this week.',
     icon: 'file',
     tone: 'brand',
+    to: '/decisions',
   },
   {
     id: 'risks',
     label: 'Risks detected',
     value: '2',
-    detail: 'Down from 4 last week.',
+    detail: 'Two open anomalies, down from four last week.',
     icon: 'alert',
     tone: 'amber',
+    to: '/missions?status=at-risk',
   },
   {
     id: 'hours',
@@ -50,6 +95,7 @@ export const stats = [
     detail: 'AI has saved you 24 hours across briefings, analysis and draft content.',
     icon: 'clock',
     tone: 'brand',
+    to: '/ai-activity',
   },
 ] as const
 
@@ -62,8 +108,8 @@ export const focus = [
 export const brief = {
   headline: 'Two priorities need your attention today.',
   paragraphs: [
-    'A supplier delay could move the prototype review by 4 days. Engineering has a recovery plan ready for your approval.',
-    'Finance and hiring remain on plan. Three team updates are waiting for review.',
+    'A supplier delay has taken the prototype review off-nominal — the date could slip 4 days. Engineering has a recovery plan ready for your go.',
+    'All other stations are nominal. Finance and hiring remain on plan, and three team updates are waiting for your review.',
   ],
 }
 
@@ -81,6 +127,14 @@ export type PastProject = {
   period: string
 }
 
+export type TeamMember = {
+  name: string
+  title: string
+  focus: string
+  initials: string
+  status: Status
+}
+
 export type Team = {
   id: string
   name: string
@@ -96,6 +150,7 @@ export type Team = {
   metrics: { label: string; value: string }[]
   resourcing: Resourcing
   pastProjects: PastProject[]
+  members: TeamMember[]
 }
 
 export const teams: Team[] = [
@@ -133,6 +188,15 @@ export const teams: Team[] = [
       { name: 'Firmware OTA pipeline', outcome: 'Cut release time from 3 days to 4 hours', period: 'Q4 2025' },
       { name: 'Thermal redesign', outcome: 'Reduced peak temps 18%, unblocked enclosure', period: 'Q3 2025' },
     ],
+    members: [
+      { name: 'Priya Desai', title: 'Team Lead', focus: 'Prototype v2 review and supplier recovery', initials: 'PD', status: 'on-track' },
+      { name: 'Omar Haddad', title: 'Safety Certification Lead', focus: 'Cert test plan; alternate-lab evaluation', initials: 'OH', status: 'at-risk' },
+      { name: 'Daniel Reyes', title: 'Staff Mechanical Engineer', focus: 'Prototype v2 enclosure and supplier recovery', initials: 'DR', status: 'at-risk' },
+      { name: 'Mei Lin', title: 'Firmware Lead', focus: 'OTA pipeline and v2 bring-up firmware', initials: 'ML', status: 'on-track' },
+      { name: 'Tomas Novak', title: 'Systems Integration Engineer', focus: 'v2 integration and bench bring-up', initials: 'TN', status: 'on-track' },
+      { name: 'Sarah Whitfield', title: 'Test & Validation Engineer', focus: 'EMC and safety-cert test campaign', initials: 'SW', status: 'at-risk' },
+      { name: 'Arjun Patel', title: 'Data Platform Engineer', focus: 'Data platform migration, phase 2', initials: 'AP', status: 'on-track' },
+    ],
   },
   {
     id: 'operations',
@@ -168,6 +232,15 @@ export const teams: Team[] = [
       { name: 'Line 2 stand-up', outcome: 'Doubled capacity; 99.2% first-pass yield', period: 'Q4 2025' },
       { name: 'Inbound logistics rework', outcome: 'Lead times down 22%, freight cost down 11%', period: 'Q2 2025' },
     ],
+    members: [
+      { name: 'Marcus Chen', title: 'Team Lead', focus: 'Q4 manufacturing readiness and hiring plan', initials: 'MC', status: 'on-track' },
+      { name: 'Nadia Rahman', title: 'Manufacturing Lead', focus: 'Line qualification for the Q4 gate', initials: 'NR', status: 'on-track' },
+      { name: 'Kwame Osei', title: 'Supply Chain Manager', focus: 'Supplier diversification, second-source qual', initials: 'KO', status: 'on-track' },
+      { name: 'Lena Fischer', title: 'Quality Engineer', focus: 'First-pass yield and incoming inspection', initials: 'LF', status: 'on-track' },
+      { name: 'Diego Morales', title: 'Logistics Lead', focus: 'Inbound logistics and freight cost-down', initials: 'DM', status: 'on-track' },
+      { name: 'Priyanka Shah', title: 'Procurement Specialist', focus: 'Cost-down program sourcing', initials: 'PS', status: 'on-track' },
+      { name: 'Hannah Berg', title: 'Manufacturing Engineer', focus: 'Line 2 tooling and ramp', initials: 'HB', status: 'on-track' },
+    ],
   },
   {
     id: 'commercial',
@@ -202,6 +275,14 @@ export const teams: Team[] = [
       { name: 'Lighthouse partner launch', outcome: 'Closed 3 design wins; $1.8M new pipeline', period: 'Q1 2026' },
       { name: 'Support tooling rollout', outcome: 'Response times down 30%, CSAT up to 94%', period: 'Q4 2025' },
       { name: 'Category rebrand', outcome: 'Doubled inbound demo requests quarter-on-quarter', period: 'Q3 2025' },
+    ],
+    members: [
+      { name: 'Elena Park', title: 'Team Lead', focus: 'Partner demo and Q4 pipeline', initials: 'EP', status: 'on-track' },
+      { name: 'James Okafor', title: 'Partnerships Lead', focus: 'Partner demo runbook and design wins', initials: 'JO', status: 'on-track' },
+      { name: 'Sofia Ricci', title: 'Account Executive', focus: 'Q4 pipeline and demo follow-through', initials: 'SR', status: 'on-track' },
+      { name: 'Aiden Clarke', title: 'Product Marketing Manager', focus: 'Launch brand refresh and messaging', initials: 'AC', status: 'on-track' },
+      { name: 'Yuki Tanaka', title: 'Customer Success Lead', focus: 'Support scale-up and CSAT', initials: 'YT', status: 'on-track' },
+      { name: 'Nora Adebayo', title: 'Brand Designer', focus: 'Launch brand refresh creative', initials: 'NA', status: 'on-track' },
     ],
   },
 ]

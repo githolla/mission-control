@@ -60,13 +60,14 @@ export default function Sidebar() {
       </nav>
 
       {/* Profile */}
-      <div className="mx-3 mb-5 mt-4 flex items-center gap-3 border-t border-white/5 px-3 pt-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-semibold tracking-wide text-white">
+      <div className="mx-3 mb-5 mt-4 flex items-start gap-3 border-t border-white/5 px-3 pt-5">
+        <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-semibold tracking-wide text-white">
           {user.initials}
         </div>
         <div className="min-w-0 leading-tight">
           <div className="truncate text-[13px] font-medium text-white">{user.name}</div>
-          <div className="text-[11px] uppercase tracking-[0.12em] text-slate-500">{user.role}</div>
+          <div className="text-[11px] uppercase tracking-[0.12em] text-slate-500">{user.console}</div>
+          <div className="mt-1 text-[10px] leading-snug tracking-[0.04em] text-slate-600">{user.background}</div>
         </div>
       </div>
     </aside>

@@ -4,11 +4,14 @@ import { user, today, brief, focus, stats, teams, crossTeamDependency, decisions
 import { Card, StatIcon, TeamIcon, StatusPill, PriorityPill, ActivityIcon, IconTile } from '../components/ui'
 import { SparkleIcon, ChatIcon, LinkIcon, BranchIcon, CalendarIcon, ArrowRightIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
+import { MissionClock, ReadinessBoard } from '../components/mission'
 import AskBar from '../components/AskBar'
 import ChatModal from '../components/ChatModal'
 
 function greeting() {
-  const h = new Date().getHours()
+  // Deterministic for the demo: derived from the fixed brief hour (07:00),
+  // not the viewer's local clock, so it always reads "Good morning".
+  const h = parseInt(today.briefUpdated.split(':')[0], 10) || 7
   if (h < 12) return 'Good morning'
   if (h < 18) return 'Good afternoon'
   return 'Good evening'
@@ -31,6 +34,9 @@ export default function Overview() {
           {greeting()}, {user.firstName}.
         </h1>
       </div>
+
+      {/* Mission clock — T-minus to the nearest gate */}
+      <MissionClock />
 
       {/* AI morning brief hero */}
       <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-ink-950 text-white">
@@ -113,16 +119,25 @@ export default function Overview() {
       {/* Stat cards */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((s) => (
-          <Card key={s.id} className="p-5">
+          <Link key={s.id} to={s.to} className="card group block p-5 transition-colors hover:border-line-strong">
             <div className="flex items-center justify-between">
               <span className="eyebrow">{s.label}</span>
               <StatIcon name={s.icon} width={17} height={17} className="text-slate-400" />
             </div>
             <div className="mt-4 font-display text-[2rem] font-semibold tracking-tight text-ink-900">{s.value}</div>
             <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">{s.detail}</p>
-          </Card>
+          </Link>
         ))}
       </div>
+
+      {/* Flight readiness — Go / No-Go poll */}
+      <section className="space-y-5">
+        <div>
+          <div className="eyebrow mb-2">Flight readiness</div>
+          <p className="text-sm text-[var(--color-muted)]">Every station polled and rolled up to your console.</p>
+        </div>
+        <ReadinessBoard />
+      </section>
 
       {/* Company overview + Decisions */}
       <div className="grid gap-8 lg:grid-cols-[1.55fr_1fr]">

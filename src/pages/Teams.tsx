@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { teams, type Team } from '../data'
+import { teams, type Team, type Status } from '../data'
 import { Card, StatusPill, TeamIcon, SectionHeading, IconTile } from '../components/ui'
 import { CheckIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
@@ -38,6 +38,13 @@ export default function Teams() {
 
 // Muted, monochrome-friendly segments for the allocation bar.
 const segTones = ['bg-ink-900', 'bg-ink-700', 'bg-slate-400', 'bg-slate-300']
+
+// Small status dot hues for the crew roster.
+const dotHue: Record<Status, string> = {
+  'on-track': 'var(--color-ok)',
+  'at-risk': 'var(--color-warn)',
+  blocked: 'var(--color-bad)',
+}
 
 function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void }) {
   const r = t.resourcing
@@ -150,6 +157,39 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+
+      {/* Crew */}
+      <div className="mt-6 border-t border-line pt-6">
+        <div className="mb-3 flex flex-wrap items-baseline gap-x-2">
+          <div className="eyebrow">Crew</div>
+          <span className="text-xs text-[var(--color-muted)]">
+            · {t.members.length} shown · {t.headcount} people
+          </span>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {t.members.map((m) => (
+            <div key={m.name} className="flex items-start gap-3 rounded-lg border border-line p-3">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink-900 text-[11px] font-semibold text-white">
+                {m.initials}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="truncate text-sm font-medium text-ink-900">{m.name}</span>
+                  <span
+                    className="h-1.5 w-1.5 shrink-0 rounded-full"
+                    style={{ background: dotHue[m.status] }}
+                    title={m.status === 'on-track' ? 'On track' : m.status === 'at-risk' ? 'At risk' : 'Blocked'}
+                  />
+                </div>
+                <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-400">
+                  {m.title}
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-[var(--color-muted)]">{m.focus}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

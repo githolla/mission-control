@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { missions, type Status } from '../data'
 import { StatusPill, SectionHeading } from '../components/ui'
 import { ArrowRightIcon } from '../components/icons'
@@ -18,8 +18,19 @@ const barColor: Record<Status, string> = {
   blocked: 'bg-[var(--color-bad)]',
 }
 
+const isFilter = (v: string | null): v is Filter =>
+  v === 'all' || v === 'on-track' || v === 'at-risk' || v === 'blocked'
+
 export default function Missions() {
-  const [filter, setFilter] = useState<Filter>('all')
+  const [searchParams] = useSearchParams()
+  const initial: Filter = isFilter(searchParams.get('status')) ? (searchParams.get('status') as Filter) : 'all'
+  const [filter, setFilter] = useState<Filter>(initial)
+
+  // Keep the filter in sync when arriving with a ?status= param (e.g. from a stat card).
+  useEffect(() => {
+    const s = searchParams.get('status')
+    if (isFilter(s)) setFilter(s)
+  }, [searchParams])
 
   const list = useMemo(
     () => (filter === 'all' ? missions : missions.filter((m) => m.status === filter)),
