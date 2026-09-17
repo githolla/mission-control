@@ -30,7 +30,8 @@ export default function TopBar() {
   const [open, setOpen] = useState(false)
   const boxRef = useRef<HTMLDivElement>(null)
 
-  const title = titles[location.pathname] ?? 'Overview'
+  const section = '/' + (location.pathname.split('/')[1] ?? '')
+  const title = titles[section] ?? titles[location.pathname] ?? 'Overview'
   const index = useMemo(buildIndex, [])
   const results = useMemo(() => {
     const q = query.trim().toLowerCase()

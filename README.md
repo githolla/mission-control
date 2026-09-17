@@ -14,9 +14,13 @@ A director's-eye view that rolls team signals up into one command surface:
   cards + AI insights, the decisions that need you, and an "Ask Mission Control"
   bar.
 - **Missions** — every mission with status, owner, due date and progress;
-  filter by _All / On track / At risk_.
-- **Teams** — Engineering, Operations and Commercial, each with metrics and an
-  AI insight. Overview team cards deep-link here.
+  filter by _All / On track / At risk_. Each card opens a **mission detail**
+  page (`/missions/:id`) with milestones, an at-risk callout, the owning team
+  and key facts.
+- **Teams** — Engineering, Operations and Commercial, each with specialty and
+  disciplines, **resourcing** (utilization + allocation breakdown + open
+  roles), **past projects** with outcomes, metrics and an AI insight. Overview
+  team cards deep-link here.
 - **Decisions** — interactive decision cards: pick an option (the AI-recommended
   one is pre-selected) and confirm.
 - **AI Activity** — a timeline of what the assistant did on your behalf.
@@ -25,8 +29,11 @@ A director's-eye view that rolls team signals up into one command surface:
 ### Interactive, no API
 
 - The **search** box (top bar) filters across missions, teams, decisions and docs.
-- **Ask Mission Control** answers from canned, keyword-matched responses.
-- **Decisions** are selectable and confirmable; actions surface toast feedback.
+- **Ask about today** opens a demo chat interface; **Ask Mission Control** answers
+  from canned, keyword-matched responses.
+- The **focus priorities** in the hero are clickable and route to the relevant page.
+- **Mission cards** open a full mission detail view; **decisions** are selectable
+  and confirmable; actions surface toast feedback.
 - All the demo content lives in [`src/data.ts`](src/data.ts) — edit it there.
 
 ## Tech

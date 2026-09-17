@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { missions, type Status } from '../data'
-import { Card, StatusPill, SectionHeading } from '../components/ui'
-import { useToast } from '../components/Toast'
+import { StatusPill, SectionHeading } from '../components/ui'
+import { ArrowRightIcon } from '../components/icons'
 
 type Filter = 'all' | Status
 
@@ -18,7 +19,6 @@ const barColor: Record<Status, string> = {
 }
 
 export default function Missions() {
-  const { notify } = useToast()
   const [filter, setFilter] = useState<Filter>('all')
 
   const list = useMemo(
@@ -52,7 +52,7 @@ export default function Missions() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {list.map((m) => (
-          <Card key={m.id} className="p-5">
+          <Link key={m.id} to={`/missions/${m.id}`} className="card group block p-5 transition-colors hover:border-line-strong">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="font-display text-base font-semibold text-ink-900">{m.name}</h3>
@@ -74,20 +74,18 @@ export default function Missions() {
               </div>
             </div>
 
-            <div className="mt-5 flex justify-end border-t border-line pt-4">
-              <button
-                onClick={() => notify(`Opening the “${m.name}” mission workspace.`)}
-                className="text-sm font-medium text-ink-900 hover:text-black"
-              >
-                Open mission →
-              </button>
+            <div className="mt-5 flex items-center justify-end border-t border-line pt-4">
+              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-900">
+                Open mission
+                <ArrowRightIcon width={15} height={15} className="transition-transform group-hover:translate-x-0.5" />
+              </span>
             </div>
-          </Card>
+          </Link>
         ))}
       </div>
 
       {list.length === 0 && (
-        <Card className="p-10 text-center text-sm text-[var(--color-muted)]">No missions match this filter.</Card>
+        <div className="card p-10 text-center text-sm text-[var(--color-muted)]">No missions match this filter.</div>
       )}
     </div>
   )

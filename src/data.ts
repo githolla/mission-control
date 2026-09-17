@@ -67,17 +67,35 @@ export const brief = {
   ],
 }
 
+export type Resourcing = {
+  utilization: number // % of capacity currently committed
+  allocated: number // people committed to active missions
+  capacity: number // total people
+  openRoles: number
+  allocation: { label: string; value: number }[] // how the team is split, sums ~100
+}
+
+export type PastProject = {
+  name: string
+  outcome: string
+  period: string
+}
+
 export type Team = {
   id: string
   name: string
   lead: string
   status: Status
   icon: 'gear' | 'rocket' | 'chart'
+  specialty: string
+  disciplines: string[]
   summary: string
   insight: string
   headcount: number
   missions: number
   metrics: { label: string; value: string }[]
+  resourcing: Resourcing
+  pastProjects: PastProject[]
 }
 
 export const teams: Team[] = [
@@ -87,6 +105,8 @@ export const teams: Team[] = [
     lead: 'Priya Desai',
     status: 'at-risk',
     icon: 'gear',
+    specialty: 'Hardware & platform engineering — prototype development, systems integration and safety certification.',
+    disciplines: ['Mechanical', 'Firmware', 'Systems integration', 'Test & validation', 'Data platform'],
     summary: 'Supplier delay could move prototype review by 4 days.',
     insight: 'Recovery plan is ready for your approval.',
     headcount: 42,
@@ -96,6 +116,23 @@ export const teams: Team[] = [
       { label: 'Open risks', value: '2' },
       { label: 'Prototype', value: 'Oct 10' },
     ],
+    resourcing: {
+      utilization: 94,
+      allocated: 39,
+      capacity: 42,
+      openRoles: 3,
+      allocation: [
+        { label: 'Prototype v2', value: 45 },
+        { label: 'Safety certification', value: 25 },
+        { label: 'Data platform', value: 20 },
+        { label: 'Bench / support', value: 10 },
+      ],
+    },
+    pastProjects: [
+      { name: 'Prototype v1 bring-up', outcome: 'Shipped 2 weeks early; passed first-pass EMC', period: 'Q1 2026' },
+      { name: 'Firmware OTA pipeline', outcome: 'Cut release time from 3 days to 4 hours', period: 'Q4 2025' },
+      { name: 'Thermal redesign', outcome: 'Reduced peak temps 18%, unblocked enclosure', period: 'Q3 2025' },
+    ],
   },
   {
     id: 'operations',
@@ -103,6 +140,8 @@ export const teams: Team[] = [
     lead: 'Marcus Chen',
     status: 'on-track',
     icon: 'rocket',
+    specialty: 'Manufacturing & supply chain — line qualification, supplier management and cost-down programs.',
+    disciplines: ['Manufacturing', 'Supply chain', 'Quality', 'Logistics', 'Procurement'],
     summary: 'Manufacturing readiness on schedule for Q4.',
     insight: 'No action needed. Momentum is strong.',
     headcount: 28,
@@ -112,6 +151,23 @@ export const teams: Team[] = [
       { label: 'Open risks', value: '0' },
       { label: 'Q4 gate', value: 'On plan' },
     ],
+    resourcing: {
+      utilization: 82,
+      allocated: 23,
+      capacity: 28,
+      openRoles: 2,
+      allocation: [
+        { label: 'Manufacturing readiness', value: 40 },
+        { label: 'Supplier diversification', value: 25 },
+        { label: 'Cost-down program', value: 20 },
+        { label: 'Bench / support', value: 15 },
+      ],
+    },
+    pastProjects: [
+      { name: 'Second-source qualification', outcome: 'Removed single-supplier risk on 6 parts', period: 'Q1 2026' },
+      { name: 'Line 2 stand-up', outcome: 'Doubled capacity; 99.2% first-pass yield', period: 'Q4 2025' },
+      { name: 'Inbound logistics rework', outcome: 'Lead times down 22%, freight cost down 11%', period: 'Q2 2025' },
+    ],
   },
   {
     id: 'commercial',
@@ -119,6 +175,8 @@ export const teams: Team[] = [
     lead: 'Elena Park',
     status: 'on-track',
     icon: 'chart',
+    specialty: 'Go-to-market & partnerships — partner demos, pipeline growth and customer success.',
+    disciplines: ['Partnerships', 'Sales', 'Marketing', 'Customer success', 'Brand'],
     summary: 'Partner demo on schedule for October 6.',
     insight: 'Consider aligning resources with engineering (shared team).',
     headcount: 19,
@@ -127,6 +185,23 @@ export const teams: Team[] = [
       { label: 'Pipeline', value: '$4.2M' },
       { label: 'Open risks', value: '0' },
       { label: 'Partner demo', value: 'Oct 6' },
+    ],
+    resourcing: {
+      utilization: 76,
+      allocated: 14,
+      capacity: 19,
+      openRoles: 1,
+      allocation: [
+        { label: 'Partner demo', value: 35 },
+        { label: 'Brand refresh', value: 25 },
+        { label: 'Support scale-up', value: 25 },
+        { label: 'Bench / support', value: 15 },
+      ],
+    },
+    pastProjects: [
+      { name: 'Lighthouse partner launch', outcome: 'Closed 3 design wins; $1.8M new pipeline', period: 'Q1 2026' },
+      { name: 'Support tooling rollout', outcome: 'Response times down 30%, CSAT up to 94%', period: 'Q4 2025' },
+      { name: 'Category rebrand', outcome: 'Doubled inbound demo requests quarter-on-quarter', period: 'Q3 2025' },
     ],
   },
 ]

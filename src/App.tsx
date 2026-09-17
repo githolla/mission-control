@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import Overview from './pages/Overview'
 import Missions from './pages/Missions'
+import MissionDetail from './pages/MissionDetail'
 import Teams from './pages/Teams'
 import Decisions from './pages/Decisions'
 import AIActivity from './pages/AIActivity'
@@ -13,6 +14,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route index element={<Overview />} />
         <Route path="missions" element={<Missions />} />
+        <Route path="missions/:id" element={<MissionDetail />} />
         <Route path="teams" element={<Teams />} />
         <Route path="decisions" element={<Decisions />} />
         <Route path="ai-activity" element={<AIActivity />} />
