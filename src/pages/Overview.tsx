@@ -5,35 +5,20 @@ import { Card, StatIcon, TeamIcon, StatusPill, PriorityPill, ActivityIcon, IconT
 import { SparkleIcon, ChatIcon, LinkIcon, BranchIcon, CalendarIcon, ArrowRightIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
 import { MissionClock, ReadinessBoard } from '../components/mission'
+import Greeting from '../components/Greeting'
 import AskBar from '../components/AskBar'
 import ChatModal from '../components/ChatModal'
-
-function greeting() {
-  // Deterministic for the demo: derived from the fixed brief hour (07:00),
-  // not the viewer's local clock, so it always reads "Good morning".
-  const h = parseInt(today.briefUpdated.split(':')[0], 10) || 7
-  if (h < 12) return 'Good morning'
-  if (h < 18) return 'Good afternoon'
-  return 'Good evening'
-}
 
 export default function Overview() {
   const { notify } = useToast()
   const navigate = useNavigate()
   const [chatOpen, setChatOpen] = useState(false)
-  const overviewDecisions = decisions.slice(0, 2)
+  const overviewDecisions = decisions
 
   return (
     <div className="space-y-8">
-      {/* Greeting */}
-      <div>
-        <div className="eyebrow mb-2">
-          {today.weekday}, {today.date}
-        </div>
-        <h1 className="font-display text-4xl font-semibold tracking-tight text-ink-900 sm:text-[2.6rem]">
-          {greeting()}, {user.firstName}.
-        </h1>
-      </div>
+      {/* Greeting + live clock */}
+      <Greeting />
 
       {/* Mission clock — T-minus to the nearest gate */}
       <MissionClock />
@@ -208,7 +193,7 @@ export default function Overview() {
         <section className="space-y-5">
           <div>
             <div className="eyebrow mb-2">Decisions for you</div>
-            <p className="text-sm text-[var(--color-muted)]">2 items need your decision.</p>
+            <p className="text-sm text-[var(--color-muted)]">{overviewDecisions.length} items need your decision.</p>
           </div>
 
           {overviewDecisions.map((d) => {
