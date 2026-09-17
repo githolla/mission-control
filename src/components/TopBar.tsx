@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { SearchIcon } from './icons'
 import { missions, teams, decisions, knowledge, user } from '../data'
+import { usePalette } from './palette-context'
 
 const titles: Record<string, string> = {
   '/': 'Overview',
@@ -26,6 +27,7 @@ function buildIndex(): Result[] {
 export default function TopBar() {
   const location = useLocation()
   const navigate = useNavigate()
+  const palette = usePalette()
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(false)
   const boxRef = useRef<HTMLDivElement>(null)
@@ -77,8 +79,17 @@ export default function TopBar() {
               }}
               onFocus={() => setOpen(true)}
               placeholder="Search across your company..."
-              className="h-9 w-[220px] rounded-lg border border-line bg-white pl-9 pr-3 text-sm text-ink-900 outline-none transition-[width,border-color] placeholder:text-slate-400 focus:w-[300px] focus:border-ink-700 lg:w-[280px]"
+              className="h-9 w-[220px] rounded-lg border border-line bg-white pl-9 pr-14 text-sm text-ink-900 outline-none transition-[width,border-color] placeholder:text-slate-400 focus:w-[300px] focus:border-ink-700 lg:w-[280px]"
             />
+            <button
+              type="button"
+              onClick={palette.open}
+              aria-label="Open command palette"
+              title="Command palette"
+              className="absolute right-2 flex items-center rounded border border-line bg-white px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-muted)] transition-colors hover:border-line-strong hover:text-ink-900"
+            >
+              ⌘K
+            </button>
           </div>
 
           {open && query.trim() && (

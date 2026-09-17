@@ -6,6 +6,7 @@ import { SparkleIcon, ChatIcon, LinkIcon, BranchIcon, CalendarIcon, ArrowRightIc
 import { useToast } from '../components/Toast'
 import { MissionClock, ReadinessBoard } from '../components/mission'
 import Greeting from '../components/Greeting'
+import Copilot from '../components/Copilot'
 import AskBar from '../components/AskBar'
 import ChatModal from '../components/ChatModal'
 
@@ -114,6 +115,9 @@ export default function Overview() {
           </Link>
         ))}
       </div>
+
+      {/* AI Copilot — recommended actions */}
+      <Copilot />
 
       {/* Flight readiness — Go / No-Go poll */}
       <section className="space-y-5">

@@ -301,6 +301,7 @@ export type Mission = {
   due: string
   progress: number
   summary: string
+  nextSteps?: string[]
 }
 
 export const missions: Mission[] = [
@@ -313,6 +314,11 @@ export const missions: Mission[] = [
     due: 'Oct 10',
     progress: 68,
     summary: 'Supplier delay threatens the review date. Recovery plan awaiting approval.',
+    nextSteps: [
+      'Approve the alternate supplier to hold the Oct 10 date.',
+      'Lock the review agenda and circulate to reviewers.',
+      'Confirm the test rig is booked for the week of Oct 6.',
+    ],
   },
   {
     id: 'm-mfg',
@@ -333,6 +339,11 @@ export const missions: Mission[] = [
     due: 'Oct 6',
     progress: 81,
     summary: 'Demo environment ready. Final rehearsal scheduled next week.',
+    nextSteps: [
+      'Approve the partner briefing so it can go out today.',
+      'Run the final rehearsal with the demo team midweek.',
+      'Lock the engineering support window before the allocation call.',
+    ],
   },
   {
     id: 'm-cert',
@@ -343,6 +354,11 @@ export const missions: Mission[] = [
     due: 'Dec 15',
     progress: 45,
     summary: 'Awaiting third-party lab slot. Alternate lab under evaluation.',
+    nextSteps: [
+      'Approve the alternate lab to remove the schedule dependency.',
+      'Finalize the test plan and pre-submit documentation.',
+      'Add a $120K contingency from the travel underspend.',
+    ],
   },
   {
     id: 'm-hire',
@@ -594,4 +610,69 @@ export const suggestedPrompts = [
   'What changed overnight?',
   'Where do I need to step in?',
   'Explain this risk',
+]
+
+// AI Copilot — the proactive "here's what I'd do next" queue for the flight
+// director. Each item is an action Steve can accept / act on / dismiss.
+export type Recommendation = {
+  id: string
+  title: string
+  rationale: string
+  impact: 'high' | 'medium' | 'low'
+  category: string
+  icon: 'branch' | 'calendar' | 'users' | 'file' | 'alert' | 'link'
+  actionLabel: string
+  to?: string
+}
+
+export const recommendations: Recommendation[] = [
+  {
+    id: 'r-supplier',
+    title: 'Approve the alternate supplier',
+    rationale: 'Holds the Oct 10 prototype review at ~3% higher unit cost. The only NO-GO on the board clears with your go.',
+    impact: 'high',
+    category: 'Schedule',
+    icon: 'branch',
+    actionLabel: 'Approve',
+    to: '/decisions',
+  },
+  {
+    id: 'r-allocation',
+    title: 'Sequence prototype testing ahead of the partner demo',
+    rationale: 'Resolves the October engineering conflict and protects the certification path. Demo gets 3 engineers from Oct 7.',
+    impact: 'high',
+    category: 'Resourcing',
+    icon: 'users',
+    actionLabel: 'Apply',
+    to: '/decisions',
+  },
+  {
+    id: 'r-briefing',
+    title: 'Send the partner briefing for review',
+    rationale: 'The one-page briefing for the Oct 6 demo is drafted and ready. Sending now keeps Commercial on schedule.',
+    impact: 'medium',
+    category: 'Comms',
+    icon: 'file',
+    actionLabel: 'Send',
+    to: '/knowledge',
+  },
+  {
+    id: 'r-cert',
+    title: 'Open the alternate cert-lab slot',
+    rationale: 'Removes the third-party lab dependency on safety certification and de-risks the Dec 15 gate.',
+    impact: 'medium',
+    category: 'Risk',
+    icon: 'alert',
+    actionLabel: 'Open',
+    to: '/missions/m-cert',
+  },
+  {
+    id: 'r-sync',
+    title: 'Sync with Elena on shared engineering',
+    rationale: 'Commercial and Engineering share a team in October. A 15-minute sync now avoids a scheduling clash later.',
+    impact: 'low',
+    category: 'Comms',
+    icon: 'users',
+    actionLabel: 'Schedule',
+  },
 ]

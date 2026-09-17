@@ -1,8 +1,75 @@
+import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { missions, teams, type Status } from '../data'
+import { missions, teams, type Status, type Mission } from '../data'
 import { Card, StatusPill, IconTile } from '../components/ui'
-import { ArrowRightIcon, AlertIcon, CheckIcon, UsersIcon } from '../components/icons'
+import { ArrowRightIcon, AlertIcon, CheckIcon, UsersIcon, SparkleIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
+
+// AI-suggested next steps: authored per mission when available, else derived
+// from status. Each is a checkable action the owner can clear.
+function stepsFor(m: Mission): string[] {
+  if (m.nextSteps && m.nextSteps.length) return m.nextSteps
+  if (m.status === 'at-risk' || m.status === 'blocked')
+    return [
+      'Clear the top blocker with the owner today.',
+      'Confirm the mitigation and a firm new target date.',
+      'Escalate to the flight director if it slips again.',
+    ]
+  return [
+    'Confirm the next milestone owner and date.',
+    'Check dependencies with adjacent teams.',
+    'Post a short status to the console.',
+  ]
+}
+
+function AiNextSteps({ mission }: { mission: Mission }) {
+  const { notify } = useToast()
+  const steps = stepsFor(mission)
+  const [done, setDone] = useState<boolean[]>(() => steps.map(() => false))
+  const cleared = done.filter(Boolean).length
+
+  return (
+    <Card className="p-6">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="eyebrow flex items-center gap-2">
+          <SparkleIcon width={13} height={13} className="text-ink-700" />
+          AI recommended next steps
+        </div>
+        <span className="text-xs tabular-nums text-[var(--color-muted)]">
+          {cleared}/{steps.length} done
+        </span>
+      </div>
+      <ul className="space-y-2">
+        {steps.map((s, i) => (
+          <li key={i}>
+            <button
+              onClick={() => {
+                setDone((prev) => {
+                  const next = [...prev]
+                  next[i] = !next[i]
+                  return next
+                })
+                if (!done[i]) notify('Step marked done.', 'done')
+              }}
+              className="group flex w-full items-start gap-3 rounded-lg border border-line p-3 text-left transition-colors hover:border-line-strong"
+            >
+              <span
+                className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
+                  done[i] ? 'border-transparent bg-ink-900 text-white' : 'border-line-strong text-transparent'
+                }`}
+              >
+                <CheckIcon width={12} height={12} />
+              </span>
+              <span className={`text-sm ${done[i] ? 'text-[var(--color-muted)] line-through decoration-slate-300' : 'text-ink-800'}`}>
+                {s}
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  )
+}
 
 const barColor: Record<Status, string> = {
   'on-track': 'bg-[var(--color-ok)]',
@@ -89,6 +156,9 @@ export default function MissionDetail() {
               </div>
             </div>
           </Card>
+
+          {/* AI recommended next steps */}
+          <AiNextSteps key={mission.id} mission={mission} />
 
           {/* Milestones */}
           <Card className="p-6">

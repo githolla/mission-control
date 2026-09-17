@@ -34,6 +34,10 @@ off‑nominal) throughout.
 
 ### Interactive, no API
 
+- **⌘K command palette** — press ⌘K / Ctrl+K (or the ⌘K chip in the top bar) to
+  jump to any mission, team, decision or doc, or run quick actions, from anywhere.
+- **AI Copilot** (Overview) — a ranked queue of recommended actions Steve can
+  Accept / View / Dismiss, plus checkable **AI next steps** on each mission.
 - The **search** box (top bar) filters across missions, teams, decisions and docs.
 - **Ask about today** opens a demo chat interface; **Ask Mission Control** answers
   from canned, keyword-matched responses.
