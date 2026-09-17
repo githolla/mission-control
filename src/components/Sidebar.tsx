@@ -56,21 +56,13 @@ export default function Sidebar() {
       </nav>
 
       {/* Profile */}
-      <div className="mx-3 mt-4 flex items-center gap-3 border-t border-white/10 px-2 py-4">
+      <div className="mx-3 mb-4 mt-4 flex items-center gap-3 border-t border-white/10 px-2 pt-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-sm font-semibold text-white ring-2 ring-white/10">
           {user.initials}
         </div>
         <div className="min-w-0 leading-tight">
           <div className="truncate text-sm font-semibold text-white">{user.name}</div>
           <div className="text-xs text-slate-400">{user.role}</div>
-        </div>
-      </div>
-
-      <div className="px-5 pb-6">
-        <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Higher insight
-          <br />
-          A brighter tomorrow
         </div>
       </div>
     </aside>

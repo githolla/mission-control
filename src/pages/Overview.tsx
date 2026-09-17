@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { user, today, brief, focus, stats, teams, crossTeamDependency, decisions, activity } from '../data'
 import { Card, StatIcon, TeamIcon, StatusPill, PriorityPill, ActivityIcon } from '../components/ui'
-import { SparkleIcon, PlayIcon, ChatIcon, LinkIcon, BranchIcon, CalendarIcon, ArrowRightIcon } from '../components/icons'
+import { SparkleIcon, ChatIcon, LinkIcon, BranchIcon, CalendarIcon, ArrowRightIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
 import AskBar from '../components/AskBar'
+import ChatModal from '../components/ChatModal'
 
 function greeting() {
   const h = new Date().getHours()
@@ -20,42 +22,34 @@ const toneStyles: Record<string, string> = {
 export default function Overview() {
   const { notify } = useToast()
   const navigate = useNavigate()
+  const [chatOpen, setChatOpen] = useState(false)
   const overviewDecisions = decisions.slice(0, 2)
 
   return (
     <div className="space-y-7">
       {/* Greeting */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-4xl font-bold text-ink-900 sm:text-[2.75rem]">
-            {greeting()}, {user.firstName}.
-          </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            {today.weekday}, {today.date}
-          </p>
-        </div>
-        <p className="max-w-xs pt-2 text-right font-display text-sm italic text-slate-500">
-          “{user.quote}”
-          <span className="mt-1 block text-[11px] font-semibold not-italic uppercase tracking-wider text-slate-400">
-            — {user.name}
-          </span>
+      <div>
+        <h1 className="font-display text-4xl font-bold text-ink-900 sm:text-[2.75rem]">
+          {greeting()}, {user.firstName}.
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
+          {today.weekday}, {today.date}
         </p>
       </div>
 
       {/* AI morning brief hero */}
       <div className="relative overflow-hidden rounded-3xl bg-ink-950 text-white">
+        {/* Space photo backdrop — stretched to cover, bleeding to the top and sides */}
+        <div
+          className="pointer-events-none absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: 'url(/hero-space.svg)' }}
+        />
+        {/* Legibility overlay: darkens the left where the copy sits */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(120% 130% at 85% 120%, rgba(255,168,76,0.45) 0%, rgba(47,107,255,0.18) 34%, rgba(6,13,26,0) 62%), radial-gradient(60% 80% at 78% 30%, rgba(47,107,255,0.22) 0%, rgba(6,13,26,0) 70%)',
-          }}
-        />
-        <div
-          className="pointer-events-none absolute inset-0 opacity-60"
-          style={{
-            backgroundImage:
-              'radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent), radial-gradient(1px 1px at 60% 20%, #cbd5e1 50%, transparent), radial-gradient(1px 1px at 75% 55%, #fff 50%, transparent), radial-gradient(1px 1px at 40% 70%, #94a3b8 50%, transparent), radial-gradient(1px 1px at 88% 42%, #fff 50%, transparent)',
+              'linear-gradient(90deg, rgba(6,11,22,0.92) 0%, rgba(6,11,22,0.72) 42%, rgba(6,11,22,0.28) 68%, rgba(6,11,22,0.05) 100%)',
           }}
         />
         <div className="relative grid gap-8 p-8 lg:grid-cols-[1.6fr_1fr]">
@@ -75,17 +69,8 @@ export default function Overview() {
             </div>
             <div className="mt-7 flex flex-wrap gap-3">
               <button
-                onClick={() => notify('Playing your 2-minute audio briefing…')}
+                onClick={() => setChatOpen(true)}
                 className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-500"
-              >
-                <PlayIcon width={15} height={15} />
-                Play 2-min briefing
-              </button>
-              <button
-                onClick={() =>
-                  document.getElementById('ask-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                }
-                className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
               >
                 <ChatIcon width={16} height={16} />
                 Ask about today
@@ -289,6 +274,8 @@ export default function Overview() {
       <div id="ask-anchor" className="scroll-mt-24">
         <AskBar />
       </div>
+
+      <ChatModal open={chatOpen} onClose={() => setChatOpen(false)} />
     </div>
   )
 }
