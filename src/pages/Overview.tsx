@@ -23,6 +23,7 @@ import Copilot from '../components/Copilot'
 import AskBar from '../components/AskBar'
 import ChatModal from '../components/ChatModal'
 import Planet from '../components/Planet'
+import { forecasts, detectAnomalies, fmt } from '../lib/intel'
 
 export default function Overview() {
   const { notify } = useToast()
@@ -244,6 +245,9 @@ export default function Overview() {
       {/* AI Copilot — recommended actions */}
       <Copilot />
 
+      {/* AI analysis — forecast strip */}
+      <AnalysisStrip />
+
       {/* Flight readiness — Go / No-Go poll */}
       <section className="space-y-5">
         <div>
@@ -386,5 +390,44 @@ export default function Overview() {
 
       <ChatModal open={chatOpen} onClose={() => setChatOpen(false)} />
     </div>
+  )
+}
+
+function AnalysisStrip() {
+  const fs = forecasts()
+  const slipping = fs.filter((f) => f.slipDays > 0)
+  const ahead = fs.filter((f) => f.trend === 'ahead')
+  const anomalies = detectAnomalies()
+  const top = [...fs].sort((a, b) => b.riskScore - a.riskScore)[0]
+  const items = [
+    { k: 'Schedule forecast', v: slipping.length ? `${slipping.map((f) => `${f.project.code} +${f.slipDays}d`).join(', ')}` : 'All gates hold', d: slipping.length ? `${slipping[0].project.gate} lands ${fmt(slipping[0].predictedGate)} unmitigated.` : 'No gate is forecast to slip on current velocity.' },
+    { k: 'Ahead of plan', v: `${ahead.length} / ${fs.length}`, d: `${ahead.map((f) => f.project.code).join(', ')} are running ahead of their plan line.` },
+    { k: 'Anomalies detected', v: `${anomalies.length}`, d: `${anomalies.filter((a) => a.severity === 'high').length} high · scanning missions, teams, gates and readiness.` },
+    { k: 'Highest risk', v: `${top.project.code} · ${top.riskScore}`, d: top.drivers[0] },
+  ]
+  return (
+    <section className="rise space-y-4">
+      <div className="flex items-end justify-between">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2">
+            <SparkleIcon width={12} height={12} className="text-fg-3" />
+            AI analysis
+          </div>
+          <p className="text-sm text-[var(--color-muted)]">Forecasts, risk scoring and anomaly detection computed from the board.</p>
+        </div>
+        <Link to="/analysis" className="btn btn-secondary">
+          Open analysis
+        </Link>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {items.map((it) => (
+          <Link key={it.k} to="/analysis" className="card lift p-5">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--color-sky)' }}>{it.k}</div>
+            <div className="mt-2 font-display text-[1.45rem] font-semibold leading-none tracking-tight" style={{ color: 'var(--color-amber)' }}>{it.v}</div>
+            <div className="mt-2 text-xs leading-snug text-[var(--color-muted)]">{it.d}</div>
+          </Link>
+        ))}
+      </div>
+    </section>
   )
 }

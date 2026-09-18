@@ -192,3 +192,9 @@ export const BellIcon = (p: IconProps) => (
     <path d="M10.5 20a2 2 0 0 0 3 0" />
   </svg>
 )
+
+export const PulseIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M2 12h4l2.5-6 3.5 12 3-9 2 3h5" />
+  </svg>
+)

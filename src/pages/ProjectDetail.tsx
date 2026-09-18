@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { projects, teams, missionsForProject, type Status } from '../data'
 import { Card, StatusPill, IconTile } from '../components/ui'
 import { ArrowRightIcon, SparkleIcon, UsersIcon, RocketIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
+import ChatModal from '../components/ChatModal'
+import { forecastProject, riskMatrix, riskCategories, fmt } from '../lib/intel'
 
 const barColor: Record<Status, string> = {
   'on-track': 'bg-[var(--color-ok)]',
@@ -14,6 +17,7 @@ export default function ProjectDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { notify } = useToast()
+  const [chat, setChat] = useState<{ open: boolean; seed?: string }>({ open: false })
   const project = projects.find((p) => p.id === id)
 
   if (!project) {
@@ -29,6 +33,14 @@ export default function ProjectDetail() {
 
   const team = teams.find((t) => t.name === project.team)
   const rollupMissions = missionsForProject(project)
+  const f = forecastProject(project)
+  const risks = riskMatrix().find((r) => r.project.id === project.id)
+  const prompts = [
+    `Forecast for ${project.code}`,
+    `Why is ${project.code} at risk?`,
+    `What is happening on ${project.code}?`,
+    `Who leads ${project.code}?`,
+  ]
 
   return (
     <div className="space-y-7">
@@ -93,6 +105,68 @@ export default function ProjectDetail() {
                   <div className="eyebrow">{m.label}</div>
                   <div className="mt-1.5 font-mono text-xl font-medium text-fg">{m.value}</div>
                 </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* AI analysis */}
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="eyebrow flex items-center gap-2">
+                <SparkleIcon width={13} height={13} className="text-fg-3" />
+                AI analysis
+              </div>
+              <Link to="/analysis" className="text-xs font-medium text-[var(--color-muted)] hover:text-fg">Full analysis →</Link>
+            </div>
+            <div className="mt-4 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-4">
+              {[
+                { k: 'Forecast', v: f.slipDays ? `+${f.slipDays} days` : 'Holds gate', d: f.slipDays ? `Lands ${fmt(f.predictedGate)} unmitigated` : `${project.gate} · T-${f.daysToGate}`, warn: f.slipDays > 0 },
+                { k: 'Plan line', v: `${project.progress}% / ${f.expected}%`, d: `Actual vs expected · ${f.trend}` },
+                { k: 'SPI', v: f.spi.toFixed(2), d: f.spi >= 1 ? 'Ahead of schedule' : 'Behind schedule' },
+                { k: 'Risk score', v: `${f.riskScore}`, d: `${f.confidence} confidence`, warn: f.riskScore >= 50 },
+              ].map((c) => (
+                <div key={c.k} className="bg-surface px-4 py-3.5">
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--color-sky)' }}>{c.k}</div>
+                  <div className="mt-1.5 font-display text-xl font-semibold tracking-tight" style={{ color: c.warn ? 'var(--color-warn)' : 'var(--color-amber)' }}>{c.v}</div>
+                  <div className="mt-1 text-[11px] text-[var(--color-muted)]">{c.d}</div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-5 grid gap-5 sm:grid-cols-2">
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">Risk drivers</div>
+                <ul className="mt-2 space-y-1.5">
+                  {f.drivers.map((d) => (
+                    <li key={d} className="flex gap-2 text-[12.5px] leading-snug text-fg-2">
+                      <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[var(--color-warn)]" />
+                      {d}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">Risk profile</div>
+                <ul className="mt-2 space-y-1.5">
+                  {risks &&
+                    riskCategories.map((c) => (
+                      <li key={c} className="flex items-center gap-3 text-[12.5px]">
+                        <span className="w-24 text-[var(--color-muted)]">{c}</span>
+                        <span className="flex gap-1">
+                          {[1, 2, 3].map((i) => (
+                            <span key={i} className="h-2 w-6 rounded-sm border border-line" style={{ background: i <= risks.cells[c] ? (risks.cells[c] >= 3 ? 'var(--color-bad)' : risks.cells[c] === 2 ? 'var(--color-warn)' : 'var(--color-accent)') : 'transparent' }} />
+                          ))}
+                        </span>
+                        <span className="text-[11px] uppercase tracking-[0.08em] text-dim">{['clear', 'watch', 'elevated', 'severe'][risks.cells[c]]}</span>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-2 border-t border-line pt-4">
+              {prompts.map((q) => (
+                <button key={q} onClick={() => setChat({ open: true, seed: q })} className="rounded-full border border-line px-3.5 py-1.5 text-xs font-medium text-[var(--color-muted)] transition-colors hover:border-line-strong hover:text-fg">
+                  {q}
+                </button>
               ))}
             </div>
           </Card>
@@ -181,6 +255,8 @@ export default function ProjectDetail() {
           ← Back to all projects
         </button>
       </div>
+
+      <ChatModal open={chat.open} seed={chat.seed} onClose={() => setChat({ open: false })} />
     </div>
   )
 }

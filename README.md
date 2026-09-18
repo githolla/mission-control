@@ -43,6 +43,15 @@ off‑nominal) throughout.
   team cards deep-link here.
 - **Decisions** — interactive decision cards: pick an option (the AI-recommended
   one is pre-selected) and confirm.
+- **AI Analysis** — the analyst's desk, computed live from the board: a
+  **schedule forecast** per project (progress vs plan line, SPI, predicted gate
+  and slip, confidence, risk score with drivers), a **risk heatmap** (projects ×
+  schedule / resourcing / technical / supply / commercial), **anomaly detection**
+  (missions behind plan, over-committed teams, gate collisions, NO-GO stations,
+  pending decisions), a **what-if simulator** (move engineers between projects
+  and see both gates move), an 8-week **resource forecast** per team, a
+  **briefing generator** (board / team leads / for me — copy or send) and the
+  **questions worth asking**, each answerable in chat.
 - **AI Activity** — a timeline of what the assistant did on your behalf.
 - **Knowledge** — a searchable library of company docs.
 
@@ -54,7 +63,11 @@ off‑nominal) throughout.
 - **AI Copilot** (Overview) — a ranked queue of recommended actions Steve can
   Accept / View / Dismiss, plus checkable **AI next steps** on each mission.
 - **Ask about today** opens a demo chat interface; **Ask Mission Control** answers
-  from canned, keyword-matched responses.
+  are **computed from the data** — name any project, mission or team, or ask for
+  a forecast, what is due this week, team capacity, the biggest risk, next gates
+  or anomalies — with canned narrative answers as the fallback. Every project
+  page has an **AI analysis** card (forecast, plan line, SPI, risk score, drivers,
+  risk profile) with one-click questions that open the chat pre-asked.
 - The **focus priorities** in the hero are clickable and route to the relevant page.
 - **Mission cards** open a full mission detail view; **decisions** are selectable
   and confirmable; actions surface toast feedback.
@@ -85,6 +98,8 @@ npm run preview  # preview the production build
 ```
 src/
   data.ts             # single source of demo data
+  lib/intel.ts        # forecasts, risk, anomalies, simulator, briefings (computed)
+  lib/assistant.ts    # data-aware answer engine for the chat / ask bar
   App.tsx             # routes
   components/         # Layout, Sidebar, TopBar, AskBar, Toast, icons, ui
   pages/             # Overview, Missions, Teams, Decisions, AIActivity, Knowledge

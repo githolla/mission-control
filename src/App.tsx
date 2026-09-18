@@ -10,6 +10,7 @@ import Teams from './pages/Teams'
 import Decisions from './pages/Decisions'
 import AIActivity from './pages/AIActivity'
 import Knowledge from './pages/Knowledge'
+import Analysis from './pages/Analysis'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="missions/:id" element={<MissionDetail />} />
         <Route path="teams" element={<Teams />} />
         <Route path="decisions" element={<Decisions />} />
+        <Route path="analysis" element={<Analysis />} />
         <Route path="ai-activity" element={<AIActivity />} />
         <Route path="knowledge" element={<Knowledge />} />
         <Route path="*" element={<Overview />} />

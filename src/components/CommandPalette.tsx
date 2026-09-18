@@ -40,6 +40,7 @@ const navDestinations: Item[] = [
   { id: 'go-missions', label: 'Missions', hint: 'Go to', Icon: RocketIcon, to: '/missions' },
   { id: 'go-teams', label: 'Teams', hint: 'Go to', Icon: UsersIcon, to: '/teams' },
   { id: 'go-decisions', label: 'Decisions', hint: 'Go to', Icon: FileIcon, to: '/decisions' },
+  { id: 'go-analysis', label: 'AI Analysis', hint: 'Go to', Icon: SparkleIcon, to: '/analysis' },
   { id: 'go-ai', label: 'AI Activity', hint: 'Go to', Icon: SparkleIcon, to: '/ai-activity' },
   { id: 'go-knowledge', label: 'Knowledge', hint: 'Go to', Icon: BookIcon, to: '/knowledge' },
 ]

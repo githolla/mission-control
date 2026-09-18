@@ -5,7 +5,7 @@ import { suggestedPrompts } from '../data'
 
 type Msg = { role: 'user' | 'ai'; text: string }
 
-export default function ChatModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function ChatModal({ open, onClose, seed }: { open: boolean; onClose: () => void; seed?: string }) {
   const [messages, setMessages] = useState<Msg[]>([{ role: 'ai', text: todayIntro }])
   const [value, setValue] = useState('')
   const [typing, setTyping] = useState(false)
@@ -34,6 +34,21 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
 
   // Clean up any pending timers on unmount.
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), [])
+
+  // A seeded question (from a project page or the analysis page) is asked on open.
+  const seeded = useRef<string | undefined>(undefined)
+  useEffect(() => {
+    if (!open || !seed || seeded.current === seed) return
+    seeded.current = seed
+    const q = seed
+    setMessages((m) => [...m, { role: 'user', text: q }])
+    setTyping(true)
+    const t = window.setTimeout(() => {
+      setTyping(false)
+      setMessages((m) => [...m, { role: 'ai', text: answerFor(q) }])
+    }, 750)
+    timers.current.push(t)
+  }, [open, seed])
 
   if (!open) return null
 
