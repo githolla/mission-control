@@ -135,45 +135,55 @@ body {
 
 /* ── HUD / telemetry console (dark Control Room) ─────────────────────────── */
 .hud {
-  --hud-accent: #38b6ff;
-  --hud-accent-soft: rgba(56, 182, 255, 0.16);
-  --hud-line: rgba(120, 170, 255, 0.16);
-  --hud-ok: #34d399;
-  --hud-warn: #fbbf24;
-  --hud-bad: #f87171;
-  color: #cdd8ea;
+  /* Restrained: one muted steel-blue accent, desaturated status hues, no glow. */
+  --hud-accent: #6ea8ff;
+  --hud-accent-dim: rgba(110, 168, 255, 0.42);
+  --hud-line: rgba(140, 165, 210, 0.12);
+  --hud-line-strong: rgba(140, 165, 210, 0.22);
+  --hud-ok: #6cc4a6;
+  --hud-warn: #d6a955;
+  --hud-bad: #d47b7b;
+  --hud-text: #d3dbe8;
+  --hud-muted: #7d8aa3;
+  --hud-dim: #55617a;
+  color: var(--hud-text);
+  font-size: 12px;
 }
 .hud-grid {
   background-image:
-    linear-gradient(rgba(120, 170, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(120, 170, 255, 0.045) 1px, transparent 1px);
-  background-size: 44px 44px;
+    linear-gradient(rgba(140, 165, 210, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140, 165, 210, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 .hud-panel {
   position: relative;
   border: 1px solid var(--hud-line);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
-  border-radius: 12px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 20px 40px -30px rgba(0, 0, 0, 0.8);
+  background: rgba(10, 17, 30, 0.55);
+  border-radius: 8px;
+  backdrop-filter: blur(6px);
 }
 .hud-num {
   font-family: var(--font-mono);
   font-weight: 600;
-  color: #061321;
-  background: var(--hud-accent);
-  box-shadow: 0 0 18px rgba(56, 182, 255, 0.5);
+  font-size: 10px;
+  color: #dfe9ff;
+  background: rgba(110, 168, 255, 0.18);
+  border: 1px solid rgba(110, 168, 255, 0.35);
 }
 .hud-label {
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: #7f93b3;
+  letter-spacing: 0.18em;
+  color: var(--hud-dim);
 }
 .hud-value {
   font-family: var(--font-mono);
-  color: #eaf1fb;
+  color: var(--hud-text);
+  font-variant-numeric: tabular-nums;
+}
+.hud-mono {
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 @keyframes hud-sweep {
