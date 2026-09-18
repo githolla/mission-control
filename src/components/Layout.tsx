@@ -34,8 +34,8 @@ export default function Layout() {
     <PaletteContext.Provider value={paletteCtx}>
       <div className="relative flex h-screen flex-col overflow-hidden bg-[var(--color-canvas)]">
         <TopNav />
-        <main id={mainId} className="min-w-0 flex-1 overflow-y-auto">
-          <div className="w-full px-8 pb-8 pt-[96px] xl:px-12">
+        <main id={mainId} className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="mx-auto w-full max-w-[1440px] px-8 pb-8 pt-[96px] xl:px-12">
             <Outlet />
           </div>
         </main>

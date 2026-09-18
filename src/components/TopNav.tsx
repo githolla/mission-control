@@ -24,7 +24,7 @@ export default function TopNav() {
       className="absolute inset-x-0 top-0 z-30 backdrop-blur-[2px]"
       style={{ background: 'linear-gradient(180deg, rgba(6,10,18,0.72) 0%, rgba(6,10,18,0.35) 70%, rgba(6,10,18,0) 100%)' }}
     >
-      <div className="flex h-[76px] items-center gap-8 px-8 xl:px-12">
+      <div className="mx-auto flex h-[76px] max-w-[1440px] items-center gap-8 px-8 xl:px-12">
         {/* Brand */}
         <Link to="/" className="flex shrink-0 items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 text-white">

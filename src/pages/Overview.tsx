@@ -34,7 +34,7 @@ export default function Overview() {
   return (
     <div className="space-y-8">
       {/* Full-bleed space hero — greeting, clock, brief and focus over the planet */}
-      <div className="relative -mx-8 -mt-[96px] overflow-hidden bg-ink-950 text-white xl:-mx-12">
+      <div className="relative -mt-[96px] overflow-hidden bg-ink-950 text-white" style={{ marginLeft: 'calc(50% - 50vw)', marginRight: 'calc(50% - 50vw)' }}>
         {/* Deep space: starfield + a live, lit planet rising over the horizon */}
         <div className="stars pointer-events-none absolute inset-0 opacity-80" />
         <Planet
@@ -49,7 +49,7 @@ export default function Overview() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'linear-gradient(90deg, rgba(6,10,18,0.94) 0%, rgba(6,10,18,0.72) 36%, rgba(6,10,18,0.16) 60%, rgba(6,10,18,0) 100%)',
+              'linear-gradient(90deg, rgba(6,10,18,0.92) 0%, rgba(6,10,18,0.6) 32%, rgba(6,10,18,0.14) 56%, rgba(6,10,18,0) 80%)',
           }}
         />
         <div
@@ -65,10 +65,10 @@ export default function Overview() {
           style={{ background: 'radial-gradient(110% 90% at 100% 0%, rgba(6,10,18,0.7) 0%, rgba(6,10,18,0) 50%)' }}
         />
 
-        <div className="relative px-8 pb-40 pt-[104px] sm:px-12 sm:pb-52 sm:pt-[112px] xl:px-14">
+        <div className="relative mx-auto max-w-[1440px] px-8 pb-40 pt-[104px] sm:pb-52 sm:pt-[112px] xl:px-12">
           <Greeting onDark />
 
-          <div className="mt-9 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
+          <div className="mt-9 grid gap-10 lg:grid-cols-[1.35fr_1fr] xl:gap-16">
             <div>
             <div className="flex items-center gap-3">
               <SparkleIcon width={15} height={15} className="text-white" />
