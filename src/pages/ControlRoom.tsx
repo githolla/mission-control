@@ -109,12 +109,12 @@ export default function ControlRoom() {
   const nowL = pct(now)
 
   return (
-    <div className="hud relative -mx-8 -my-8 min-h-screen bg-[var(--color-canvas)] px-8 py-6 xl:-mx-12 xl:px-10">
+    <div className="hud relative -mx-8 -mb-8 bg-[var(--color-canvas)] px-8 pb-6 xl:-mx-12 xl:px-10">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-baseline gap-4">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--hud-text)]">Mission control</span>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--hud-dim)]">Portfolio</span>
+          <span className="font-display text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--hud-text)]">Control room</span>
+          <span className="text-[11px] uppercase tracking-[0.2em] text-[var(--hud-dim)]">Portfolio · all projects</span>
         </div>
         <div className="flex items-center gap-8">
           <div className="flex items-baseline gap-2">

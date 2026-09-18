@@ -18,7 +18,8 @@ uniform vec2 u_res;
 uniform float u_time;
 uniform vec3 u_light;
 uniform float u_radius;   // sphere radius as fraction of min(res)
-uniform vec2 u_center;    // sphere center in 0..1 of res
+uniform vec2 u_center;    // sphere center in 0..1 of res (may lie outside the canvas)
+uniform float u_tilt;     // axial tilt toward the viewer, radians
 
 // --- hash / noise ---------------------------------------------------------
 float hash(vec3 p){
@@ -88,8 +89,8 @@ void main(){
   float z = sqrt(max(1.0 - dot(uvs,uvs), 0.0));
   vec3 n = vec3(uvs, z);                       // geometric normal (view space)
   float spin = u_time*0.035;
-  mat3 R = rotX(0.36) * rotY(spin);
-  mat3 Ri = rotY(-spin) * rotX(-0.36);
+  mat3 R = rotX(u_tilt) * rotY(spin);
+  mat3 Ri = rotY(-spin) * rotX(-u_tilt);
   vec3 p = R * n;                              // texture-space point
 
   float c = continents(p);
@@ -134,9 +135,9 @@ void main(){
   base = mix(base, vec3(0.86, 0.91, 0.96), ice);
 
   // clouds + their shadow on the surface
-  vec3 pc = rotX(0.36) * rotY(u_time*0.048) * n;
+  vec3 pc = rotX(u_tilt) * rotY(u_time*0.048) * n;
   float clouds = cloudAt(pc, u_time);
-  vec3 Ltex = rotX(0.36) * rotY(u_time*0.048) * L;
+  vec3 Ltex = rotX(u_tilt) * rotY(u_time*0.048) * L;
   float shadow = cloudAt(pc + Ltex*0.03, u_time) * (1.0 - smoothstep(0.65, 0.85, lat));
 
   // lighting
@@ -194,12 +195,14 @@ export default function Planet({
   light = [-0.55, 0.35, 0.75] as [number, number, number],
   radius = 0.47,
   center = [0.5, 0.5] as [number, number],
+  tilt = 0.36,
   speed = 1,
 }: {
   className?: string
   light?: [number, number, number]
   radius?: number
   center?: [number, number]
+  tilt?: number
   speed?: number
 }) {
   const ref = useRef<HTMLCanvasElement>(null)
@@ -234,6 +237,7 @@ export default function Planet({
     const uLight = gl.getUniformLocation(prog, 'u_light')
     const uRadius = gl.getUniformLocation(prog, 'u_radius')
     const uCenter = gl.getUniformLocation(prog, 'u_center')
+    const uTilt = gl.getUniformLocation(prog, 'u_tilt')
 
     gl.enable(gl.BLEND)
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
@@ -243,7 +247,7 @@ export default function Planet({
     const start = performance.now()
     // Render at full device resolution for crisp coastlines; very large canvases
     // (the hero backdrop) drop to 1.5x to keep the shader comfortable on iGPUs.
-    const dpr = Math.min(window.devicePixelRatio || 1, canvas.clientWidth > 1000 ? 1.5 : 2)
+    const dpr = Math.min(window.devicePixelRatio || 1, canvas.clientWidth > 2000 ? 1 : canvas.clientWidth > 1000 ? 1.5 : 2)
 
     const resize = () => {
       const w = Math.max(1, Math.floor(canvas.clientWidth * dpr))
@@ -281,6 +285,7 @@ export default function Planet({
         gl.uniform3f(uLight, light[0], light[1], light[2])
         gl.uniform1f(uRadius, radius)
         gl.uniform2f(uCenter, center[0], center[1])
+        gl.uniform1f(uTilt, tilt)
         gl.clearColor(0, 0, 0, 0)
         gl.clear(gl.COLOR_BUFFER_BIT)
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
@@ -289,7 +294,7 @@ export default function Planet({
     }
     raf = requestAnimationFrame(frame)
     return () => cancelAnimationFrame(raf)
-  }, [light, radius, center, speed])
+  }, [light, radius, center, tilt, speed])
 
   return <canvas ref={ref} className={className} aria-hidden />
 }

@@ -75,10 +75,12 @@ off‑nominal) throughout.
 
 ## Design
 
-A pure-black, typography-led system in the SpaceX / Tesla idiom: white type
-carries the hierarchy, hairlines replace boxed cards, a single white accent, and
-monochrome status (one muted amber for risk). Archivo for display, Inter for UI,
-JetBrains Mono for every readout.
+A deep-space, typography-led system in the SpaceX / Tesla idiom: a live WebGL
+planet fills the entire top of the Overview under a wide, tracked uppercase tab
+bar (brand left, tabs on a hairline, status and profile right — no sidebar).
+Glass panels, hairlines instead of boxes, amber numerals with sky-blue labels
+for readouts. Montserrat for display and tabs, Inter for UI, JetBrains Mono for
+every readout.
 
 ## Tech
 
@@ -101,6 +103,6 @@ src/
   lib/intel.ts        # forecasts, risk, anomalies, simulator, briefings (computed)
   lib/assistant.ts    # data-aware answer engine for the chat / ask bar
   App.tsx             # routes
-  components/         # Layout, Sidebar, TopBar, AskBar, Toast, icons, ui
+  components/         # Layout, TopNav, Planet (WebGL), AskBar, ChatModal, Toast, icons, ui
   pages/             # Overview, Missions, Teams, Decisions, AIActivity, Knowledge
 ```

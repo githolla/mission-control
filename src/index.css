@@ -2,7 +2,7 @@
 
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Archivo', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Montserrat', 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   /* SpaceX / Tesla: pure black canvas, white type, hairlines, monochrome status. */

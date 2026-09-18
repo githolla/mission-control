@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import Sidebar from './Sidebar'
+import TopNav from './TopNav'
 import CommandPalette from './CommandPalette'
 import { PaletteContext } from './palette-context'
 
@@ -32,15 +32,13 @@ export default function Layout() {
 
   return (
     <PaletteContext.Provider value={paletteCtx}>
-      <div className="flex h-screen overflow-hidden bg-[var(--color-canvas)]">
-        <Sidebar />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <main id={mainId} className="flex-1 overflow-y-auto">
-            <div className="w-full px-8 py-8 xl:px-12">
-              <Outlet />
-            </div>
-          </main>
-        </div>
+      <div className="relative flex h-screen flex-col overflow-hidden bg-[var(--color-canvas)]">
+        <TopNav />
+        <main id={mainId} className="min-w-0 flex-1 overflow-y-auto">
+          <div className="w-full px-8 pb-8 pt-[96px] xl:px-12">
+            <Outlet />
+          </div>
+        </main>
       </div>
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </PaletteContext.Provider>

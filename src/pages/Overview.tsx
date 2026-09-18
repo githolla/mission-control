@@ -34,13 +34,15 @@ export default function Overview() {
   return (
     <div className="space-y-8">
       {/* Full-bleed space hero — greeting, clock, brief and focus over the planet */}
-      <div className="relative -mx-8 -mt-8 overflow-hidden bg-ink-950 text-white xl:-mx-12">
+      <div className="relative -mx-8 -mt-[96px] overflow-hidden bg-ink-950 text-white xl:-mx-12">
         {/* Deep space: starfield + a live, lit planet rising over the horizon */}
         <div className="stars pointer-events-none absolute inset-0 opacity-80" />
         <Planet
-          className="pointer-events-none absolute left-1/2 top-[56%] h-[1800px] w-[1800px] max-w-none -translate-x-[46%]"
-          radius={0.44}
-          light={[0.2, 0.8, 0.5]}
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          radius={2.3}
+          center={[0.5, -1.72]}
+          tilt={0.55}
+          light={[0.15, 0.85, 0.5]}
         />
         {/* Legibility overlays: darken the left where the copy sits, let the planet breathe on the right */}
         <div
@@ -63,7 +65,7 @@ export default function Overview() {
           style={{ background: 'radial-gradient(110% 90% at 100% 0%, rgba(6,10,18,0.7) 0%, rgba(6,10,18,0) 50%)' }}
         />
 
-        <div className="relative px-8 pb-28 pt-9 sm:px-12 sm:pb-36 sm:pt-10 xl:px-14">
+        <div className="relative px-8 pb-40 pt-[104px] sm:px-12 sm:pb-52 sm:pt-[112px] xl:px-14">
           <Greeting onDark />
 
           <div className="mt-9 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
