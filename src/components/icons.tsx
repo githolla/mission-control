@@ -168,6 +168,15 @@ export const CheckIcon = (p: IconProps) => (
   </svg>
 )
 
+export const RadarIcon = (p: IconProps) => (
+  <svg {...base(p)}>
+    <path d="M12 12 19 7" />
+    <path d="M12 3a9 9 0 1 0 8.5 6" />
+    <path d="M12 8a4 4 0 1 0 3.9 3" />
+    <circle cx="12" cy="12" r="0.6" fill="currentColor" />
+  </svg>
+)
+
 export const GridIcon = (p: IconProps) => (
   <svg {...base(p)}>
     <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />

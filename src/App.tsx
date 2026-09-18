@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import Overview from './pages/Overview'
+import ControlRoom from './pages/ControlRoom'
 import Projects from './pages/Projects'
 import ProjectDetail from './pages/ProjectDetail'
 import Missions from './pages/Missions'
@@ -15,6 +16,7 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Overview />} />
+        <Route path="control-room" element={<ControlRoom />} />
         <Route path="projects" element={<Projects />} />
         <Route path="projects/:id" element={<ProjectDetail />} />
         <Route path="missions" element={<Missions />} />

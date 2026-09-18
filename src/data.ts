@@ -337,6 +337,8 @@ export type Project = {
   lead: string
   progress: number
   gate: string
+  gateMonth: number
+  gateDay: number
   summary: string
   insight: string
   metrics: { label: string; value: string }[]
@@ -356,6 +358,8 @@ export const projects: Project[] = [
     lead: 'Priya Desai',
     progress: 84,
     gate: 'v2 field trial · Nov',
+    gateMonth: 11,
+    gateDay: 20,
     summary: 'Precision quantum-sensing array deployed for magnetometry and non-destructive materials inspection.',
     insight: 'Field data is strong — line up the v2 trial while the team has slack.',
     metrics: [
@@ -376,6 +380,8 @@ export const projects: Project[] = [
     lead: 'Marcus Chen',
     progress: 72,
     gate: 'Q4 capacity · Nov 30',
+    gateMonth: 11,
+    gateDay: 30,
     summary: 'Photonic single-photon source scaling production to meet quantum-computing demand.',
     insight: 'Manufacturing readiness is nominal; the second-source qualification de-risks Q4.',
     metrics: [
@@ -396,6 +402,8 @@ export const projects: Project[] = [
     lead: 'Elena Park',
     progress: 77,
     gate: 'Partner demo · Oct 6',
+    gateMonth: 10,
+    gateDay: 6,
     summary: 'Cryogenic control platform for quantum devices, anchoring the partner motion.',
     insight: 'The partner demo is the near-term growth lever — keep the support window locked.',
     metrics: [
@@ -417,6 +425,8 @@ export const projects: Project[] = [
     lead: 'Sylvain Fourmaux',
     progress: 58,
     gate: 'Scale-up review · Q1',
+    gateMonth: 12,
+    gateDay: 22,
     summary:
       'Laser-driven compact neutron source with INRS on the ALLS facility — the highest neutron flux ever generated with a laser (~100× prior methods). Toward compact, affordable neutron sources for imaging and non-destructive testing.',
     insight: 'World-record result published in Nature Communications — define the productization path before the scale-up review.',
@@ -438,6 +448,8 @@ export const projects: Project[] = [
     lead: 'Priya Desai',
     progress: 62,
     gate: 'Review · Oct 10',
+    gateMonth: 10,
+    gateDay: 10,
     summary: 'Next-gen device prototype in design validation. A supplier delay is threatening the Oct 10 review.',
     insight: 'The only NO-GO on the board. Approve the alternate supplier to protect the review date.',
     metrics: [
@@ -458,6 +470,8 @@ export const projects: Project[] = [
     lead: 'Mei Lin',
     progress: 34,
     gate: 'Go/No-go · Dec',
+    gateMonth: 12,
+    gateDay: 10,
     summary: 'Quantum-materials characterization platform in technical validation to determine whether to build a product around it.',
     insight: 'Validation is on plan; a go/no-go call is due in December.',
     metrics: [

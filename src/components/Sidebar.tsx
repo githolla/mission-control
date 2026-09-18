@@ -1,9 +1,10 @@
 import { NavLink } from 'react-router-dom'
-import { HomeIcon, GridIcon, RocketIcon, UsersIcon, FileIcon, SparkleIcon, BookIcon, StarIcon } from './icons'
+import { HomeIcon, RadarIcon, GridIcon, RocketIcon, UsersIcon, FileIcon, SparkleIcon, BookIcon, StarIcon } from './icons'
 import { user, flightReadiness } from '../data'
 
 const nav = [
   { to: '/', label: 'Overview', Icon: HomeIcon, end: true, group: 'Command' },
+  { to: '/control-room', label: 'Control Room', Icon: RadarIcon, group: 'Command' },
   { to: '/projects', label: 'Projects', Icon: GridIcon, group: 'Command' },
   { to: '/missions', label: 'Missions', Icon: RocketIcon, group: 'Command' },
   { to: '/teams', label: 'Teams', Icon: UsersIcon, group: 'Command' },

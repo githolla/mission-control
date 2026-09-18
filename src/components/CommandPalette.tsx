@@ -14,7 +14,7 @@ import {
   PlayIcon,
   ArrowRightIcon,
 } from './icons'
-import { GridIcon } from './icons'
+import { GridIcon, RadarIcon } from './icons'
 import { projects, missions, teams, decisions, knowledge } from '../data'
 import { useToast } from './Toast'
 
@@ -35,6 +35,7 @@ type Group = { title: string; items: Item[] }
 
 const navDestinations: Item[] = [
   { id: 'go-overview', label: 'Overview', hint: 'Go to', Icon: HomeIcon, to: '/' },
+  { id: 'go-control', label: 'Control Room', hint: 'Go to', Icon: RadarIcon, to: '/control-room' },
   { id: 'go-projects', label: 'Projects', hint: 'Go to', Icon: GridIcon, to: '/projects' },
   { id: 'go-missions', label: 'Missions', hint: 'Go to', Icon: RocketIcon, to: '/missions' },
   { id: 'go-teams', label: 'Teams', hint: 'Go to', Icon: UsersIcon, to: '/teams' },

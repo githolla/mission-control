@@ -20,6 +20,11 @@ now running the company from the flight director's console — so it uses authen
 mission-control language (T‑minus gates, Go / No‑Go readiness, nominal /
 off‑nominal) throughout.
 
+- **Control Room** — the mission-control "big board": one screen showing
+  everything across every project — a **portfolio timeline** (each project's
+  gates and mission milestones on a Now → year-end axis), an **all-projects
+  status matrix**, the Go/No-Go **flight readiness** board, a **"Needs your
+  call"** panel (open decisions + anomalies) and a **live activity** feed.
 - **Overview** — a **T‑minus mission clock** to the next gate, an AI morning
   brief, today's focus, clickable headline stats (missions, decisions, risks,
   hours saved), a **Flight Readiness (Go / No‑Go) board**, a company overview
