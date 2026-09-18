@@ -38,7 +38,7 @@ export default function Layout() {
         <div className="flex min-w-0 flex-1 flex-col">
           <TopBar />
           <main id={mainId} className="flex-1 overflow-y-auto">
-            <div className="mx-auto w-full max-w-[1760px] px-8 py-8 xl:px-12">
+            <div className="w-full px-8 py-8 xl:px-12">
               <Outlet />
             </div>
           </main>

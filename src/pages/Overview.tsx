@@ -18,14 +18,8 @@ export default function Overview() {
 
   return (
     <div className="space-y-8">
-      {/* Greeting + live clock */}
-      <Greeting />
-
-      {/* Mission clock — T-minus to the nearest gate */}
-      <MissionClock />
-
-      {/* AI morning brief hero */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-ink-950 text-white">
+      {/* Full-bleed space hero — greeting, clock, brief and focus over the planet */}
+      <div className="relative -mx-8 -mt-8 overflow-hidden bg-ink-950 text-white xl:-mx-12">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -39,15 +33,24 @@ export default function Overview() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'linear-gradient(90deg, rgba(6,8,13,0.95) 0%, rgba(6,8,13,0.82) 38%, rgba(6,8,13,0.4) 62%, rgba(6,8,13,0.08) 100%)',
+              'linear-gradient(90deg, rgba(6,8,13,0.95) 0%, rgba(6,8,13,0.82) 40%, rgba(6,8,13,0.42) 64%, rgba(6,8,13,0.12) 100%)',
           }}
         />
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-24"
-          style={{ background: 'linear-gradient(180deg, rgba(6,8,13,0.55) 0%, rgba(6,8,13,0) 100%)' }}
+          className="pointer-events-none absolute inset-x-0 top-0 h-28"
+          style={{ background: 'linear-gradient(180deg, rgba(6,8,13,0.7) 0%, rgba(6,8,13,0) 100%)' }}
         />
-        <div className="relative grid gap-10 p-8 sm:p-10 lg:grid-cols-[1.6fr_1fr]">
-          <div>
+        {/* Scrim behind the focus list (top-right) for legibility over the bright limb */}
+        <div
+          className="pointer-events-none absolute inset-0 hidden lg:block"
+          style={{ background: 'radial-gradient(120% 95% at 100% 0%, rgba(6,8,13,0.62) 0%, rgba(6,8,13,0) 52%)' }}
+        />
+
+        <div className="relative px-8 pb-10 pt-9 sm:px-12 sm:pb-12 sm:pt-10 xl:px-14">
+          <Greeting onDark />
+
+          <div className="mt-9 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
+            <div>
             <div className="flex items-center gap-3">
               <SparkleIcon width={15} height={15} className="text-white" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-200">
@@ -79,7 +82,7 @@ export default function Overview() {
 
           <div className="relative lg:border-l lg:border-white/10 lg:pl-8">
             <div>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-300">
                 Your focus today
               </div>
               <div className="mt-4 -mx-2">
@@ -89,19 +92,17 @@ export default function Overview() {
                     onClick={() => navigate(f.to)}
                     className="group flex w-full items-center gap-4 rounded-lg border-t border-white/10 px-2 py-3.5 text-left transition-colors first:border-t-0 hover:bg-white/5"
                   >
-                    <span className="font-display text-lg font-medium tabular-nums text-slate-500">{f.n}</span>
+                    <span className="font-display text-lg font-medium tabular-nums text-slate-300">{f.n}</span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[15px] font-medium text-slate-100 transition-colors group-hover:text-white">
-                        {f.label}
-                      </span>
-                      <span className="mt-0.5 block truncate text-[11px] uppercase tracking-[0.1em] text-slate-500">
+                      <span className="block text-[15px] font-medium text-white">{f.label}</span>
+                      <span className="mt-0.5 block truncate text-[11px] uppercase tracking-[0.1em] text-slate-300">
                         {f.hint}
                       </span>
                     </span>
                     <ArrowRightIcon
                       width={16}
                       height={16}
-                      className="shrink-0 text-slate-600 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+                      className="shrink-0 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-white"
                     />
                   </button>
                 ))}
@@ -109,7 +110,11 @@ export default function Overview() {
             </div>
           </div>
         </div>
+        </div>
       </div>
+
+      {/* Mission clock — T-minus to the nearest gate */}
+      <MissionClock />
 
       {/* Stat cards */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
