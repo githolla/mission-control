@@ -63,7 +63,7 @@ export default function Missions() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {list.map((m) => (
-          <Link key={m.id} to={`/missions/${m.id}`} className="card group block p-5 transition-colors hover:border-line-strong">
+          <Link key={m.id} to={`/missions/${m.id}`} className="card lift group block p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="font-display text-base font-semibold text-ink-900">{m.name}</h3>
@@ -78,7 +78,7 @@ export default function Missions() {
             <div className="mt-5">
               <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
                 <span className="uppercase tracking-[0.1em]">Progress</span>
-                <span className="tabular-nums text-ink-900">{m.progress}%</span>
+                <span className="font-mono text-ink-900">{m.progress}%</span>
               </div>
               <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
                 <div className={`h-full rounded-full ${barColor[m.status]}`} style={{ width: `${m.progress}%` }} />

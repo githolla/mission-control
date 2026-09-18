@@ -116,18 +116,29 @@ export default function Overview() {
       {/* Mission clock — T-minus to the nearest gate */}
       <MissionClock />
 
-      {/* Stat cards */}
+      {/* KPI cards */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((s) => (
-          <Link key={s.id} to={s.to} className="card group block p-5 transition-colors hover:border-line-strong">
-            <div className="flex items-center justify-between">
-              <span className="eyebrow">{s.label}</span>
-              <StatIcon name={s.icon} width={17} height={17} className="text-slate-400" />
-            </div>
-            <div className="mt-4 font-display text-[2rem] font-semibold tracking-tight text-ink-900">{s.value}</div>
-            <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">{s.detail}</p>
-          </Link>
-        ))}
+        {stats.map((s) => {
+          const arrow = s.trend === 'up' ? '↑' : s.trend === 'down' ? '↓' : '→'
+          const trendColor = s.trend === 'flat' ? 'text-[var(--color-muted)]' : 'text-[var(--color-ok)]'
+          return (
+            <Link key={s.id} to={s.to} className="card lift group block p-5">
+              <div className="flex items-center justify-between">
+                <span className="eyebrow">{s.label}</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-slate-400 transition-colors group-hover:text-ink-700">
+                  <StatIcon name={s.icon} width={15} height={15} />
+                </span>
+              </div>
+              <div className="mt-4 flex items-end justify-between gap-2">
+                <div className="font-mono text-[2rem] font-medium leading-none tracking-tight text-ink-900">{s.value}</div>
+                <span className={`mb-0.5 inline-flex items-center gap-1 font-mono text-[11px] font-medium ${trendColor}`}>
+                  {arrow} {s.delta}
+                </span>
+              </div>
+              <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">{s.detail}</p>
+            </Link>
+          )
+        })}
       </div>
 
       {/* AI Copilot — recommended actions */}
@@ -167,11 +178,7 @@ export default function Overview() {
 
           <div className="grid gap-4 sm:grid-cols-3">
             {teams.map((t) => (
-              <Link
-                key={t.id}
-                to={`/teams#${t.id}`}
-                className="card group block p-5 transition-colors hover:border-line-strong"
-              >
+              <Link key={t.id} to={`/teams#${t.id}`} className="card lift group block p-5">
                 <div className="flex items-center justify-between">
                   <IconTile className="h-9 w-9">
                     <TeamIcon name={t.icon} width={18} height={18} />

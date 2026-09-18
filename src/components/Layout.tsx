@@ -32,7 +32,7 @@ export default function Layout() {
 
   return (
     <PaletteContext.Provider value={paletteCtx}>
-      <div className="flex h-screen overflow-hidden bg-[#eef1f6]">
+      <div className="flex h-screen overflow-hidden bg-[var(--color-canvas)]">
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <main id={mainId} className="flex-1 overflow-y-auto">

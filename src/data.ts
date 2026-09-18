@@ -60,15 +60,29 @@ export const flightReadiness: ReadinessItem[] = [
   { domain: 'Hiring', status: 'go', note: '6 of 10 Q4 roles filled; pipeline healthy.' },
 ]
 
-export const stats = [
+export type Stat = {
+  id: string
+  label: string
+  value: string
+  detail: string
+  icon: 'target' | 'file' | 'alert' | 'clock'
+  to: string
+  trend: 'up' | 'down' | 'flat'
+  delta: string
+  positive: boolean
+}
+
+export const stats: Stat[] = [
   {
     id: 'missions',
     label: 'Missions on track',
     value: '8 / 10',
     detail: 'Two missions are at risk, down from three last week.',
     icon: 'target',
-    tone: 'brand',
     to: '/missions',
+    trend: 'up',
+    delta: '+1 wk',
+    positive: true,
   },
   {
     id: 'decisions',
@@ -76,17 +90,21 @@ export const stats = [
     value: '3',
     detail: 'Three items need your decision this week.',
     icon: 'file',
-    tone: 'brand',
     to: '/decisions',
+    trend: 'flat',
+    delta: 'this wk',
+    positive: true,
   },
   {
     id: 'risks',
-    label: 'Risks detected',
+    label: 'Open anomalies',
     value: '2',
     detail: 'Two open anomalies, down from four last week.',
     icon: 'alert',
-    tone: 'amber',
     to: '/missions?status=at-risk',
+    trend: 'down',
+    delta: '−2 wk',
+    positive: true,
   },
   {
     id: 'hours',
@@ -94,10 +112,12 @@ export const stats = [
     value: '24',
     detail: 'AI has saved you 24 hours across briefings, analysis and draft content.',
     icon: 'clock',
-    tone: 'brand',
     to: '/ai-activity',
+    trend: 'up',
+    delta: '+6 wk',
+    positive: true,
   },
-] as const
+]
 
 export const focus = [
   { n: '01', label: 'Approve recovery plan', to: '/decisions', hint: 'Supplier recovery · protects Oct 10' },

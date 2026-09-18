@@ -45,7 +45,7 @@ export default function Greeting({ onDark = false }: { onDark?: boolean }) {
       {/* Live console clock */}
       <div className="text-right">
         <div className={`mb-1 ${label}`}>Local time</div>
-        <div className={`font-display text-2xl font-semibold tabular-nums tracking-tight ${strong}`}>{time}</div>
+        <div className={`font-mono text-2xl font-medium tracking-tight ${strong}`}>{time}</div>
       </div>
     </div>
   )

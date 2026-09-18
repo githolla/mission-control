@@ -89,7 +89,7 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
         {t.metrics.map((m) => (
           <div key={m.label} className="bg-white px-4 py-3.5">
             <div className="eyebrow">{m.label}</div>
-            <div className="mt-1.5 font-display text-xl font-semibold tabular-nums text-ink-900">{m.value}</div>
+            <div className="mt-1.5 font-mono text-xl font-medium text-ink-900">{m.value}</div>
           </div>
         ))}
       </div>
@@ -107,7 +107,7 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
 
           <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
             <span className="uppercase tracking-[0.1em]">Utilization</span>
-            <span className="tabular-nums text-ink-900">{r.utilization}%</span>
+            <span className="font-mono text-ink-900">{r.utilization}%</span>
           </div>
           <div className="mt-2 flex h-2 overflow-hidden rounded-full bg-line">
             {r.allocation.map((seg, i) => (

@@ -40,7 +40,7 @@ export default function Knowledge() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((k) => (
           <button key={k.id} onClick={() => notify(`Opening “${k.title}”.`)} className="text-left">
-            <Card className="flex h-full flex-col p-5 transition-colors hover:border-line-strong">
+            <Card className="lift flex h-full flex-col p-5">
               <div className="flex items-center justify-between">
                 <IconTile className="h-9 w-9">
                   <BookIcon width={17} height={17} />

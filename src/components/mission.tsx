@@ -15,9 +15,7 @@ export function MissionClock() {
       <div className="flex items-center gap-4">
         <span className="eyebrow">Next gate</span>
         <div className="flex items-baseline gap-2">
-          <span className="font-display text-2xl font-semibold tabular-nums tracking-tight text-ink-900">
-            T&#8209;{next.tMinus}
-          </span>
+          <span className="font-mono text-2xl font-medium tracking-tight text-ink-900">T&#8209;{next.tMinus}</span>
           <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-muted)]">
             {next.tMinus === 1 ? 'day' : 'days'}
           </span>
@@ -29,7 +27,7 @@ export function MissionClock() {
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 sm:ml-auto sm:border-l sm:border-line sm:pl-8">
           {rest.slice(0, 2).map((g) => (
             <div key={g.id} className="flex items-baseline gap-2 text-xs">
-              <span className="font-semibold tabular-nums text-ink-700">T&#8209;{g.tMinus}</span>
+              <span className="font-mono font-medium text-ink-700">T&#8209;{g.tMinus}</span>
               <span className="uppercase tracking-[0.1em] text-[var(--color-muted)]">{g.label}</span>
             </div>
           ))}
@@ -64,10 +62,10 @@ export function ReadinessBoard() {
           </p>
         </div>
         <span
-          className="text-[11px] font-semibold uppercase tracking-[0.14em] tabular-nums"
+          className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em]"
           style={{ color: allGo ? 'var(--color-ok)' : 'var(--color-bad)' }}
         >
-          {allGo ? 'All stations GO' : `${noGo} NO-GO`}
+          {allGo ? 'ALL GO' : `${noGo} NO-GO`}
         </span>
       </div>
 
@@ -79,7 +77,7 @@ export function ReadinessBoard() {
               <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: m.hue }} />
               <span className="w-24 shrink-0 text-sm font-medium text-ink-900">{i.domain}</span>
               <span
-                className="w-14 shrink-0 text-[12px] font-semibold uppercase tracking-[0.12em] tabular-nums"
+                className="w-16 shrink-0 font-mono text-[12px] font-semibold uppercase tracking-[0.08em]"
                 style={{ color: m.hue }}
               >
                 {m.label}
