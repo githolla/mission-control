@@ -127,9 +127,18 @@ export const focus = [
 
 export const brief = {
   headline: 'Two priorities need your attention today.',
+  headlineTo: '/decisions',
   paragraphs: [
-    'A supplier delay has taken the prototype review off-nominal — the date could slip 4 days. Engineering has a recovery plan ready for your go.',
-    'All other stations are nominal. Finance and hiring remain on plan, and three team updates are waiting for your review.',
+    {
+      text: 'A supplier delay has taken the prototype review off-nominal — the date could slip 4 days. Engineering has a recovery plan ready for your go.',
+      to: '/missions/m-proto',
+      cue: 'Open the prototype mission',
+    },
+    {
+      text: 'All other stations are nominal. Finance and hiring remain on plan, and three team updates are waiting for your review.',
+      to: '/teams',
+      cue: 'Review team updates',
+    },
   ],
 }
 

@@ -61,12 +61,31 @@ export default function Overview() {
                 Updated {today.briefUpdated}
               </span>
             </div>
-            <h2 className="mt-6 max-w-xl font-display text-[1.9rem] font-semibold leading-[1.15] tracking-tight sm:text-[2.15rem]">
-              {brief.headline}
-            </h2>
-            <div className="mt-4 max-w-xl space-y-2.5 text-sm leading-relaxed text-slate-300">
+            <Link
+              to={brief.headlineTo}
+              className="group mt-6 block max-w-xl font-display text-[1.9rem] font-semibold leading-[1.15] tracking-tight sm:text-[2.15rem]"
+            >
+              <span className="bg-gradient-to-r from-white to-white bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_1px]">
+                {brief.headline}
+              </span>
+              <ArrowRightIcon
+                width={22}
+                height={22}
+                className="ml-2 inline-block -translate-y-0.5 text-slate-500 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white group-hover:opacity-100"
+              />
+            </Link>
+            <div className="mt-4 max-w-xl space-y-1">
               {brief.paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
+                <Link
+                  key={i}
+                  to={p.to}
+                  className="group -mx-2 flex items-start gap-3 rounded-lg px-2 py-2 text-sm leading-relaxed text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-slate-100"
+                >
+                  <span className="flex-1">{p.text}</span>
+                  <span className="mt-0.5 flex shrink-0 items-center gap-1 whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.08em] text-slate-500 opacity-0 transition-opacity group-hover:opacity-100">
+                    <ArrowRightIcon width={14} height={14} className="transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
               ))}
             </div>
             <div className="mt-8">
