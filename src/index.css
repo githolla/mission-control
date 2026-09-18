@@ -135,17 +135,17 @@ body {
 
 /* ── HUD / telemetry console (dark Control Room) ─────────────────────────── */
 .hud {
-  /* Restrained: one muted steel-blue accent, desaturated status hues, no glow. */
-  --hud-accent: #6ea8ff;
-  --hud-accent-dim: rgba(110, 168, 255, 0.42);
-  --hud-line: rgba(140, 165, 210, 0.12);
-  --hud-line-strong: rgba(140, 165, 210, 0.22);
-  --hud-ok: #6cc4a6;
-  --hud-warn: #d6a955;
-  --hud-bad: #d47b7b;
-  --hud-text: #d3dbe8;
-  --hud-muted: #7d8aa3;
-  --hud-dim: #55617a;
+  /* SpaceX / Tesla: pure black, white type, hairlines, monochrome status. */
+  --hud-accent: #ffffff;
+  --hud-accent-dim: rgba(255, 255, 255, 0.45);
+  --hud-line: #1c1c1c;
+  --hud-line-strong: #2a2a2a;
+  --hud-ok: #e6e6e6;
+  --hud-warn: #d2a24a;
+  --hud-bad: #d46a6a;
+  --hud-text: #f2f2f2;
+  --hud-muted: #8b8b8b;
+  --hud-dim: #5c5c5c;
   color: var(--hud-text);
   font-size: 12px;
 }
