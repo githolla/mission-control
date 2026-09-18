@@ -1,7 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Sidebar from './Sidebar'
-import TopBar from './TopBar'
 import CommandPalette from './CommandPalette'
 import { PaletteContext } from './palette-context'
 
@@ -36,7 +35,6 @@ export default function Layout() {
       <div className="flex h-screen overflow-hidden bg-[#eef1f6]">
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col">
-          <TopBar />
           <main id={mainId} className="flex-1 overflow-y-auto">
             <div className="w-full px-8 py-8 xl:px-12">
               <Outlet />

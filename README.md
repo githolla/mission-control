@@ -34,11 +34,11 @@ off‑nominal) throughout.
 
 ### Interactive, no API
 
-- **⌘K command palette** — press ⌘K / Ctrl+K (or the ⌘K chip in the top bar) to
-  jump to any mission, team, decision or doc, or run quick actions, from anywhere.
+- **⌘K command palette** — press ⌘K / Ctrl+K to search and jump to any mission,
+  team, decision or doc, or run quick actions, from anywhere. (This is where
+  global search lives.)
 - **AI Copilot** (Overview) — a ranked queue of recommended actions Steve can
   Accept / View / Dismiss, plus checkable **AI next steps** on each mission.
-- The **search** box (top bar) filters across missions, teams, decisions and docs.
 - **Ask about today** opens a demo chat interface; **Ask Mission Control** answers
   from canned, keyword-matched responses.
 - The **focus priorities** in the hero are clickable and route to the relevant page.
