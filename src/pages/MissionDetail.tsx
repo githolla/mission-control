@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { missions, teams, type Status, type Mission } from '../data'
+import { missions, teams, projectFor, type Status, type Mission } from '../data'
 import { Card, StatusPill, IconTile } from '../components/ui'
 import { ArrowRightIcon, AlertIcon, CheckIcon, UsersIcon, SparkleIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
@@ -103,6 +103,7 @@ export default function MissionDetail() {
   }
 
   const team = teams.find((t) => t.name === mission.team)
+  const project = projectFor(mission.id)
   const currentPhase = phases.findIndex((p) => mission.progress < p.at)
 
   return (
@@ -217,6 +218,25 @@ export default function MissionDetail() {
                   </Link>
                 </div>
               </div>
+            </Card>
+          )}
+
+          {/* Parent project */}
+          {project && (
+            <Card className="p-5">
+              <div className="eyebrow mb-3">Part of project</div>
+              <Link to={`/projects/${project.id}`} className="group flex items-center gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line font-mono text-[11px] font-semibold text-ink-800">
+                  {project.code}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-semibold text-ink-900">{project.name}</div>
+                  <div className="text-xs text-[var(--color-muted)]">
+                    {project.kind === 'product' ? 'Product' : 'In testing'} · {project.stage}
+                  </div>
+                </div>
+                <ArrowRightIcon width={16} height={16} className="text-slate-400 transition-transform group-hover:translate-x-0.5" />
+              </Link>
             </Card>
           )}
 

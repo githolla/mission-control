@@ -1,6 +1,19 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { user, today, brief, focus, stats, teams, crossTeamDependency, decisions, activity } from '../data'
+import {
+  user,
+  today,
+  brief,
+  focus,
+  stats,
+  teams,
+  crossTeamDependency,
+  decisions,
+  activity,
+  projects,
+  productProjects,
+  explorationProjects,
+} from '../data'
 import { Card, StatIcon, TeamIcon, StatusPill, PriorityPill, ActivityIcon, IconTile } from '../components/ui'
 import { SparkleIcon, ChatIcon, LinkIcon, BranchIcon, CalendarIcon, ArrowRightIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
@@ -159,6 +172,71 @@ export default function Overview() {
           )
         })}
       </div>
+
+      {/* Project portfolio — the six base projects */}
+      <section className="space-y-4">
+        <div className="flex items-end justify-between">
+          <div>
+            <div className="eyebrow mb-2">Project portfolio</div>
+            <p className="text-sm text-[var(--color-muted)]">
+              {productProjects.length} products live · {explorationProjects.length} in testing.
+            </p>
+          </div>
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-900 hover:text-black"
+          >
+            View portfolio
+            <ArrowRightIcon width={15} height={15} />
+          </Link>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {projects.map((p) => (
+            <Link key={p.id} to={`/projects/${p.id}`} className="card lift group flex items-center gap-3.5 p-4">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line font-mono text-[12px] font-semibold text-ink-800">
+                {p.code}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="truncate text-sm font-semibold text-ink-900">{p.name}</span>
+                  <span
+                    className="h-1.5 w-1.5 shrink-0 rounded-full"
+                    style={{
+                      background:
+                        p.status === 'on-track'
+                          ? 'var(--color-ok)'
+                          : p.status === 'at-risk'
+                            ? 'var(--color-warn)'
+                            : 'var(--color-bad)',
+                    }}
+                  />
+                </div>
+                <div className="mt-0.5 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em]">
+                  <span className={p.kind === 'product' ? 'text-ink-700' : 'text-[var(--color-muted)]'}>
+                    {p.kind === 'product' ? 'Product' : 'In testing'}
+                  </span>
+                  <span className="text-slate-300">·</span>
+                  <span className="truncate text-[var(--color-muted)]">{p.stage}</span>
+                </div>
+                <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${p.progress}%`,
+                      background:
+                        p.status === 'on-track'
+                          ? 'var(--color-ok)'
+                          : p.status === 'at-risk'
+                            ? 'var(--color-warn)'
+                            : 'var(--color-bad)',
+                    }}
+                  />
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {/* AI Copilot — recommended actions */}
       <Copilot />

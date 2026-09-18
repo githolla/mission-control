@@ -321,6 +321,168 @@ export const crossTeamDependency = {
   detail: 'Prototype testing and the partner demo need the same engineering team.',
 }
 
+// The 6 base projects — the spine of the company. The first three are shipped
+// PRODUCTS; the other three are EXPLORATIONS in different testing stages, run
+// to determine the products to build around them. Missions roll up to these.
+export type ProjectKind = 'product' | 'exploration'
+
+export type Project = {
+  id: string
+  code: string
+  name: string
+  kind: ProjectKind
+  stage: string
+  status: Status
+  team: string
+  lead: string
+  progress: number
+  gate: string
+  summary: string
+  insight: string
+  metrics: { label: string; value: string }[]
+  missionIds: string[]
+}
+
+export const projects: Project[] = [
+  // ── Products (shipped, in market) ──────────────────────────────────────
+  {
+    id: 'p-aperture',
+    code: 'APX',
+    name: 'Aperture Sensor Array',
+    kind: 'product',
+    stage: 'Live',
+    status: 'on-track',
+    team: 'Engineering',
+    lead: 'Priya Desai',
+    progress: 86,
+    gate: 'v3 scope · Nov',
+    summary: 'Flagship sensor array shipping to 40+ customers. v3 in early scoping on the new data platform.',
+    insight: 'Adoption is compounding — prioritize v3 scoping while the team has slack.',
+    metrics: [
+      { label: 'ARR', value: '$6.4M' },
+      { label: 'Customers', value: '42' },
+      { label: 'Uptime', value: '99.9%' },
+    ],
+    missionIds: ['m-data'],
+  },
+  {
+    id: 'p-relay',
+    code: 'RGS',
+    name: 'Relay Ground Station',
+    kind: 'product',
+    stage: 'Scaling',
+    status: 'on-track',
+    team: 'Operations',
+    lead: 'Marcus Chen',
+    progress: 72,
+    gate: 'Q4 capacity · Nov 30',
+    summary: 'Ground-station product scaling manufacturing and supply to meet Q4 demand.',
+    insight: 'Manufacturing readiness is nominal; the second-source qualification de-risks Q4.',
+    metrics: [
+      { label: 'ARR', value: '$3.1M' },
+      { label: 'Readiness', value: '96%' },
+      { label: 'Backlog', value: '11 units' },
+    ],
+    missionIds: ['m-mfg', 'm-supply', 'm-cost'],
+  },
+  {
+    id: 'p-nova',
+    code: 'NFS',
+    name: 'Nova Flight Software',
+    kind: 'product',
+    stage: 'Live',
+    status: 'on-track',
+    team: 'Commercial',
+    lead: 'Elena Park',
+    progress: 78,
+    gate: 'Partner demo · Oct 6',
+    summary: 'Flight-software product driving the partner motion. Support scale-up and brand refresh in flight.',
+    insight: 'Partner demo is the near-term growth lever — keep the engineering support window locked.',
+    metrics: [
+      { label: 'ARR', value: '$4.2M' },
+      { label: 'Pipeline', value: '$4.2M' },
+      { label: 'CSAT', value: '94%' },
+    ],
+    missionIds: ['m-demo', 'm-brand', 'm-support', 'm-hire'],
+  },
+  // ── Explorations (in testing, to determine products) ───────────────────
+  {
+    id: 'p-proto',
+    code: 'PV2',
+    name: 'Prototype v2',
+    kind: 'exploration',
+    stage: 'Design validation',
+    status: 'at-risk',
+    team: 'Engineering',
+    lead: 'Priya Desai',
+    progress: 62,
+    gate: 'Review · Oct 10',
+    summary: 'Next-gen hardware in design validation. A supplier delay is threatening the Oct 10 review.',
+    insight: 'The only NO-GO on the board. Approve the alternate supplier to protect the review date.',
+    metrics: [
+      { label: 'Stage', value: 'DVT' },
+      { label: 'Open risks', value: '2' },
+      { label: 'Review', value: 'Oct 10' },
+    ],
+    missionIds: ['m-proto', 'm-cert'],
+  },
+  {
+    id: 'p-autonomy',
+    code: 'AUT',
+    name: 'Autonomy Stack',
+    kind: 'exploration',
+    stage: 'Alpha',
+    status: 'on-track',
+    team: 'Engineering',
+    lead: 'Omar Haddad',
+    progress: 41,
+    gate: 'Alpha review · Nov',
+    summary: 'Onboard autonomy under alpha testing to determine a productization path.',
+    insight: 'Promising early results — define the success metric before the alpha review.',
+    metrics: [
+      { label: 'Stage', value: 'Alpha' },
+      { label: 'Test cycles', value: '7' },
+      { label: 'Confidence', value: 'Medium' },
+    ],
+    missionIds: [],
+  },
+  {
+    id: 'p-edge',
+    code: 'EDP',
+    name: 'Edge Data Platform',
+    kind: 'exploration',
+    stage: 'Technical validation',
+    status: 'on-track',
+    team: 'Engineering',
+    lead: 'Mei Lin',
+    progress: 34,
+    gate: 'Go/No-go · Dec',
+    summary: 'Edge data platform in technical validation to determine whether to build a product around it.',
+    insight: 'Validation is on plan; a go/no-go call is due in December.',
+    metrics: [
+      { label: 'Stage', value: 'Validation' },
+      { label: 'Benchmarks', value: '3/5' },
+      { label: 'Decision', value: 'Dec' },
+    ],
+    missionIds: [],
+  },
+]
+
+export const productProjects = projects.filter((p) => p.kind === 'product')
+export const explorationProjects = projects.filter((p) => p.kind === 'exploration')
+
+export function projectFor(missionId: string): Project | undefined {
+  return projects.find((p) => p.missionIds.includes(missionId))
+}
+export function missionsForProject(p: Project): Mission[] {
+  return p.missionIds
+    .map((id) => missions.find((m) => m.id === id))
+    .filter((m): m is Mission => Boolean(m))
+}
+export function projectsForTeam(teamName: string): Project[] {
+  return projects.filter((p) => p.team === teamName)
+}
+
 export type Mission = {
   id: string
   name: string

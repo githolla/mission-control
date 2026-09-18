@@ -7,6 +7,13 @@ Everything runs in the browser with local demo data; there is **no backend or AP
 
 ## What's inside
 
+The company runs on **six base projects** — three shipped **products** (Aperture
+Sensor Array, Relay Ground Station, Nova Flight Software) and three **explorations
+in testing** (Prototype v2, Autonomy Stack, Edge Data Platform). These are the
+spine: the Overview surfaces the portfolio, a **Projects** view groups them, and
+every mission, team and decision ties back to a project (missions roll up to their
+project; teams show the projects they own; a project's page lists its missions).
+
 A flight-director's-eye view that rolls team signals up into one command surface.
 The demo is framed as a mission control for Steve MacLean — a former astronaut
 now running the company from the flight director's console — so it uses authentic

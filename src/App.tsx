@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import Overview from './pages/Overview'
+import Projects from './pages/Projects'
+import ProjectDetail from './pages/ProjectDetail'
 import Missions from './pages/Missions'
 import MissionDetail from './pages/MissionDetail'
 import Teams from './pages/Teams'
@@ -13,6 +15,8 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Overview />} />
+        <Route path="projects" element={<Projects />} />
+        <Route path="projects/:id" element={<ProjectDetail />} />
         <Route path="missions" element={<Missions />} />
         <Route path="missions/:id" element={<MissionDetail />} />
         <Route path="teams" element={<Teams />} />

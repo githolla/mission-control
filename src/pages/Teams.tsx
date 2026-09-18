@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { teams, type Team, type Status } from '../data'
+import { Link } from 'react-router-dom'
+import { teams, projectsForTeam, type Team, type Status } from '../data'
 import { Card, StatusPill, TeamIcon, SectionHeading, IconTile } from '../components/ui'
 import { CheckIcon } from '../components/icons'
 import { useToast } from '../components/Toast'
@@ -83,6 +84,34 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
           </span>
         ))}
       </div>
+
+      {/* Projects owned */}
+      {projectsForTeam(t.name).length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="eyebrow mr-1">Projects</span>
+          {projectsForTeam(t.name).map((p) => (
+            <Link
+              key={p.id}
+              to={`/projects/${p.id}`}
+              className="group inline-flex items-center gap-2 rounded-lg border border-line bg-white px-2.5 py-1.5 transition-colors hover:border-line-strong"
+            >
+              <span className="font-mono text-[11px] font-semibold text-ink-800">{p.code}</span>
+              <span className="text-[12px] font-medium text-ink-900">{p.name}</span>
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{
+                  background:
+                    p.status === 'on-track'
+                      ? 'var(--color-ok)'
+                      : p.status === 'at-risk'
+                        ? 'var(--color-warn)'
+                        : 'var(--color-bad)',
+                }}
+              />
+            </Link>
+          ))}
+        </div>
+      )}
 
       {/* Metrics */}
       <div className="mt-6 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3">

@@ -14,7 +14,8 @@ import {
   PlayIcon,
   ArrowRightIcon,
 } from './icons'
-import { missions, teams, decisions, knowledge } from '../data'
+import { GridIcon } from './icons'
+import { projects, missions, teams, decisions, knowledge } from '../data'
 import { useToast } from './Toast'
 
 type Icon = ComponentType<SVGProps<SVGSVGElement>>
@@ -34,6 +35,7 @@ type Group = { title: string; items: Item[] }
 
 const navDestinations: Item[] = [
   { id: 'go-overview', label: 'Overview', hint: 'Go to', Icon: HomeIcon, to: '/' },
+  { id: 'go-projects', label: 'Projects', hint: 'Go to', Icon: GridIcon, to: '/projects' },
   { id: 'go-missions', label: 'Missions', hint: 'Go to', Icon: RocketIcon, to: '/missions' },
   { id: 'go-teams', label: 'Teams', hint: 'Go to', Icon: UsersIcon, to: '/teams' },
   { id: 'go-decisions', label: 'Decisions', hint: 'Go to', Icon: FileIcon, to: '/decisions' },
@@ -104,6 +106,16 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
   const groups = useMemo<Group[]>(
     () => [
       { title: 'Go to', items: navDestinations },
+      {
+        title: 'Projects',
+        items: projects.map((p) => ({
+          id: `project-${p.id}`,
+          label: p.name,
+          hint: `${p.code} · ${p.kind === 'product' ? 'Product' : 'In testing'}`,
+          Icon: GridIcon,
+          to: `/projects/${p.id}`,
+        })),
+      },
       {
         title: 'Missions',
         items: missions.map((m) => ({
