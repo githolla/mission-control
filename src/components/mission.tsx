@@ -45,7 +45,7 @@ const readinessMeta: Record<Readiness, { label: string; hue: string }> = {
 
 /**
  * Flight readiness — a Go / No-Go poll of every domain, rolled up to the
- * flight director's console. Small hue dots + tabular GO/WATCH/NO-GO tags.
+ * director's console. Small hue dots + tabular GO/WATCH/NO-GO tags.
  */
 export function ReadinessBoard() {
   const items = flightReadiness
@@ -89,7 +89,7 @@ export function ReadinessBoard() {
       </ul>
 
       <div className="border-t border-line px-5 py-3.5 text-xs leading-relaxed text-[var(--color-muted)]">
-        <span className="font-semibold text-fg-3">Flight director&rsquo;s call</span> — one NO-GO open. Approve the
+        <span className="font-semibold text-fg-3">Director&rsquo;s call</span> — one NO-GO open. Approve the
         recovery plan to clear the board.
       </div>
     </Card>

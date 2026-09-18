@@ -6,9 +6,9 @@ export type Status = 'on-track' | 'at-risk' | 'blocked'
 export const user = {
   name: 'Steve MacLean',
   firstName: 'Steve',
-  role: 'CTO',
-  console: 'Flight Director',
-  background: 'CTO, Infinite Potential Labs · former astronaut',
+  role: 'Director',
+  console: 'Director',
+  background: 'Infinite Potential Labs',
   initials: 'SM',
   mandate: 'Setting the trajectory. Clearing blockers. Calling Go / No-Go where it counts.',
   quote: 'Complexity is a problem worth solving.',
@@ -48,7 +48,7 @@ export function upcomingGates(now: Date = new Date()): (Gate & { tMinus: number 
 }
 
 // Flight readiness — a classic Go / No-Go poll of every domain, rolled up to
-// the flight director's console. NO-GO / WATCH / GO map to the bad/warn/ok hues.
+// the director's console. NO-GO / WATCH / GO map to the bad/warn/ok hues.
 export type Readiness = 'go' | 'watch' | 'no-go'
 export type ReadinessItem = { domain: string; status: Readiness; note: string }
 

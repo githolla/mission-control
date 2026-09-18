@@ -15,8 +15,8 @@ every mission, team and decision ties back to a project (missions roll up to the
 project; teams show the projects they own; a project's page lists its missions).
 
 A flight-director's-eye view that rolls team signals up into one command surface.
-The demo is framed as a mission control for Steve MacLean — a former astronaut
-now running the company from the flight director's console — so it uses authentic
+The demo is framed as a mission control for Steve MacLean, Director at Infinite
+Potential Labs, running the company from the director's console — so it uses authentic
 mission-control language (T‑minus gates, Go / No‑Go readiness, nominal /
 off‑nominal) throughout.
 

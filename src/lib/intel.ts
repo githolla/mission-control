@@ -294,7 +294,7 @@ export function generateBrief(audience: Audience, now = new Date()): { title: st
       paragraphs: [
         `${onTrack} of ${projects.length} base projects are on track. ${ahead.length} are ahead of their plan line (${ahead.map((f) => f.project.code).join(', ')}). The next gate is ${next?.project.gate ?? '—'} (${next?.project.name ?? ''}), T-${next?.daysToGate ?? '—'}.`,
         slipping.length
-          ? `Forecast exposure is concentrated in ${slipping.map((f) => `${f.project.name} (+${f.slipDays} days if unmitigated)`).join(' and ')}. Mitigations are identified and awaiting the flight director's call; expected residual slip after mitigation is under one week.`
+          ? `Forecast exposure is concentrated in ${slipping.map((f) => `${f.project.name} (+${f.slipDays} days if unmitigated)`).join(' and ')}. Mitigations are identified and awaiting the director's call; expected residual slip after mitigation is under one week.`
           : 'No project is forecast to slip its gate.',
         `Readiness: ${flightReadiness.length - noGo.length} of ${flightReadiness.length} stations GO. ${hi.length ? `One high-priority decision is open (${hi.map((d) => d.title.toLowerCase()).join(', ')}).` : ''} Compact Neutron Source published a world-record result with INRS; productization path is being defined ahead of the scale-up review.`,
       ],
@@ -309,7 +309,7 @@ export function generateBrief(audience: Audience, now = new Date()): { title: st
       ],
     }
   return {
-    title: 'Flight director — my read of the board',
+    title: 'Director — my read of the board',
     paragraphs: [
       `Watch list: ${fs
         .filter((f) => f.riskScore >= 40)

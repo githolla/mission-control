@@ -13,7 +13,7 @@ function stepsFor(m: Mission): string[] {
     return [
       'Clear the top blocker with the owner today.',
       'Confirm the mitigation and a firm new target date.',
-      'Escalate to the flight director if it slips again.',
+      'Escalate to the director if it slips again.',
     ]
   return [
     'Confirm the next milestone owner and date.',
