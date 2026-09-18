@@ -1,323 +1,360 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  projects,
-  missions,
-  missionsForProject,
-  decisions,
-  activity,
-  type Project,
-  type Status,
-} from '../data'
-import { Card, StatusPill, SectionHeading, ActivityIcon } from '../components/ui'
-import { ReadinessBoard } from '../components/mission'
-import { ArrowRightIcon, AlertIcon, BranchIcon, CalendarIcon } from '../components/icons'
+import { projects, missions, missionsForProject, flightReadiness, activity, type Status } from '../data'
 
+/* ── time / scale helpers ─────────────────────────────────────────────── */
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const YEAR = new Date().getFullYear()
-const START = new Date(YEAR, 8, 15) // Sep 15
-const END = new Date(YEAR, 11, 31) // Dec 31
+const START = new Date(YEAR, 8, 15)
+const END = new Date(YEAR, 11, 31)
 const SPAN = END.getTime() - START.getTime()
-const NOW = new Date()
-
 const pct = (d: Date) => Math.max(0, Math.min(100, ((d.getTime() - START.getTime()) / SPAN) * 100))
-const hue = (s: Status) =>
-  s === 'on-track' ? 'var(--color-ok)' : s === 'at-risk' ? 'var(--color-warn)' : 'var(--color-bad)'
+const pad = (n: number) => String(n).padStart(2, '0')
+const gateDate = (p: (typeof projects)[number]) => new Date(YEAR, p.gateMonth - 1, p.gateDay)
+const dhue = (s: Status) => (s === 'on-track' ? 'var(--hud-ok)' : s === 'at-risk' ? 'var(--hud-warn)' : 'var(--hud-bad)')
 
 function parseDue(due: string): Date | null {
   const m = due.trim().match(/^([A-Za-z]{3})\s+(\d{1,2})$/)
   if (!m) return null
   const mi = MONTHS.indexOf(m[1])
-  if (mi < 0) return null
-  return new Date(YEAR, mi, parseInt(m[2], 10))
+  return mi < 0 ? null : new Date(YEAR, mi, parseInt(m[2], 10))
 }
 
-const tMinus = (d: Date) => Math.round((d.getTime() - NOW.getTime()) / 86_400_000)
+function useNow(ms = 1000) {
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), ms)
+    return () => window.clearInterval(id)
+  }, [ms])
+  return now
+}
 
-// Month gridlines (Oct / Nov / Dec starts) shown on every track.
-const monthTicks = [9, 10, 11].map((m) => ({ label: MONTHS[m], left: pct(new Date(YEAR, m, 1)) }))
-const nowLeft = pct(NOW)
-
-function Track({ project }: { project: Project }) {
-  const gateDate = new Date(YEAR, project.gateMonth - 1, project.gateDay)
-  const gateLeft = pct(gateDate)
-  const gateT = tMinus(gateDate)
-  const missionMarks = missionsForProject(project)
-    .map((m) => ({ m, date: parseDue(m.due) }))
-    .filter((x): x is { m: (typeof missions)[number]; date: Date } => Boolean(x.date))
-
+/* ── primitives ───────────────────────────────────────────────────────── */
+function Panel({
+  num,
+  title,
+  right,
+  children,
+  className = '',
+}: {
+  num: string
+  title: string
+  right?: React.ReactNode
+  children: React.ReactNode
+  className?: string
+}) {
   return (
-    <div className="relative h-11">
-      {/* month gridlines */}
-      {monthTicks.map((t) => (
-        <div key={t.label} className="absolute inset-y-0 w-px bg-line" style={{ left: `${t.left}%` }} />
-      ))}
-      {/* now line */}
-      <div className="absolute inset-y-0 w-px" style={{ left: `${nowLeft}%`, background: 'var(--color-accent)' }} />
-      {/* baseline */}
-      <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-line" />
-      {/* progress along baseline up to the gate */}
-      <div
-        className="absolute top-1/2 h-[2px] -translate-y-1/2 rounded-full"
-        style={{ left: `${nowLeft}%`, width: `${Math.max(0, gateLeft - nowLeft)}%`, background: hue(project.status) }}
-      />
-      {/* mission ticks */}
-      {missionMarks.map(({ m, date }) => (
-        <div
-          key={m.id}
-          className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white"
-          style={{ left: `${pct(date)}%`, background: hue(m.status) }}
-          title={`${m.name} · ${m.due}`}
-        />
-      ))}
-      {/* gate marker */}
-      <div className="absolute top-1/2 -translate-y-1/2" style={{ left: `${gateLeft}%` }}>
-        <div
-          className="h-3 w-3 -translate-x-1/2 rotate-45 rounded-[2px]"
-          style={{ background: hue(project.status) }}
-          title={`${project.gate}`}
-        />
-        <span
-          className={`absolute top-1/2 ml-2 -translate-y-1/2 whitespace-nowrap font-mono text-[10px] font-medium ${gateT < 0 ? 'text-slate-400' : 'text-ink-700'}`}
-          style={{ left: '0.4rem' }}
-        >
-          {gateT >= 0 ? `T-${gateT}` : 'done'}
-        </span>
+    <section className={`hud-panel p-4 ${className}`}>
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <span className="hud-num flex h-6 w-7 items-center justify-center rounded text-[12px]">{num}</span>
+          <span className="hud-label !tracking-[0.18em] text-slate-300">{title}</span>
+        </div>
+        {right}
       </div>
+      {children}
+    </section>
+  )
+}
+
+function Gauge({ label, value, display, color }: { label: string; value: number; display: string; color: string }) {
+  const r = 34
+  const c = 2 * Math.PI * r
+  const frac = Math.max(0, Math.min(1, value / 100))
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <div className="relative h-[86px] w-[86px]">
+        <svg viewBox="0 0 80 80" className="h-full w-full -rotate-90">
+          <circle cx="40" cy="40" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="5" />
+          <circle
+            cx="40"
+            cy="40"
+            r={r}
+            fill="none"
+            stroke={color}
+            strokeWidth="5"
+            strokeLinecap="round"
+            strokeDasharray={`${frac * c} ${c}`}
+            style={{ filter: `drop-shadow(0 0 5px ${color})` }}
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="hud-value text-[17px] font-medium">{display}</span>
+        </div>
+      </div>
+      <span className="hud-label text-center">{label}</span>
     </div>
   )
 }
 
-export default function ControlRoom() {
-  const onTrack = projects.filter((p) => p.status === 'on-track').length
-  const atRisk = projects.filter((p) => p.status !== 'on-track')
-  const gatesSoon = projects.filter((p) => {
-    const t = tMinus(new Date(YEAR, p.gateMonth - 1, p.gateDay))
-    return t >= 0 && t <= 30
-  }).length
-  const anomalies = missions.filter((m) => m.status !== 'on-track')
+function AreaChart({ data, color }: { data: number[]; color: string }) {
+  const w = 300
+  const h = 90
+  const max = Math.max(...data)
+  const min = Math.min(...data)
+  const rng = max - min || 1
+  const pts = data.map((v, i) => [(i / (data.length - 1)) * w, h - 8 - ((v - min) / rng) * (h - 18)] as const)
+  const line = pts.map((p) => p.join(',')).join(' ')
+  const area = `0,${h} ${line} ${w},${h}`
+  const last = pts[pts.length - 1]
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" className="h-24 w-full">
+      <defs>
+        <linearGradient id="hudArea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={color} stopOpacity="0.32" />
+          <stop offset="1" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {[0.25, 0.5, 0.75].map((g) => (
+        <line key={g} x1="0" y1={h * g} x2={w} y2={h * g} stroke="rgba(120,170,255,0.10)" strokeWidth="1" />
+      ))}
+      <polygon points={area} fill="url(#hudArea)" />
+      <polyline points={line} fill="none" stroke={color} strokeWidth="1.6" style={{ filter: `drop-shadow(0 0 4px ${color})` }} />
+      <circle cx={last[0]} cy={last[1]} r="3" fill={color} style={{ filter: `drop-shadow(0 0 6px ${color})` }} />
+    </svg>
+  )
+}
 
-  const summary = [
-    { label: 'Projects', value: `${projects.length}` },
-    { label: 'On track', value: `${onTrack}`, hue: 'var(--color-ok)' },
-    { label: 'Needs attention', value: `${atRisk.length}`, hue: 'var(--color-warn)' },
-    { label: 'Gates ≤ 30d', value: `${gatesSoon}` },
-    { label: 'Open decisions', value: `${decisions.length}` },
-    { label: 'Open anomalies', value: `${anomalies.length}`, hue: 'var(--color-warn)' },
+function Radar() {
+  return (
+    <div className="relative h-24 w-24 shrink-0">
+      <svg viewBox="0 0 100 100" className="h-full w-full">
+        {[40, 28, 16].map((r) => (
+          <circle key={r} cx="50" cy="50" r={r} fill="none" stroke="rgba(120,170,255,0.2)" strokeWidth="1" />
+        ))}
+        <line x1="50" y1="10" x2="50" y2="90" stroke="rgba(120,170,255,0.15)" strokeWidth="1" />
+        <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(120,170,255,0.15)" strokeWidth="1" />
+      </svg>
+      <div
+        className="absolute inset-0 rounded-full animate-[hud-sweep_4s_linear_infinite]"
+        style={{ background: 'conic-gradient(from 0deg, rgba(56,182,255,0) 0deg 300deg, rgba(56,182,255,0.28) 348deg, rgba(56,182,255,0) 360deg)' }}
+      />
+      <span className="absolute left-[64%] top-[36%] h-1.5 w-1.5 rounded-full bg-[var(--hud-ok)]" style={{ boxShadow: '0 0 6px var(--hud-ok)' }} />
+      <span className="absolute left-[38%] top-[60%] h-1.5 w-1.5 rounded-full bg-[var(--hud-warn)]" style={{ boxShadow: '0 0 6px var(--hud-warn)' }} />
+      <span className="absolute left-[56%] top-[64%] h-1 w-1 rounded-full bg-[var(--hud-ok)]" />
+    </div>
+  )
+}
+
+/* ── page ─────────────────────────────────────────────────────────────── */
+const hoursSeries = [12, 14, 13, 16, 15, 18, 17, 20, 19, 21, 20, 22, 21, 23, 22, 24]
+
+export default function ControlRoom() {
+  const now = useNow(1000)
+  const utc = `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}`
+  const local = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
+
+  const onTrack = projects.filter((p) => p.status === 'on-track').length
+  const anomalies = missions.filter((m) => m.status !== 'on-track')
+  const readyGo = flightReadiness.filter((r) => r.status === 'go').length
+  const avgUtil = 84
+  const riskPct = Math.round((anomalies.length / missions.length) * 100)
+
+  // nearest upcoming gate + live countdown
+  const upcoming = projects
+    .map((p) => ({ p, d: gateDate(p) }))
+    .filter((x) => x.d.getTime() >= now.getTime())
+    .sort((a, b) => a.d.getTime() - b.d.getTime())
+  const next = upcoming[0]
+  let mission = '—'
+  if (next) {
+    const diff = Math.max(0, next.d.getTime() - now.getTime())
+    const days = Math.floor(diff / 86_400_000)
+    const hrs = Math.floor((diff % 86_400_000) / 3_600_000)
+    const mins = Math.floor((diff % 3_600_000) / 60_000)
+    const secs = Math.floor((diff % 60_000) / 1000)
+    mission = `${days}d ${pad(hrs)}:${pad(mins)}:${pad(secs)}`
+  }
+
+  const readouts = [
+    { k: 'Projects', v: `${projects.length}` },
+    { k: 'On track', v: `${onTrack}/${projects.length}` },
+    { k: 'Anomalies', v: `${anomalies.length}`, warn: true },
+    { k: 'Stations GO', v: `${readyGo}/${flightReadiness.length}` },
+    { k: 'Next gate', v: next ? `T-${Math.ceil((next.d.getTime() - now.getTime()) / 86_400_000)}` : '—' },
+    { k: 'Lead', v: next ? next.p.code : '—' },
   ]
 
   return (
-    <div className="space-y-7">
-      <SectionHeading
-        eyebrow="Control Room"
-        title="Portfolio control room"
-        subtitle="Every project, gate, risk and decision on one console — the whole company at a glance."
-      />
+    <div
+      className="hud relative -mx-8 -my-8 min-h-screen overflow-hidden px-6 py-6 xl:-mx-12"
+      style={{ background: 'radial-gradient(130% 110% at 50% -15%, #12294a 0%, #0b1728 45%, #070e18 100%)' }}
+    >
+      <div className="hud-grid pointer-events-none absolute inset-0 opacity-70" />
 
-      {/* Summary readout */}
-      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3 xl:grid-cols-6">
-        {summary.map((s) => (
-          <div key={s.label} className="bg-white px-4 py-3.5">
-            <div className="eyebrow">{s.label}</div>
-            <div className="mt-1.5 flex items-center gap-2">
-              {s.hue && <span className="h-1.5 w-1.5 rounded-full" style={{ background: s.hue }} />}
-              <span className="font-mono text-xl font-medium text-ink-900">{s.value}</span>
+      <div className="relative space-y-5">
+        {/* Top strip */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-baseline gap-3">
+            <span className="font-display text-xl font-bold tracking-[0.12em] text-white">MISSION DASHBOARD</span>
+            <span className="hud-label">Portfolio telemetry</span>
+          </div>
+          <div className="flex items-center gap-5">
+            <div className="text-right">
+              <div className="hud-label">UTC</div>
+              <div className="hud-value text-sm">{utc}</div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Portfolio timeline — the big board */}
-      <Card className="overflow-hidden">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-4">
-          <div>
-            <div className="eyebrow">Portfolio timeline</div>
-            <p className="mt-1 text-sm text-[var(--color-muted)]">Gates and mission milestones through year-end.</p>
-          </div>
-          <div className="flex items-center gap-4 text-[11px] font-medium text-[var(--color-muted)]">
-            <span className="flex items-center gap-1.5">
-              <span className="h-2.5 w-2.5 rotate-45 rounded-[2px] bg-ink-700" /> Gate
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-ink-700 ring-2 ring-white" /> Mission
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-px" style={{ background: 'var(--color-accent)' }} /> Now
+            <div className="text-right">
+              <div className="hud-label">Local</div>
+              <div className="hud-value text-sm">{local}</div>
+            </div>
+            <span
+              className="rounded-md border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em]"
+              style={{ borderColor: 'var(--hud-line)', color: anomalies.length ? 'var(--hud-warn)' : 'var(--hud-ok)' }}
+            >
+              {anomalies.length ? 'System · hold' : 'System · nominal'}
             </span>
           </div>
         </div>
 
-        <div className="overflow-x-auto px-5 py-4">
-          <div className="min-w-[720px]">
-            {/* Month axis */}
-            <div className="mb-2 flex">
-              <div className="w-[220px] shrink-0" />
-              <div className="relative h-4 flex-1">
-                {monthTicks.map((t) => (
-                  <span
-                    key={t.label}
-                    className="absolute -translate-x-1/2 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400"
-                    style={{ left: `${t.left}%` }}
-                  >
-                    {t.label}
-                  </span>
+        {/* Row A */}
+        <div className="grid gap-5 xl:grid-cols-[1.35fr_1fr]">
+          {/* 01 Orbit view */}
+          <Panel num="01" title="Orbit view" right={<span className="hud-label">Portfolio</span>}>
+            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+              <div className="space-y-4">
+                {readouts.slice(0, 3).map((r) => (
+                  <div key={r.k}>
+                    <div className="hud-label">{r.k}</div>
+                    <div className="hud-value text-lg" style={r.warn ? { color: 'var(--hud-warn)' } : undefined}>
+                      {r.v}
+                    </div>
+                  </div>
                 ))}
-                <span
-                  className="absolute -translate-x-1/2 font-mono text-[10px] font-semibold"
-                  style={{ left: `${nowLeft}%`, color: 'var(--color-accent)' }}
-                >
-                  NOW
-                </span>
+              </div>
+
+              <div className="relative mx-auto aspect-square w-full max-w-[300px]">
+                <div className="absolute inset-[10%] rounded-full bg-cover bg-center" style={{ backgroundImage: 'url(/hero-space.svg)' }} />
+                <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full">
+                  <ellipse cx="100" cy="100" rx="94" ry="40" fill="none" stroke="rgba(56,182,255,0.35)" strokeWidth="1" transform="rotate(-24 100 100)" />
+                  <ellipse cx="100" cy="100" rx="88" ry="30" fill="none" stroke="rgba(56,182,255,0.2)" strokeWidth="1" transform="rotate(18 100 100)" />
+                  <circle cx="100" cy="100" r="97" fill="none" stroke="rgba(120,170,255,0.15)" strokeWidth="1" />
+                </svg>
+                <div className="absolute inset-0 animate-[hud-orbit_14s_linear_infinite]">
+                  <span
+                    className="absolute left-1/2 top-[3%] h-2 w-2 -translate-x-1/2 rounded-full bg-[var(--hud-accent)]"
+                    style={{ boxShadow: '0 0 8px var(--hud-accent)' }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4 text-right">
+                {readouts.slice(3).map((r) => (
+                  <div key={r.k}>
+                    <div className="hud-label">{r.k}</div>
+                    <div className="hud-value text-lg">{r.v}</div>
+                  </div>
+                ))}
               </div>
             </div>
+          </Panel>
 
-            {/* Rows */}
-            <div className="divide-y divide-line">
-              {projects.map((p) => (
-                <Link key={p.id} to={`/projects/${p.id}`} className="group flex items-center hover:bg-[#f7f8fa]">
-                  <div className="flex w-[220px] shrink-0 items-center gap-2.5 py-2 pr-4">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-line font-mono text-[10px] font-semibold text-ink-800">
-                      {p.code}
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block truncate text-[13px] font-medium text-ink-900">{p.name}</span>
-                      <span className="block truncate text-[10px] uppercase tracking-[0.1em] text-slate-400">
-                        {p.kind === 'product' ? 'Product' : 'In testing'}
+          {/* 02 Systems health */}
+          <Panel num="02" title="Systems health" right={<Radar />}>
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 xl:grid-cols-2">
+              <Gauge label="On track" value={Math.round((onTrack / projects.length) * 100)} display={`${Math.round((onTrack / projects.length) * 100)}%`} color="var(--hud-ok)" />
+              <Gauge label="Readiness" value={(readyGo / flightReadiness.length) * 100} display={`${readyGo}/${flightReadiness.length}`} color="var(--hud-accent)" />
+              <Gauge label="Utilisation" value={avgUtil} display={`${avgUtil}%`} color="var(--hud-accent)" />
+              <Gauge label="Risk" value={riskPct} display={`${riskPct}%`} color="var(--hud-warn)" />
+            </div>
+          </Panel>
+        </div>
+
+        {/* Row B */}
+        <div className="grid gap-5 xl:grid-cols-[1.35fr_1fr]">
+          {/* 03 Portfolio timeline */}
+          <Panel num="03" title="Portfolio timeline" right={<span className="hud-label">Gates → year-end</span>}>
+            <div className="overflow-x-auto">
+              <div className="min-w-[520px]">
+                <div className="mb-2 flex">
+                  <div className="w-[150px] shrink-0" />
+                  <div className="relative h-3 flex-1">
+                    {[9, 10, 11].map((m) => (
+                      <span key={m} className="hud-label absolute -translate-x-1/2" style={{ left: `${pct(new Date(YEAR, m, 1))}%` }}>
+                        {MONTHS[m]}
                       </span>
-                    </span>
+                    ))}
                   </div>
-                  <div className="flex-1">
-                    <Track project={p} />
-                  </div>
-                </Link>
+                </div>
+                <div className="divide-y divide-[color:var(--hud-line)]">
+                  {projects.map((p) => {
+                    const gd = gateDate(p)
+                    const gl = pct(gd)
+                    const nowL = pct(now)
+                    const t = Math.ceil((gd.getTime() - now.getTime()) / 86_400_000)
+                    const ms = missionsForProject(p)
+                      .map((m) => ({ m, d: parseDue(m.due) }))
+                      .filter((x): x is { m: (typeof missions)[number]; d: Date } => Boolean(x.d))
+                    return (
+                      <Link key={p.id} to={`/projects/${p.id}`} className="flex items-center hover:bg-white/[0.03]">
+                        <div className="flex w-[150px] shrink-0 items-center gap-2 py-2 pr-3">
+                          <span className="hud-value flex h-6 w-7 items-center justify-center rounded border text-[10px]" style={{ borderColor: 'var(--hud-line)' }}>
+                            {p.code}
+                          </span>
+                          <span className="truncate text-[12px] text-slate-300">{p.name}</span>
+                        </div>
+                        <div className="relative h-9 flex-1">
+                          <div className="absolute inset-y-0 w-px" style={{ left: `${nowL}%`, background: 'var(--hud-accent)' }} />
+                          <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2" style={{ background: 'var(--hud-line)' }} />
+                          <div className="absolute top-1/2 h-[2px] -translate-y-1/2 rounded-full" style={{ left: `${nowL}%`, width: `${Math.max(0, gl - nowL)}%`, background: dhue(p.status), boxShadow: `0 0 6px ${dhue(p.status)}` }} />
+                          {ms.map(({ m, d }) => (
+                            <span key={m.id} className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ left: `${pct(d)}%`, background: dhue(m.status), boxShadow: `0 0 5px ${dhue(m.status)}` }} title={m.name} />
+                          ))}
+                          <span className="absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-[2px]" style={{ left: `${gl}%`, background: dhue(p.status), boxShadow: `0 0 7px ${dhue(p.status)}` }} />
+                          <span className="hud-value absolute top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px]" style={{ left: `calc(${gl}% + 0.5rem)` }}>
+                            {t >= 0 ? `T-${t}` : 'done'}
+                          </span>
+                        </div>
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </Panel>
+
+          {/* 04 Telemetry */}
+          <Panel
+            num="04"
+            title="Telemetry"
+            right={
+              <span className="hud-value text-sm" style={{ color: 'var(--hud-accent)' }}>
+                +6/wk
+              </span>
+            }
+          >
+            <div className="mb-2 flex items-baseline gap-2">
+              <span className="hud-label">Hours saved / week</span>
+              <span className="hud-value ml-auto text-2xl font-medium">24</span>
+            </div>
+            <AreaChart data={hoursSeries} color="var(--hud-accent)" />
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              {[
+                { k: 'Decisions', v: '3' },
+                { k: 'Gates ≤30d', v: `${upcoming.filter((u) => (u.d.getTime() - now.getTime()) / 86_400_000 <= 30).length}` },
+                { k: 'Activity', v: `${activity.length}` },
+              ].map((s) => (
+                <div key={s.k} className="rounded-lg border px-3 py-2" style={{ borderColor: 'var(--hud-line)' }}>
+                  <div className="hud-label">{s.k}</div>
+                  <div className="hud-value text-base">{s.v}</div>
+                </div>
               ))}
             </div>
+          </Panel>
+        </div>
+
+        {/* Mission clock bar */}
+        <div className="hud-panel flex flex-wrap items-center justify-between gap-4 px-5 py-3">
+          <span className="hud-label">Next gate · {next ? next.p.name : '—'}</span>
+          <div className="flex items-center gap-3">
+            <span className="hud-label">T-minus</span>
+            <span className="hud-value text-2xl font-medium tracking-wide" style={{ color: 'var(--hud-accent)', textShadow: '0 0 14px rgba(56,182,255,0.5)' }}>
+              {mission}
+            </span>
           </div>
+          <span className="hud-label">Link · nominal · {readyGo}/{flightReadiness.length} GO</span>
         </div>
-      </Card>
-
-      {/* Status matrix */}
-      <Card className="overflow-hidden">
-        <div className="border-b border-line px-5 py-4">
-          <div className="eyebrow">All projects</div>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[720px] text-sm">
-            <thead>
-              <tr className="border-b border-line text-left">
-                {['Project', 'Stage', 'Status', 'Progress', 'Next gate', 'Lead', 'Missions'].map((h) => (
-                  <th key={h} className="px-5 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-line">
-              {projects.map((p) => {
-                const gateDate = new Date(YEAR, p.gateMonth - 1, p.gateDay)
-                const t = tMinus(gateDate)
-                return (
-                  <tr key={p.id} className="group hover:bg-[#f7f8fa]">
-                    <td className="px-5 py-3">
-                      <Link to={`/projects/${p.id}`} className="flex items-center gap-2.5">
-                        <span className="flex h-7 w-7 items-center justify-center rounded-md border border-line font-mono text-[10px] font-semibold text-ink-800">
-                          {p.code}
-                        </span>
-                        <span className="font-medium text-ink-900">{p.name}</span>
-                      </Link>
-                    </td>
-                    <td className="px-5 py-3 text-[var(--color-muted)]">{p.stage}</td>
-                    <td className="px-5 py-3">
-                      <StatusPill status={p.status} />
-                    </td>
-                    <td className="px-5 py-3">
-                      <div className="flex items-center gap-2">
-                        <div className="h-1 w-16 overflow-hidden rounded-full bg-line">
-                          <div className="h-full rounded-full" style={{ width: `${p.progress}%`, background: hue(p.status) }} />
-                        </div>
-                        <span className="font-mono text-xs text-[var(--color-muted)]">{p.progress}%</span>
-                      </div>
-                    </td>
-                    <td className="px-5 py-3">
-                      <span className="font-mono text-xs text-ink-800">{t >= 0 ? `T-${t}` : '—'}</span>
-                      <span className="ml-2 text-xs text-[var(--color-muted)]">{p.gate}</span>
-                    </td>
-                    <td className="px-5 py-3 text-[var(--color-muted)]">{p.lead}</td>
-                    <td className="px-5 py-3 font-mono text-xs text-[var(--color-muted)]">{p.missionIds.length}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-
-      {/* Readiness + attention */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        <ReadinessBoard />
-
-        <Card className="overflow-hidden">
-          <div className="border-b border-line px-5 py-4">
-            <div className="eyebrow">Needs your call</div>
-            <p className="mt-1 text-sm text-[var(--color-muted)]">Open decisions and anomalies across the portfolio.</p>
-          </div>
-          <ul className="divide-y divide-line">
-            {decisions.map((d) => {
-              const Icon = d.icon === 'branch' ? BranchIcon : CalendarIcon
-              return (
-                <li key={d.id}>
-                  <Link to="/decisions" className="flex items-center gap-3 px-5 py-3 hover:bg-[#f7f8fa]">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line text-ink-700">
-                      <Icon width={16} height={16} />
-                    </span>
-                    <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink-900">{d.title}</span>
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--color-muted)]">
-                      Decision
-                    </span>
-                    <ArrowRightIcon width={15} height={15} className="text-slate-400" />
-                  </Link>
-                </li>
-              )
-            })}
-            {anomalies.map((m) => (
-              <li key={m.id}>
-                <Link to={`/missions/${m.id}`} className="flex items-center gap-3 px-5 py-3 hover:bg-[#f7f8fa]">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--color-warn)]/30 text-[var(--color-warn)]">
-                    <AlertIcon width={16} height={16} />
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink-900">{m.name}</span>
-                  <StatusPill status={m.status} />
-                  <ArrowRightIcon width={15} height={15} className="text-slate-400" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Card>
       </div>
-
-      {/* Live activity */}
-      <Card className="overflow-hidden">
-        <div className="flex items-center justify-between border-b border-line px-5 py-4">
-          <div className="eyebrow">Live activity</div>
-          <Link to="/ai-activity" className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-900 hover:text-black">
-            View all
-            <ArrowRightIcon width={15} height={15} />
-          </Link>
-        </div>
-        <ul className="divide-y divide-line">
-          {activity.slice(0, 5).map((a) => (
-            <li key={a.id} className="flex items-center gap-3 px-5 py-3">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line text-slate-500">
-                <ActivityIcon name={a.icon} width={15} height={15} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-medium text-ink-900">{a.title}</span>
-                <span className="block truncate text-xs text-[var(--color-muted)]">{a.detail}</span>
-              </span>
-              <span className="shrink-0 font-mono text-[11px] text-slate-400">{a.time}</span>
-            </li>
-          ))}
-        </ul>
-      </Card>
     </div>
   )
 }
