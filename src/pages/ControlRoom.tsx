@@ -141,7 +141,7 @@ export default function ControlRoom() {
           style={{ background: 'radial-gradient(circle, rgba(255,178,70,0.30) 0%, rgba(255,140,40,0.10) 34%, transparent 62%)' }}
         />
         {/* planet limb on the horizon — atmosphere only */}
-        <Planet className="pointer-events-none absolute left-1/2 top-[84%] h-[1600px] w-[1600px] max-w-none -translate-x-1/2" radius={0.46} light={[-0.4, 0.9, 0.35]} />
+        <Planet className="pointer-events-none absolute left-1/2 top-[81%] h-[1600px] w-[1600px] max-w-none -translate-x-1/2" radius={0.46} light={[0.15, 0.9, 0.45]} />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[160px]" style={{ background: 'linear-gradient(to top, rgba(6,10,18,0.55), transparent)' }} />
 
         {/* band header */}

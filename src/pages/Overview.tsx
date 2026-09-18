@@ -39,14 +39,14 @@ export default function Overview() {
         <Planet
           className="pointer-events-none absolute left-1/2 top-[56%] h-[1800px] w-[1800px] max-w-none -translate-x-[46%]"
           radius={0.44}
-          light={[-0.35, 0.75, 0.56]}
+          light={[0.2, 0.8, 0.5]}
         />
         {/* Legibility overlays: darken the left where the copy sits, let the planet breathe on the right */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'linear-gradient(90deg, rgba(6,10,18,0.96) 0%, rgba(6,10,18,0.84) 38%, rgba(6,10,18,0.35) 62%, rgba(6,10,18,0.05) 100%)',
+              'linear-gradient(90deg, rgba(6,10,18,0.94) 0%, rgba(6,10,18,0.72) 36%, rgba(6,10,18,0.16) 60%, rgba(6,10,18,0) 100%)',
           }}
         />
         <div
