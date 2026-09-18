@@ -27,15 +27,24 @@ export default function Overview() {
       {/* AI morning brief hero */}
       <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-ink-950 text-white">
         <div
-          className="pointer-events-none absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(/hero-space.svg)' }}
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: 'url(/hero-space.svg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center bottom',
+          }}
         />
+        {/* Legibility overlay: darkens the left where the copy sits, lets the planet breathe on the right */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'linear-gradient(90deg, rgba(8,9,12,0.94) 0%, rgba(8,9,12,0.8) 40%, rgba(8,9,12,0.35) 66%, rgba(8,9,12,0.05) 100%)',
+              'linear-gradient(90deg, rgba(6,8,13,0.95) 0%, rgba(6,8,13,0.82) 38%, rgba(6,8,13,0.4) 62%, rgba(6,8,13,0.08) 100%)',
           }}
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-24"
+          style={{ background: 'linear-gradient(180deg, rgba(6,8,13,0.55) 0%, rgba(6,8,13,0) 100%)' }}
         />
         <div className="relative grid gap-10 p-8 sm:p-10 lg:grid-cols-[1.6fr_1fr]">
           <div>

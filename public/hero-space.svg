@@ -1,73 +1,108 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" preserveAspectRatio="xMidYMid slice">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 600" preserveAspectRatio="xMidYMax slice">
   <defs>
-    <linearGradient id="space" x1="0" y1="0" x2="0.25" y2="1">
-      <stop offset="0" stop-color="#08090c"/>
-      <stop offset="0.6" stop-color="#0a0c11"/>
-      <stop offset="1" stop-color="#0c1018"/>
+    <!-- Deep space -->
+    <linearGradient id="space" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0" stop-color="#05070d"/>
+      <stop offset="0.6" stop-color="#070a12"/>
+      <stop offset="1" stop-color="#0a1020"/>
     </linearGradient>
 
-    <!-- Earth: mostly in shadow, a precise lit crescent on the upper-right limb -->
-    <radialGradient id="earth" cx="0.74" cy="0.12" r="0.85">
-      <stop offset="0" stop-color="#eaf2ff"/>
-      <stop offset="0.05" stop-color="#bcd4ff"/>
-      <stop offset="0.12" stop-color="#3f6dbf"/>
-      <stop offset="0.26" stop-color="#12305e"/>
-      <stop offset="0.5" stop-color="#0a1830"/>
-      <stop offset="1" stop-color="#070a12"/>
+    <!-- Ocean/earth surface, lit from the upper-right sun -->
+    <radialGradient id="ocean" gradientUnits="userSpaceOnUse" cx="1240" cy="300" r="1500">
+      <stop offset="0" stop-color="#eaf3ff"/>
+      <stop offset="0.09" stop-color="#a9cdf2"/>
+      <stop offset="0.22" stop-color="#3f83cf"/>
+      <stop offset="0.42" stop-color="#1e569e"/>
+      <stop offset="0.64" stop-color="#123a6e"/>
+      <stop offset="0.82" stop-color="#0b2247"/>
+      <stop offset="1" stop-color="#071228"/>
     </radialGradient>
 
-    <!-- Razor-thin atmospheric line hugging the limb -->
-    <radialGradient id="atmo" cx="0.72" cy="0.11" r="0.6">
-      <stop offset="0.9" stop-color="#8fbcff" stop-opacity="0"/>
-      <stop offset="0.965" stop-color="#a9ccff" stop-opacity="0.7"/>
-      <stop offset="0.99" stop-color="#dbe9ff" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#dbe9ff" stop-opacity="0"/>
+    <!-- Night-side shadow (terminator) -->
+    <radialGradient id="terminator" gradientUnits="userSpaceOnUse" cx="1240" cy="300" r="1800">
+      <stop offset="0.42" stop-color="#03060d" stop-opacity="0"/>
+      <stop offset="0.66" stop-color="#03060d" stop-opacity="0.28"/>
+      <stop offset="0.86" stop-color="#02040a" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#01030700" stop-opacity="0.92"/>
     </radialGradient>
 
-    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#eef4ff" stop-opacity="0.5"/>
-      <stop offset="0.4" stop-color="#9fc0ff" stop-opacity="0.14"/>
-      <stop offset="1" stop-color="#9fc0ff" stop-opacity="0"/>
+    <!-- Atmospheric scattering halo just beyond the limb -->
+    <radialGradient id="atmo" gradientUnits="userSpaceOnUse" cx="800" cy="1900" r="1660">
+      <stop offset="0.945" stop-color="#7fb4ff" stop-opacity="0"/>
+      <stop offset="0.975" stop-color="#8fc2ff" stop-opacity="0.55"/>
+      <stop offset="0.992" stop-color="#dcecff" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#dcecff" stop-opacity="0"/>
     </radialGradient>
 
-    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="10"/>
+    <!-- Warm sunrise glow rising off the horizon -->
+    <radialGradient id="sunrise" gradientUnits="userSpaceOnUse" cx="1230" cy="330" r="720">
+      <stop offset="0" stop-color="#ffe9c9" stop-opacity="0.6"/>
+      <stop offset="0.35" stop-color="#ffc98d" stop-opacity="0.28"/>
+      <stop offset="0.7" stop-color="#8fb6ff" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#8fb6ff" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Photoreal cloud deck via fractal noise -->
+    <filter id="clouds" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.005 0.009" numOctaves="5" seed="14" stitchTiles="stitch" result="n"/>
+      <feColorMatrix in="n" type="matrix"
+        values="0 0 0 0 1
+                0 0 0 0 1
+                0 0 0 0 1
+                0.9 0.9 0.9 0 -0.62"/>
+      <feGaussianBlur stdDeviation="1.1"/>
     </filter>
+
+    <filter id="haloBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+
+    <clipPath id="earthClip"><circle cx="800" cy="1900" r="1600"/></clipPath>
   </defs>
 
-  <!-- Deep space -->
-  <rect width="1600" height="560" fill="url(#space)"/>
+  <!-- Space -->
+  <rect width="1600" height="600" fill="url(#space)"/>
 
-  <!-- Starfield (sparse, cinematic) -->
+  <!-- Faint nebula wash -->
+  <ellipse cx="480" cy="80" rx="900" ry="360" fill="#2a4a8a" opacity="0.10"/>
+
+  <!-- Starfield -->
   <g fill="#ffffff">
-    <circle cx="120" cy="70" r="0.9" opacity="0.7"/>
-    <circle cx="300" cy="130" r="0.8" opacity="0.45"/>
-    <circle cx="330" cy="60" r="1.1" opacity="0.8"/>
-    <circle cx="520" cy="100" r="0.8" opacity="0.4"/>
-    <circle cx="620" cy="46" r="0.9" opacity="0.6"/>
-    <circle cx="740" cy="150" r="0.8" opacity="0.4"/>
-    <circle cx="760" cy="80" r="1" opacity="0.7"/>
-    <circle cx="900" cy="60" r="0.8" opacity="0.45"/>
-    <circle cx="70" cy="220" r="0.9" opacity="0.5"/>
-    <circle cx="180" cy="320" r="1" opacity="0.6"/>
-    <circle cx="90" cy="430" r="0.8" opacity="0.4"/>
-    <circle cx="250" cy="480" r="1" opacity="0.6"/>
-    <circle cx="360" cy="400" r="0.8" opacity="0.45"/>
-    <circle cx="1030" cy="70" r="0.9" opacity="0.55"/>
-    <circle cx="1160" cy="120" r="0.8" opacity="0.4"/>
-    <circle cx="1280" cy="56" r="1" opacity="0.7"/>
-    <circle cx="1420" cy="110" r="0.8" opacity="0.45"/>
-    <circle cx="1500" cy="60" r="0.9" opacity="0.6"/>
-    <circle cx="1550" cy="180" r="0.8" opacity="0.4"/>
+    <circle cx="90" cy="60" r="1.1" opacity="0.8"/><circle cx="220" cy="120" r="0.8" opacity="0.5"/>
+    <circle cx="340" cy="52" r="1.3" opacity="0.9"/><circle cx="470" cy="110" r="0.8" opacity="0.45"/>
+    <circle cx="560" cy="44" r="1" opacity="0.7"/><circle cx="700" cy="150" r="0.8" opacity="0.4"/>
+    <circle cx="770" cy="74" r="1.2" opacity="0.85"/><circle cx="900" cy="52" r="0.8" opacity="0.5"/>
+    <circle cx="1000" cy="132" r="0.9" opacity="0.6"/><circle cx="1080" cy="60" r="1.1" opacity="0.8"/>
+    <circle cx="1200" cy="120" r="0.8" opacity="0.45"/><circle cx="1300" cy="48" r="1.3" opacity="0.9"/>
+    <circle cx="1420" cy="104" r="0.8" opacity="0.5"/><circle cx="1500" cy="58" r="1" opacity="0.7"/>
+    <circle cx="1560" cy="150" r="0.8" opacity="0.4"/><circle cx="150" cy="210" r="0.9" opacity="0.55"/>
+    <circle cx="60" cy="150" r="1" opacity="0.6"/><circle cx="1360" cy="200" r="0.9" opacity="0.5"/>
+    <circle cx="640" cy="96" r="0.7" opacity="0.4"/><circle cx="1140" cy="176" r="0.7" opacity="0.4"/>
   </g>
 
-  <!-- Subtle cool horizon glow -->
-  <ellipse cx="1180" cy="440" rx="640" ry="360" fill="url(#sun)"/>
+  <!-- Sunrise glow above the horizon (behind the planet) -->
+  <ellipse cx="1180" cy="360" rx="760" ry="300" fill="url(#sunrise)"/>
 
-  <!-- Atmosphere (soft), then the crisp thin line -->
-  <circle cx="1150" cy="1120" r="760" fill="url(#atmo)" filter="url(#soft)"/>
-  <circle cx="1150" cy="1120" r="760" fill="url(#atmo)"/>
+  <!-- Atmospheric halo (behind the planet so only the outer glow shows) -->
+  <circle cx="800" cy="1900" r="1618" fill="url(#atmo)" filter="url(#haloBlur)"/>
+  <circle cx="800" cy="1900" r="1612" fill="url(#atmo)"/>
 
-  <!-- Planet -->
-  <circle cx="1150" cy="1120" r="740" fill="url(#earth)"/>
+  <!-- The planet -->
+  <g clip-path="url(#earthClip)">
+    <circle cx="800" cy="1900" r="1600" fill="url(#ocean)"/>
+    <!-- cloud deck -->
+    <rect x="-800" y="290" width="3200" height="1400" fill="#ffffff" filter="url(#clouds)" opacity="0.5"/>
+    <!-- night-side city lights -->
+    <g fill="#ffdca2">
+      <circle cx="360" cy="560" r="1.4" opacity="0.7"/><circle cx="392" cy="548" r="1" opacity="0.5"/>
+      <circle cx="420" cy="566" r="1.2" opacity="0.6"/><circle cx="300" cy="576" r="1" opacity="0.5"/>
+      <circle cx="470" cy="556" r="1" opacity="0.45"/><circle cx="250" cy="560" r="1.1" opacity="0.5"/>
+      <circle cx="520" cy="572" r="1" opacity="0.4"/><circle cx="330" cy="540" r="0.9" opacity="0.4"/>
+    </g>
+    <!-- terminator shadow over everything -->
+    <circle cx="800" cy="1900" r="1600" fill="url(#terminator)"/>
+  </g>
+
+  <!-- Crisp bright atmosphere rim on the limb -->
+  <circle cx="800" cy="1900" r="1600" fill="none" stroke="#dcecff" stroke-width="2.4" opacity="0.75"/>
 </svg>
