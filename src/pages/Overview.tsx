@@ -265,7 +265,7 @@ export default function Overview() {
                 {user.initials}
               </span>
               <span className="text-sm">
-                <span className="font-semibold text-ink-900">Director</span>
+                <span className="font-semibold text-ink-900">{user.role}</span>
                 <span className="mx-2 text-slate-300">·</span>
                 <span className="text-[var(--color-muted)]">{user.name}</span>
               </span>
