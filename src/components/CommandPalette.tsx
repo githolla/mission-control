@@ -248,18 +248,18 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
-        className="relative flex max-h-[60vh] w-full max-w-xl flex-col overflow-hidden rounded-xl border border-line bg-white shadow-2xl animate-[paletteIn_.2s_ease-out]"
+        className="relative flex max-h-[60vh] w-full max-w-xl flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-2xl animate-[paletteIn_.2s_ease-out]"
       >
         {/* Search input */}
         <div className="flex items-center gap-3 border-b border-line px-4 py-3">
-          <SearchIcon className="shrink-0 text-slate-400" width={18} height={18} />
+          <SearchIcon className="shrink-0 text-dim" width={18} height={18} />
           <input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onInputKey}
             placeholder="Search missions, teams, actions…"
-            className="flex-1 bg-transparent text-sm text-ink-900 outline-none placeholder:text-slate-400"
+            className="flex-1 bg-transparent text-sm text-fg outline-none placeholder:text-dim"
           />
           <kbd className="shrink-0 rounded border border-line px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
             Esc
@@ -269,7 +269,7 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
         {/* Results */}
         <div className="flex-1 overflow-y-auto py-2">
           {flat.length === 0 ? (
-            <div className="px-4 py-10 text-center text-sm text-slate-400">No results</div>
+            <div className="px-4 py-10 text-center text-sm text-dim">No results</div>
           ) : (
             filteredGroups.map((group) => (
               <div key={group.title} className="mb-1 last:mb-0">
@@ -287,18 +287,18 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
                       onMouseMove={() => setActive(idx)}
                       onClick={() => activate(item)}
                       className={`relative flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors ${
-                        isActive ? 'bg-[#f4f5f7]' : 'hover:bg-[#f4f5f7]'
+                        isActive ? 'bg-surface-2' : 'hover:bg-surface-2'
                       }`}
                     >
                       {isActive && (
-                        <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-ink-900" />
+                        <span className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-invert" />
                       )}
                       <item.Icon
                         width={17}
                         height={17}
-                        className={`shrink-0 ${isActive ? 'text-ink-900' : 'text-slate-400'}`}
+                        className={`shrink-0 ${isActive ? 'text-fg' : 'text-dim'}`}
                       />
-                      <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink-900">
+                      <span className="min-w-0 flex-1 truncate text-sm font-medium text-fg">
                         {item.label}
                       </span>
                       <span className="hidden shrink-0 truncate text-xs text-[var(--color-muted)] sm:block">

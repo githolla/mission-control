@@ -29,13 +29,13 @@ type State = 'open' | 'accepted' | 'dismissed'
 function ImpactTag({ impact }: { impact: Recommendation['impact'] }) {
   if (impact === 'high')
     return (
-      <span className="rounded-full bg-ink-900 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-white">
+      <span className="rounded-full bg-invert px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-on-invert">
         High impact
       </span>
     )
   if (impact === 'medium')
     return (
-      <span className="rounded-full border border-line-strong px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-ink-700">
+      <span className="rounded-full border border-line-strong px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-fg-3">
         Medium
       </span>
     )
@@ -65,7 +65,7 @@ export default function Copilot() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <div className="eyebrow mb-2 flex items-center gap-2">
-            <SparkleIcon width={13} height={13} className="text-ink-700" />
+            <SparkleIcon width={13} height={13} className="text-fg-3" />
             AI Copilot
           </div>
           <p className="text-sm text-[var(--color-muted)]">
@@ -79,11 +79,11 @@ export default function Copilot() {
       <div className="grid gap-3">
         {allClear && (
           <div className="card flex items-center gap-3 p-5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-ink-900 text-white">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-invert text-on-invert">
               <CheckIcon width={18} height={18} />
             </span>
             <div>
-              <div className="text-sm font-semibold text-ink-900">All caught up.</div>
+              <div className="text-sm font-semibold text-fg">All caught up.</div>
               <p className="text-sm text-[var(--color-muted)]">
                 Every recommendation is actioned. Ask the Copilot for more, or check back after the next sync.
               </p>
@@ -98,13 +98,13 @@ export default function Copilot() {
           if (s === 'accepted') {
             return (
               <div key={r.id} className="card flex items-center gap-3 px-5 py-3.5">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink-900 text-white">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-invert text-on-invert">
                   <CheckIcon width={14} height={14} />
                 </span>
-                <span className="flex-1 text-sm text-ink-700 line-through decoration-slate-300">{r.title}</span>
+                <span className="flex-1 text-sm text-fg-3 line-through decoration-[#3a3a3a]">{r.title}</span>
                 <button
                   onClick={() => set(r.id, 'open')}
-                  className="text-xs font-medium text-[var(--color-muted)] hover:text-ink-900"
+                  className="text-xs font-medium text-[var(--color-muted)] hover:text-fg"
                 >
                   Undo
                 </button>
@@ -120,9 +120,9 @@ export default function Copilot() {
                 </IconTile>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-[15px] font-semibold text-ink-900">{r.title}</h3>
+                    <h3 className="text-[15px] font-semibold text-fg">{r.title}</h3>
                     <ImpactTag impact={r.impact} />
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-dim">
                       {r.category}
                     </span>
                   </div>
@@ -146,7 +146,7 @@ export default function Copilot() {
                     )}
                     <button
                       onClick={() => set(r.id, 'dismissed')}
-                      className="ml-auto text-xs font-medium text-[var(--color-muted)] hover:text-ink-900"
+                      className="ml-auto text-xs font-medium text-[var(--color-muted)] hover:text-fg"
                     >
                       Dismiss
                     </button>

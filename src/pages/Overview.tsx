@@ -66,11 +66,11 @@ export default function Overview() {
             <div>
             <div className="flex items-center gap-3">
               <SparkleIcon width={15} height={15} className="text-white" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-200">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-fg-2">
                 AI Morning Brief
               </span>
               <span className="h-3 w-px bg-white/20" />
-              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500">
+              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-dim">
                 Updated {today.briefUpdated}
               </span>
             </div>
@@ -84,7 +84,7 @@ export default function Overview() {
               <ArrowRightIcon
                 width={22}
                 height={22}
-                className="ml-2 inline-block -translate-y-0.5 text-slate-500 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white group-hover:opacity-100"
+                className="ml-2 inline-block -translate-y-0.5 text-dim opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white group-hover:opacity-100"
               />
             </Link>
             <div className="mt-4 max-w-xl space-y-1">
@@ -92,10 +92,10 @@ export default function Overview() {
                 <Link
                   key={i}
                   to={p.to}
-                  className="group -mx-2 flex items-start gap-3 rounded-lg px-2 py-2 text-sm leading-relaxed text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-slate-100"
+                  className="group -mx-2 flex items-start gap-3 rounded-lg px-2 py-2 text-sm leading-relaxed text-fg-3 transition-colors hover:bg-white/[0.06] hover:text-fg"
                 >
                   <span className="flex-1">{p.text}</span>
-                  <span className="mt-0.5 flex shrink-0 items-center gap-1 whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.08em] text-slate-500 opacity-0 transition-opacity group-hover:opacity-100">
+                  <span className="mt-0.5 flex shrink-0 items-center gap-1 whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.08em] text-dim opacity-0 transition-opacity group-hover:opacity-100">
                     <ArrowRightIcon width={14} height={14} className="transition-transform group-hover:translate-x-0.5" />
                   </span>
                 </Link>
@@ -104,7 +104,7 @@ export default function Overview() {
             <div className="mt-8">
               <button
                 onClick={() => setChatOpen(true)}
-                className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-ink-900 transition-colors hover:bg-slate-200"
+                className="inline-flex items-center gap-2 rounded-[4px] bg-invert px-4 py-2.5 text-sm font-medium text-on-invert transition-colors hover:bg-white"
               >
                 <ChatIcon width={16} height={16} />
                 Ask about today
@@ -114,7 +114,7 @@ export default function Overview() {
 
           <div className="relative lg:border-l lg:border-white/10 lg:pl-8">
             <div>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-300">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-fg-3">
                 Your focus today
               </div>
               <div className="mt-4 -mx-2">
@@ -124,17 +124,17 @@ export default function Overview() {
                     onClick={() => navigate(f.to)}
                     className="group flex w-full items-center gap-4 rounded-lg border-t border-white/10 px-2 py-3.5 text-left transition-colors first:border-t-0 hover:bg-white/5"
                   >
-                    <span className="font-display text-lg font-medium tabular-nums text-slate-300">{f.n}</span>
+                    <span className="font-display text-lg font-medium tabular-nums text-fg-3">{f.n}</span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-[15px] font-medium text-white">{f.label}</span>
-                      <span className="mt-0.5 block truncate text-[11px] uppercase tracking-[0.1em] text-slate-300">
+                      <span className="mt-0.5 block truncate text-[11px] uppercase tracking-[0.1em] text-fg-3">
                         {f.hint}
                       </span>
                     </span>
                     <ArrowRightIcon
                       width={16}
                       height={16}
-                      className="shrink-0 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-white"
+                      className="shrink-0 text-fg-3 transition-all group-hover:translate-x-0.5 group-hover:text-white"
                     />
                   </button>
                 ))}
@@ -157,12 +157,12 @@ export default function Overview() {
             <Link key={s.id} to={s.to} className="card lift group block p-5">
               <div className="flex items-center justify-between">
                 <span className="eyebrow">{s.label}</span>
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-slate-400 transition-colors group-hover:text-ink-700">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-dim transition-colors group-hover:text-fg-3">
                   <StatIcon name={s.icon} width={15} height={15} />
                 </span>
               </div>
               <div className="mt-4 flex items-end justify-between gap-2">
-                <div className="font-mono text-[2rem] font-medium leading-none tracking-tight text-ink-900">{s.value}</div>
+                <div className="font-mono text-[2rem] font-medium leading-none tracking-tight text-fg">{s.value}</div>
                 <span className={`mb-0.5 inline-flex items-center gap-1 font-mono text-[11px] font-medium ${trendColor}`}>
                   {arrow} {s.delta}
                 </span>
@@ -184,7 +184,7 @@ export default function Overview() {
           </div>
           <Link
             to="/projects"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-900 hover:text-black"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-fg hover:text-white"
           >
             View portfolio
             <ArrowRightIcon width={15} height={15} />
@@ -193,12 +193,12 @@ export default function Overview() {
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {projects.map((p) => (
             <Link key={p.id} to={`/projects/${p.id}`} className="card lift group flex items-center gap-3.5 p-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line font-mono text-[12px] font-semibold text-ink-800">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line font-mono text-[12px] font-semibold text-fg-2">
                 {p.code}
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="truncate text-sm font-semibold text-ink-900">{p.name}</span>
+                  <span className="truncate text-sm font-semibold text-fg">{p.name}</span>
                   <span
                     className="h-1.5 w-1.5 shrink-0 rounded-full"
                     style={{
@@ -212,10 +212,10 @@ export default function Overview() {
                   />
                 </div>
                 <div className="mt-0.5 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em]">
-                  <span className={p.kind === 'product' ? 'text-ink-700' : 'text-[var(--color-muted)]'}>
+                  <span className={p.kind === 'product' ? 'text-fg-3' : 'text-[var(--color-muted)]'}>
                     {p.kind === 'product' ? 'Product' : 'In testing'}
                   </span>
-                  <span className="text-slate-300">·</span>
+                  <span className="text-fg-3">·</span>
                   <span className="truncate text-[var(--color-muted)]">{p.stage}</span>
                 </div>
                 <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
@@ -261,12 +261,12 @@ export default function Overview() {
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-line py-3.5">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink-900 text-[11px] font-semibold text-white">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-invert text-[11px] font-semibold text-on-invert">
                 {user.initials}
               </span>
               <span className="text-sm">
-                <span className="font-semibold text-ink-900">{user.role}</span>
-                <span className="mx-2 text-slate-300">·</span>
+                <span className="font-semibold text-fg">{user.role}</span>
+                <span className="mx-2 text-fg-3">·</span>
                 <span className="text-[var(--color-muted)]">{user.name}</span>
               </span>
             </div>
@@ -282,25 +282,25 @@ export default function Overview() {
                   </IconTile>
                   <StatusPill status={t.status} />
                 </div>
-                <h3 className="mt-4 font-display text-base font-semibold text-ink-900">{t.name}</h3>
-                <p className="mt-1 text-xs uppercase tracking-[0.08em] text-slate-400">{t.lead}</p>
-                <p className="mt-3 text-sm leading-relaxed text-ink-800">{t.summary}</p>
+                <h3 className="mt-4 font-display text-base font-semibold text-fg">{t.name}</h3>
+                <p className="mt-1 text-xs uppercase tracking-[0.08em] text-dim">{t.lead}</p>
+                <p className="mt-3 text-sm leading-relaxed text-fg-2">{t.summary}</p>
                 <div className="mt-4 border-l-2 border-line pl-3">
                   <p className="text-xs leading-relaxed text-[var(--color-muted)]">
-                    <span className="font-semibold text-ink-700">AI insight</span> — {t.insight}
+                    <span className="font-semibold text-fg-3">AI insight</span> — {t.insight}
                   </p>
                 </div>
               </Link>
             ))}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-white p-5">
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-surface p-5">
             <div className="flex items-start gap-3">
               <IconTile className="h-9 w-9 shrink-0">
                 <LinkIcon width={17} height={17} />
               </IconTile>
               <div>
-                <div className="text-sm font-semibold text-ink-900">{crossTeamDependency.title}</div>
+                <div className="text-sm font-semibold text-fg">{crossTeamDependency.title}</div>
                 <p className="mt-0.5 text-sm text-[var(--color-muted)]">{crossTeamDependency.detail}</p>
               </div>
             </div>
@@ -328,13 +328,13 @@ export default function Overview() {
                   </IconTile>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-display text-base font-semibold text-ink-900">{d.title}</h3>
+                      <h3 className="font-display text-base font-semibold text-fg">{d.title}</h3>
                       <PriorityPill priority={d.priority} />
                     </div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink-800">{d.summary}</p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-fg-2">{d.summary}</p>
                     {d.id === 'd-supplier' && (
                       <p className="mt-2 text-sm leading-relaxed text-[var(--color-muted)]">
-                        <span className="font-semibold text-ink-700">AI recommendation</span> — {d.recommendation}
+                        <span className="font-semibold text-fg-3">AI recommendation</span> — {d.recommendation}
                       </p>
                     )}
                   </div>
@@ -356,20 +356,20 @@ export default function Overview() {
       {/* AI activity latest */}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-y border-line py-4">
         <div className="flex items-center gap-2">
-          <SparkleIcon width={16} height={16} className="text-ink-700" />
+          <SparkleIcon width={16} height={16} className="text-fg-3" />
           <span className="eyebrow">AI activity</span>
         </div>
         <div className="flex flex-1 flex-wrap items-center gap-x-6 gap-y-2">
           {activity.slice(0, 3).map((a) => (
-            <div key={a.id} className="flex items-center gap-2 text-sm text-ink-800">
-              <ActivityIcon name={a.icon} width={15} height={15} className="text-slate-400" />
+            <div key={a.id} className="flex items-center gap-2 text-sm text-fg-2">
+              <ActivityIcon name={a.icon} width={15} height={15} className="text-dim" />
               {a.title}
             </div>
           ))}
         </div>
         <Link
           to="/ai-activity"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-900 hover:text-black"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-fg hover:text-white"
         >
           View all
           <ArrowRightIcon width={15} height={15} />

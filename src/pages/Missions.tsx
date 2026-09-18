@@ -46,13 +46,13 @@ export default function Missions() {
           title="Active missions"
           subtitle={`${onTrack} of ${missions.length} missions on track this quarter.`}
         />
-        <div className="flex gap-1 rounded-lg border border-line bg-white p-1">
+        <div className="flex gap-1 rounded-lg border border-line bg-surface p-1">
           {filters.map((f) => (
             <button
               key={f.id}
               onClick={() => setFilter(f.id)}
               className={`rounded-md px-3.5 py-1.5 text-sm font-medium transition-colors ${
-                filter === f.id ? 'bg-ink-900 text-white' : 'text-[var(--color-muted)] hover:text-ink-900'
+                filter === f.id ? 'bg-invert text-on-invert' : 'text-[var(--color-muted)] hover:text-fg'
               }`}
             >
               {f.label}
@@ -66,19 +66,19 @@ export default function Missions() {
           <Link key={m.id} to={`/missions/${m.id}`} className="card lift group block p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h3 className="font-display text-base font-semibold text-ink-900">{m.name}</h3>
-                <p className="mt-1 text-xs uppercase tracking-[0.08em] text-slate-400">
+                <h3 className="font-display text-base font-semibold text-fg">{m.name}</h3>
+                <p className="mt-1 text-xs uppercase tracking-[0.08em] text-dim">
                   {m.team} · {m.owner} · Due {m.due}
                 </p>
               </div>
               <StatusPill status={m.status} />
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-ink-800">{m.summary}</p>
+            <p className="mt-3 text-sm leading-relaxed text-fg-2">{m.summary}</p>
 
             <div className="mt-5">
               <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
                 <span className="uppercase tracking-[0.1em]">Progress</span>
-                <span className="font-mono text-ink-900">{m.progress}%</span>
+                <span className="font-mono text-fg">{m.progress}%</span>
               </div>
               <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
                 <div className={`h-full rounded-full ${barColor[m.status]}`} style={{ width: `${m.progress}%` }} />
@@ -86,7 +86,7 @@ export default function Missions() {
             </div>
 
             <div className="mt-5 flex items-center justify-end border-t border-line pt-4">
-              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-900">
+              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-fg">
                 Open mission
                 <ArrowRightIcon width={15} height={15} className="transition-transform group-hover:translate-x-0.5" />
               </span>

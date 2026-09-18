@@ -27,9 +27,9 @@ export default function Greeting({ onDark = false }: { onDark?: boolean }) {
   const time = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
 
   const label = onDark
-    ? 'text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400'
+    ? 'text-[11px] font-semibold uppercase tracking-[0.16em] text-dim'
     : 'eyebrow'
-  const strong = onDark ? 'text-white' : 'text-ink-900'
+  const strong = onDark ? 'text-white' : 'text-fg'
 
   return (
     <div className="flex flex-wrap items-start justify-between gap-4">

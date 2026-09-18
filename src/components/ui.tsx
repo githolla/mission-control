@@ -13,7 +13,7 @@ const statusMeta: Record<Status, { label: string; dot: string }> = {
 export function StatusPill({ status }: { status: Status }) {
   const s = statusMeta[status]
   return (
-    <span className="inline-flex items-center gap-2 text-xs font-medium text-ink-700">
+    <span className="inline-flex items-center gap-2 text-xs font-medium text-fg-3">
       <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
       {s.label}
     </span>
@@ -51,7 +51,7 @@ export function StatIcon({ name, ...rest }: { name: keyof typeof statIcons } & I
 export function IconTile({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
     <span
-      className={`flex items-center justify-center rounded-lg border border-line text-ink-700 ${className}`}
+      className={`flex items-center justify-center rounded-lg border border-line text-fg-3 ${className}`}
     >
       {children}
     </span>
@@ -70,7 +70,7 @@ export function SectionHeading({ title, subtitle, eyebrow }: { title: string; su
   return (
     <div>
       {eyebrow && <div className="eyebrow mb-2">{eyebrow}</div>}
-      <h2 className="font-display text-2xl font-semibold text-ink-900">{title}</h2>
+      <h2 className="font-display text-2xl font-semibold text-fg">{title}</h2>
       {subtitle && <p className="mt-1.5 text-sm text-[var(--color-muted)]">{subtitle}</p>}
     </div>
   )

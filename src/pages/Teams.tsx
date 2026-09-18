@@ -15,8 +15,8 @@ export default function Teams() {
     const el = document.getElementById(hash.slice(1))
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      el.classList.add('ring-1', 'ring-ink-900')
-      const t = window.setTimeout(() => el.classList.remove('ring-1', 'ring-ink-900'), 1600)
+      el.classList.add('ring-1', 'ring-fg')
+      const t = window.setTimeout(() => el.classList.remove('ring-1', 'ring-fg'), 1600)
       return () => window.clearTimeout(t)
     }
   }, [hash])
@@ -38,7 +38,7 @@ export default function Teams() {
 }
 
 // Muted, monochrome-friendly segments for the allocation bar.
-const segTones = ['bg-ink-900', 'bg-ink-700', 'bg-slate-400', 'bg-slate-300']
+const segTones = ['bg-invert', 'bg-fg-3', 'bg-[#5a5a5a]', 'bg-[#3a3a3a]']
 
 // Small status dot hues for the crew roster.
 const dotHue: Record<Status, string> = {
@@ -59,10 +59,10 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
           </IconTile>
           <div>
             <div className="flex items-center gap-3">
-              <h3 className="font-display text-lg font-semibold text-ink-900">{t.name}</h3>
+              <h3 className="font-display text-lg font-semibold text-fg">{t.name}</h3>
               <StatusPill status={t.status} />
             </div>
-            <p className="mt-1 text-xs uppercase tracking-[0.08em] text-slate-400">
+            <p className="mt-1 text-xs uppercase tracking-[0.08em] text-dim">
               {t.lead} · {t.headcount} people · {t.missions} active missions
             </p>
           </div>
@@ -73,12 +73,12 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
       </div>
 
       {/* Specialty */}
-      <p className="mt-5 max-w-3xl text-sm leading-relaxed text-ink-800">{t.specialty}</p>
+      <p className="mt-5 max-w-3xl text-sm leading-relaxed text-fg-2">{t.specialty}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {t.disciplines.map((d) => (
           <span
             key={d}
-            className="rounded-full border border-line bg-[#fafbfc] px-2.5 py-1 text-[11px] font-medium text-[var(--color-muted)]"
+            className="rounded-full border border-line bg-surface-2 px-2.5 py-1 text-[11px] font-medium text-[var(--color-muted)]"
           >
             {d}
           </span>
@@ -93,10 +93,10 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
             <Link
               key={p.id}
               to={`/projects/${p.id}`}
-              className="group inline-flex items-center gap-2 rounded-lg border border-line bg-white px-2.5 py-1.5 transition-colors hover:border-line-strong"
+              className="group inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5 transition-colors hover:border-line-strong"
             >
-              <span className="font-mono text-[11px] font-semibold text-ink-800">{p.code}</span>
-              <span className="text-[12px] font-medium text-ink-900">{p.name}</span>
+              <span className="font-mono text-[11px] font-semibold text-fg-2">{p.code}</span>
+              <span className="text-[12px] font-medium text-fg">{p.name}</span>
               <span
                 className="h-1.5 w-1.5 rounded-full"
                 style={{
@@ -116,9 +116,9 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
       {/* Metrics */}
       <div className="mt-6 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3">
         {t.metrics.map((m) => (
-          <div key={m.label} className="bg-white px-4 py-3.5">
+          <div key={m.label} className="bg-surface px-4 py-3.5">
             <div className="eyebrow">{m.label}</div>
-            <div className="mt-1.5 font-mono text-xl font-medium text-ink-900">{m.value}</div>
+            <div className="mt-1.5 font-mono text-xl font-medium text-fg">{m.value}</div>
           </div>
         ))}
       </div>
@@ -130,13 +130,13 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
           <div className="mb-3 flex items-center justify-between">
             <div className="eyebrow">Resourcing</div>
             <div className="text-xs text-[var(--color-muted)]">
-              <span className="font-semibold text-ink-900">{r.allocated}</span> / {r.capacity} allocated
+              <span className="font-semibold text-fg">{r.allocated}</span> / {r.capacity} allocated
             </div>
           </div>
 
           <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
             <span className="uppercase tracking-[0.1em]">Utilization</span>
-            <span className="font-mono text-ink-900">{r.utilization}%</span>
+            <span className="font-mono text-fg">{r.utilization}%</span>
           </div>
           <div className="mt-2 flex h-2 overflow-hidden rounded-full bg-line">
             {r.allocation.map((seg, i) => (
@@ -153,14 +153,14 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
             {r.allocation.map((seg, i) => (
               <li key={seg.label} className="flex items-center gap-2.5 text-sm">
                 <span className={`h-2.5 w-2.5 shrink-0 rounded-sm ${segTones[i % segTones.length]}`} />
-                <span className="flex-1 text-ink-800">{seg.label}</span>
+                <span className="flex-1 text-fg-2">{seg.label}</span>
                 <span className="tabular-nums text-[var(--color-muted)]">{seg.value}%</span>
               </li>
             ))}
           </ul>
 
           <div className="mt-4 flex items-center gap-2 border-t border-line pt-3 text-xs text-[var(--color-muted)]">
-            <span className="inline-flex h-5 items-center rounded-full border border-line-strong px-2 font-semibold text-ink-800">
+            <span className="inline-flex h-5 items-center rounded-full border border-line-strong px-2 font-semibold text-fg-2">
               {r.openRoles}
             </span>
             open {r.openRoles === 1 ? 'role' : 'roles'} in hiring
@@ -173,13 +173,13 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
           <ul className="space-y-3">
             {t.pastProjects.map((p) => (
               <li key={p.name} className="flex gap-3">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-ink-900 text-white">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-invert text-on-invert">
                   <CheckIcon width={12} height={12} />
                 </span>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-baseline justify-between gap-x-2">
-                    <span className="text-sm font-medium text-ink-900">{p.name}</span>
-                    <span className="text-[11px] uppercase tracking-[0.1em] text-slate-400">{p.period}</span>
+                    <span className="text-sm font-medium text-fg">{p.name}</span>
+                    <span className="text-[11px] uppercase tracking-[0.1em] text-dim">{p.period}</span>
                   </div>
                   <p className="text-sm leading-relaxed text-[var(--color-muted)]">{p.outcome}</p>
                 </div>
@@ -200,19 +200,19 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {t.members.map((m) => (
             <div key={m.name} className="flex items-start gap-3 rounded-lg border border-line p-3">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink-900 text-[11px] font-semibold text-white">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-invert text-[11px] font-semibold text-on-invert">
                 {m.initials}
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="truncate text-sm font-medium text-ink-900">{m.name}</span>
+                  <span className="truncate text-sm font-medium text-fg">{m.name}</span>
                   <span
                     className="h-1.5 w-1.5 shrink-0 rounded-full"
                     style={{ background: dotHue[m.status] }}
                     title={m.status === 'on-track' ? 'On track' : m.status === 'at-risk' ? 'At risk' : 'Blocked'}
                   />
                 </div>
-                <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-400">
+                <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.1em] text-dim">
                   {m.title}
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-[var(--color-muted)]">{m.focus}</p>
@@ -225,7 +225,7 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
       {/* AI insight */}
       <div className="mt-6 border-l-2 border-line pl-3">
         <p className="text-sm leading-relaxed text-[var(--color-muted)]">
-          <span className="font-semibold text-ink-700">AI insight</span> — {t.insight}
+          <span className="font-semibold text-fg-3">AI insight</span> — {t.insight}
         </p>
       </div>
     </Card>

@@ -32,7 +32,7 @@ function AiNextSteps({ mission }: { mission: Mission }) {
     <Card className="p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="eyebrow flex items-center gap-2">
-          <SparkleIcon width={13} height={13} className="text-ink-700" />
+          <SparkleIcon width={13} height={13} className="text-fg-3" />
           AI recommended next steps
         </div>
         <span className="text-xs tabular-nums text-[var(--color-muted)]">
@@ -55,12 +55,12 @@ function AiNextSteps({ mission }: { mission: Mission }) {
             >
               <span
                 className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                  done[i] ? 'border-transparent bg-ink-900 text-white' : 'border-line-strong text-transparent'
+                  done[i] ? 'border-transparent bg-invert text-on-invert' : 'border-line-strong text-transparent'
                 }`}
               >
                 <CheckIcon width={12} height={12} />
               </span>
-              <span className={`text-sm ${done[i] ? 'text-[var(--color-muted)] line-through decoration-slate-300' : 'text-ink-800'}`}>
+              <span className={`text-sm ${done[i] ? 'text-[var(--color-muted)] line-through decoration-[#3a3a3a]' : 'text-fg-2'}`}>
                 {s}
               </span>
             </button>
@@ -111,7 +111,7 @@ export default function MissionDetail() {
       {/* Breadcrumb / back */}
       <Link
         to="/missions"
-        className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--color-muted)] transition-colors hover:text-ink-900"
+        className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--color-muted)] transition-colors hover:text-fg"
       >
         <span className="rotate-180">
           <ArrowRightIcon width={15} height={15} />
@@ -123,8 +123,8 @@ export default function MissionDetail() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="eyebrow mb-2">{mission.team} mission</div>
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-ink-900">{mission.name}</h1>
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-[0.08em] text-slate-400">
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-fg">{mission.name}</h1>
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-[0.08em] text-dim">
             <StatusPill status={mission.status} />
             <span>Owner · {mission.owner}</span>
             <span>Due · {mission.due}</span>
@@ -145,12 +145,12 @@ export default function MissionDetail() {
           {/* Overview */}
           <Card className="p-6">
             <div className="eyebrow mb-3">Overview</div>
-            <p className="text-sm leading-relaxed text-ink-800">{mission.summary}</p>
+            <p className="text-sm leading-relaxed text-fg-2">{mission.summary}</p>
 
             <div className="mt-6">
               <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
                 <span className="uppercase tracking-[0.1em]">Progress</span>
-                <span className="tabular-nums text-ink-900">{mission.progress}%</span>
+                <span className="tabular-nums text-fg">{mission.progress}%</span>
               </div>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
                 <div className={`h-full rounded-full ${barColor[mission.status]}`} style={{ width: `${mission.progress}%` }} />
@@ -173,15 +173,15 @@ export default function MissionDetail() {
                     <span
                       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold ${
                         done
-                          ? 'border-transparent bg-ink-900 text-white'
+                          ? 'border-transparent bg-invert text-on-invert'
                           : active
-                            ? 'border-ink-900 text-ink-900'
-                            : 'border-line text-slate-400'
+                            ? 'border-fg text-fg'
+                            : 'border-line text-dim'
                       }`}
                     >
                       {done ? <CheckIcon width={13} height={13} /> : i + 1}
                     </span>
-                    <span className={`text-sm ${done ? 'text-ink-900' : active ? 'font-medium text-ink-900' : 'text-[var(--color-muted)]'}`}>
+                    <span className={`text-sm ${done ? 'text-fg' : active ? 'font-medium text-fg' : 'text-[var(--color-muted)]'}`}>
                       {p.label}
                     </span>
                     {active && (
@@ -205,13 +205,13 @@ export default function MissionDetail() {
                   <AlertIcon width={17} height={17} />
                 </IconTile>
                 <div>
-                  <div className="text-sm font-semibold text-ink-900">This mission is at risk</div>
+                  <div className="text-sm font-semibold text-fg">This mission is at risk</div>
                   <p className="mt-1 text-sm text-[var(--color-muted)]">
                     There is a related decision waiting for your input.
                   </p>
                   <Link
                     to="/decisions"
-                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-ink-900 hover:text-black"
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-fg hover:text-white"
                   >
                     Review decision
                     <ArrowRightIcon width={15} height={15} />
@@ -226,16 +226,16 @@ export default function MissionDetail() {
             <Card className="p-5">
               <div className="eyebrow mb-3">Part of project</div>
               <Link to={`/projects/${project.id}`} className="group flex items-center gap-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line font-mono text-[11px] font-semibold text-ink-800">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line font-mono text-[11px] font-semibold text-fg-2">
                   {project.code}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-semibold text-ink-900">{project.name}</div>
+                  <div className="truncate text-sm font-semibold text-fg">{project.name}</div>
                   <div className="text-xs text-[var(--color-muted)]">
                     {project.kind === 'product' ? 'Product' : 'In testing'} · {project.stage}
                   </div>
                 </div>
-                <ArrowRightIcon width={16} height={16} className="text-slate-400 transition-transform group-hover:translate-x-0.5" />
+                <ArrowRightIcon width={16} height={16} className="text-dim transition-transform group-hover:translate-x-0.5" />
               </Link>
             </Card>
           )}
@@ -249,13 +249,13 @@ export default function MissionDetail() {
                   <UsersIcon width={17} height={17} />
                 </IconTile>
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-semibold text-ink-900">{team.name}</div>
+                  <div className="text-sm font-semibold text-fg">{team.name}</div>
                   <div className="text-xs text-[var(--color-muted)]">Lead · {team.lead}</div>
                 </div>
                 <ArrowRightIcon
                   width={16}
                   height={16}
-                  className="text-slate-400 transition-transform group-hover:translate-x-0.5"
+                  className="text-dim transition-transform group-hover:translate-x-0.5"
                 />
               </Link>
             </Card>
@@ -271,8 +271,8 @@ export default function MissionDetail() {
               { k: 'Completion', v: `${mission.progress}%` },
             ].map((row) => (
               <div key={row.k} className="flex items-center justify-between px-5 py-3">
-                <span className="text-xs uppercase tracking-[0.1em] text-slate-400">{row.k}</span>
-                <span className="text-sm font-medium text-ink-900">{row.v}</span>
+                <span className="text-xs uppercase tracking-[0.1em] text-dim">{row.k}</span>
+                <span className="text-sm font-medium text-fg">{row.v}</span>
               </div>
             ))}
           </Card>

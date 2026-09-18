@@ -37,7 +37,7 @@ function DecisionCard({ decision }: { decision: Decision }) {
         </IconTile>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2.5">
-            <h3 className="font-display text-lg font-semibold text-ink-900">{decision.title}</h3>
+            <h3 className="font-display text-lg font-semibold text-fg">{decision.title}</h3>
             <PriorityPill priority={decision.priority} />
             {decided && (
               <span className="inline-flex items-center gap-1 text-xs font-medium text-[var(--color-ok)]">
@@ -45,9 +45,9 @@ function DecisionCard({ decision }: { decision: Decision }) {
               </span>
             )}
           </div>
-          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-ink-800">{decision.summary}</p>
+          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-fg-2">{decision.summary}</p>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--color-muted)]">
-            <span className="font-semibold text-ink-700">AI recommends</span> — {decision.recommendation}
+            <span className="font-semibold text-fg-3">AI recommends</span> — {decision.recommendation}
           </p>
         </div>
       </div>
@@ -59,7 +59,7 @@ function DecisionCard({ decision }: { decision: Decision }) {
             <label
               key={i}
               className={`flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-colors ${
-                active ? 'border-ink-900 bg-[#fafbfc]' : 'border-line hover:border-line-strong'
+                active ? 'border-fg bg-surface-2' : 'border-line hover:border-line-strong'
               } ${decided ? 'cursor-default opacity-80' : ''}`}
             >
               <input
@@ -67,11 +67,11 @@ function DecisionCard({ decision }: { decision: Decision }) {
                 name={decision.id}
                 checked={active}
                 onChange={() => setSelected(i)}
-                className="mt-0.5 h-4 w-4 accent-[var(--color-ink-900)]"
+                className="mt-0.5 h-4 w-4 accent-[var(--color-fg)]"
               />
               <span className="min-w-0">
                 <span className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-semibold text-ink-900">{o.label}</span>
+                  <span className="text-sm font-semibold text-fg">{o.label}</span>
                   {o.recommended && (
                     <span className="rounded-full border border-line-strong px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--color-muted)]">
                       Recommended

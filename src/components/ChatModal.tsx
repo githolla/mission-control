@@ -54,7 +54,7 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div className="absolute inset-0 bg-ink-950/50 backdrop-blur-sm animate-[fadeIn_.2s_ease-out]" onClick={onClose} />
 
-      <div className="relative flex h-[86vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl animate-[sheetIn_.24s_ease-out] sm:h-[640px] sm:rounded-2xl">
+      <div className="relative flex h-[86vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl bg-surface shadow-2xl animate-[sheetIn_.24s_ease-out] sm:h-[640px] sm:rounded-2xl">
         {/* Header */}
         <div className="flex items-center justify-between bg-ink-950 px-5 py-4 text-white">
           <div className="flex items-center gap-3">
@@ -63,13 +63,13 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
             </span>
             <div className="leading-tight">
               <div className="text-sm font-semibold">Ask Mission Control</div>
-              <div className="text-xs text-slate-400">About today · Thursday, September 17</div>
+              <div className="text-xs text-dim">About today · Thursday, September 17</div>
             </div>
           </div>
           <button
             onClick={onClose}
             aria-label="Close"
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-fg-3 transition-colors hover:bg-white/10 hover:text-white"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <path d="M6 6l12 12M18 6 6 18" />
@@ -78,18 +78,18 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
         </div>
 
         {/* Thread */}
-        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-[#f7f8fa] px-5 py-5">
+        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto bg-surface-2 px-5 py-5">
           {messages.map((m, i) =>
             m.role === 'user' ? (
               <div key={i} className="flex justify-end">
-                <p className="max-w-[82%] rounded-xl rounded-br-sm bg-ink-900 px-4 py-2.5 text-sm text-white">{m.text}</p>
+                <p className="max-w-[82%] rounded-xl rounded-br-sm bg-invert px-4 py-2.5 text-sm text-on-invert">{m.text}</p>
               </div>
             ) : (
               <div key={i} className="flex gap-3">
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-white text-ink-700">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-surface text-fg-3">
                   <SparkleIcon width={16} height={16} />
                 </span>
-                <p className="max-w-[82%] rounded-xl rounded-tl-sm border border-line bg-white px-4 py-3 text-sm leading-relaxed text-ink-800">
+                <p className="max-w-[82%] rounded-xl rounded-tl-sm border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-fg-2">
                   {m.text}
                 </p>
               </div>
@@ -98,27 +98,27 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
 
           {typing && (
             <div className="flex gap-3">
-              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-white text-ink-700">
+              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-surface text-fg-3">
                 <SparkleIcon width={16} height={16} />
               </span>
-              <div className="flex items-center gap-1 rounded-xl rounded-tl-sm border border-line bg-white px-4 py-3.5">
-                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.2s]" />
-                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.1s]" />
-                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" />
+              <div className="flex items-center gap-1 rounded-xl rounded-tl-sm border border-line bg-surface px-4 py-3.5">
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#5a5a5a] [animation-delay:-0.2s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#5a5a5a] [animation-delay:-0.1s]" />
+                <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#5a5a5a]" />
               </div>
             </div>
           )}
         </div>
 
         {/* Composer */}
-        <div className="border-t border-line bg-white px-5 py-4">
+        <div className="border-t border-line bg-surface px-5 py-4">
           {messages.length <= 1 && (
             <div className="mb-3 flex flex-wrap gap-2">
               {suggestedPrompts.map((p) => (
                 <button
                   key={p}
                   onClick={() => send(p)}
-                  className="rounded-full border border-line bg-white px-3.5 py-1.5 text-xs font-medium text-[var(--color-muted)] transition-colors hover:border-line-strong hover:text-ink-900"
+                  className="rounded-full border border-line bg-surface px-3.5 py-1.5 text-xs font-medium text-[var(--color-muted)] transition-colors hover:border-line-strong hover:text-fg"
                 >
                   {p}
                 </button>
@@ -130,20 +130,20 @@ export default function ChatModal({ open, onClose }: { open: boolean; onClose: (
               e.preventDefault()
               send(value)
             }}
-            className="flex items-center gap-3 rounded-xl border border-line bg-white px-4 py-2.5 transition-colors focus-within:border-ink-700"
+            className="flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-2.5 transition-colors focus-within:border-fg-3"
           >
-            <SparkleIcon className="shrink-0 text-ink-700" width={19} height={19} />
+            <SparkleIcon className="shrink-0 text-fg-3" width={19} height={19} />
             <input
               ref={inputRef}
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="Ask about today..."
-              className="flex-1 bg-transparent text-sm text-ink-900 outline-none placeholder:text-slate-400"
+              className="flex-1 bg-transparent text-sm text-fg outline-none placeholder:text-dim"
             />
             <button
               type="submit"
               aria-label="Send"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-[#f4f5f7] hover:text-ink-900"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-dim transition-colors hover:bg-surface-2 hover:text-fg"
             >
               <SendIcon width={18} height={18} />
             </button>

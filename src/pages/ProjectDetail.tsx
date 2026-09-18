@@ -34,7 +34,7 @@ export default function ProjectDetail() {
     <div className="space-y-7">
       <Link
         to="/projects"
-        className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--color-muted)] transition-colors hover:text-ink-900"
+        className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--color-muted)] transition-colors hover:text-fg"
       >
         <span className="rotate-180">
           <ArrowRightIcon width={15} height={15} />
@@ -45,15 +45,15 @@ export default function ProjectDetail() {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-start gap-4">
-          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-line font-mono text-base font-semibold text-ink-800">
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-line font-mono text-base font-semibold text-fg-2">
             {project.code}
           </span>
           <div>
             <div className="eyebrow mb-1.5">
               {project.kind === 'product' ? 'Product' : 'Exploration'} · {project.stage}
             </div>
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-ink-900">{project.name}</h1>
-            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-[0.08em] text-slate-400">
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-fg">{project.name}</h1>
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-[0.08em] text-dim">
               <StatusPill status={project.status} />
               <span>{project.team} · {project.lead}</span>
               <span className="font-mono normal-case tracking-normal text-[var(--color-muted)]">Gate · {project.gate}</span>
@@ -75,12 +75,12 @@ export default function ProjectDetail() {
           {/* Overview + metrics */}
           <Card className="p-6">
             <div className="eyebrow mb-3">Overview</div>
-            <p className="text-sm leading-relaxed text-ink-800">{project.summary}</p>
+            <p className="text-sm leading-relaxed text-fg-2">{project.summary}</p>
 
             <div className="mt-6">
               <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
                 <span className="uppercase tracking-[0.1em]">Progress</span>
-                <span className="font-mono text-ink-900">{project.progress}%</span>
+                <span className="font-mono text-fg">{project.progress}%</span>
               </div>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
                 <div className={`h-full rounded-full ${barColor[project.status]}`} style={{ width: `${project.progress}%` }} />
@@ -89,9 +89,9 @@ export default function ProjectDetail() {
 
             <div className="mt-6 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3">
               {project.metrics.map((m) => (
-                <div key={m.label} className="bg-white px-4 py-3.5">
+                <div key={m.label} className="bg-surface px-4 py-3.5">
                   <div className="eyebrow">{m.label}</div>
-                  <div className="mt-1.5 font-mono text-xl font-medium text-ink-900">{m.value}</div>
+                  <div className="mt-1.5 font-mono text-xl font-medium text-fg">{m.value}</div>
                 </div>
               ))}
             </div>
@@ -101,18 +101,18 @@ export default function ProjectDetail() {
           <Card className="p-6">
             <div className="mb-4 flex items-center justify-between">
               <div className="eyebrow">Missions rolling up</div>
-              <span className="font-mono text-xs text-slate-400">{rollupMissions.length}</span>
+              <span className="font-mono text-xs text-dim">{rollupMissions.length}</span>
             </div>
             {rollupMissions.length ? (
               <ul className="divide-y divide-line">
                 {rollupMissions.map((m) => (
                   <li key={m.id}>
-                    <Link to={`/missions/${m.id}`} className="group -mx-2 flex items-center gap-3 rounded-lg px-2 py-3 hover:bg-[#f7f8fa]">
+                    <Link to={`/missions/${m.id}`} className="group -mx-2 flex items-center gap-3 rounded-lg px-2 py-3 hover:bg-surface-2">
                       <IconTile className="h-8 w-8 shrink-0">
                         <RocketIcon width={15} height={15} />
                       </IconTile>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium text-ink-900">{m.name}</span>
+                        <span className="block truncate text-sm font-medium text-fg">{m.name}</span>
                         <span className="block truncate text-xs text-[var(--color-muted)]">
                           {m.owner} · Due {m.due}
                         </span>
@@ -135,10 +135,10 @@ export default function ProjectDetail() {
           {/* AI insight */}
           <Card className="p-5">
             <div className="eyebrow mb-3 flex items-center gap-2">
-              <SparkleIcon width={13} height={13} className="text-ink-700" />
+              <SparkleIcon width={13} height={13} className="text-fg-3" />
               AI insight
             </div>
-            <p className="text-sm leading-relaxed text-ink-800">{project.insight}</p>
+            <p className="text-sm leading-relaxed text-fg-2">{project.insight}</p>
           </Card>
 
           {/* Owning team */}
@@ -150,10 +150,10 @@ export default function ProjectDetail() {
                   <UsersIcon width={17} height={17} />
                 </IconTile>
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-semibold text-ink-900">{team.name}</div>
+                  <div className="text-sm font-semibold text-fg">{team.name}</div>
                   <div className="text-xs text-[var(--color-muted)]">Lead · {team.lead}</div>
                 </div>
-                <ArrowRightIcon width={16} height={16} className="text-slate-400 transition-transform group-hover:translate-x-0.5" />
+                <ArrowRightIcon width={16} height={16} className="text-dim transition-transform group-hover:translate-x-0.5" />
               </Link>
             </Card>
           )}
@@ -168,8 +168,8 @@ export default function ProjectDetail() {
               { k: 'Progress', v: `${project.progress}%` },
             ].map((row) => (
               <div key={row.k} className="flex items-center justify-between px-5 py-3">
-                <span className="text-xs uppercase tracking-[0.1em] text-slate-400">{row.k}</span>
-                <span className="text-sm font-medium text-ink-900">{row.v}</span>
+                <span className="text-xs uppercase tracking-[0.1em] text-dim">{row.k}</span>
+                <span className="text-sm font-medium text-fg">{row.v}</span>
               </div>
             ))}
           </Card>

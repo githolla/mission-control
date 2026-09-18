@@ -28,12 +28,12 @@ export default function Knowledge() {
       />
 
       <div className="relative max-w-md">
-        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" width={16} height={16} />
+        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-dim" width={16} height={16} />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search knowledge..."
-          className="h-10 w-full rounded-lg border border-line bg-white pl-9 pr-3 text-sm text-ink-900 outline-none transition-colors placeholder:text-slate-400 focus:border-ink-700"
+          className="h-10 w-full rounded-lg border border-line bg-surface pl-9 pr-3 text-sm text-fg outline-none transition-colors placeholder:text-dim focus:border-fg-3"
         />
       </div>
 
@@ -45,13 +45,13 @@ export default function Knowledge() {
                 <IconTile className="h-9 w-9">
                   <BookIcon width={17} height={17} />
                 </IconTile>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-dim">
                   {k.category}
                 </span>
               </div>
-              <h3 className="mt-4 font-display text-base font-semibold text-ink-900">{k.title}</h3>
+              <h3 className="mt-4 font-display text-base font-semibold text-fg">{k.title}</h3>
               <p className="mt-1.5 flex-1 text-sm leading-relaxed text-[var(--color-muted)]">{k.summary}</p>
-              <p className="mt-4 border-t border-line pt-3 text-[11px] uppercase tracking-[0.1em] text-slate-400">
+              <p className="mt-4 border-t border-line pt-3 text-[11px] uppercase tracking-[0.1em] text-dim">
                 Updated {k.updated}
               </p>
             </Card>

@@ -58,6 +58,13 @@ off‑nominal) throughout.
   and confirmable; actions surface toast feedback.
 - All the demo content lives in [`src/data.ts`](src/data.ts) — edit it there.
 
+## Design
+
+A pure-black, typography-led system in the SpaceX / Tesla idiom: white type
+carries the hierarchy, hairlines replace boxed cards, a single white accent, and
+monochrome status (one muted amber for risk). Archivo for display, Inter for UI,
+JetBrains Mono for every readout.
+
 ## Tech
 
 React 19 · TypeScript · Vite · Tailwind CSS v4 · React Router.

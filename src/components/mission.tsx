@@ -11,15 +11,15 @@ export function MissionClock() {
   const [next, ...rest] = gates
 
   return (
-    <div className="flex flex-wrap items-center gap-x-8 gap-y-3 rounded-xl border border-line bg-white px-5 py-4">
+    <div className="flex flex-wrap items-center gap-x-8 gap-y-3 rounded-xl border border-line bg-surface px-5 py-4">
       <div className="flex items-center gap-4">
         <span className="eyebrow">Next gate</span>
         <div className="flex items-baseline gap-2">
-          <span className="font-mono text-2xl font-medium tracking-tight text-ink-900">T&#8209;{next.tMinus}</span>
+          <span className="font-mono text-2xl font-medium tracking-tight text-fg">T&#8209;{next.tMinus}</span>
           <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-muted)]">
             {next.tMinus === 1 ? 'day' : 'days'}
           </span>
-          <span className="ml-2 text-sm font-medium uppercase tracking-[0.1em] text-ink-800">{next.label}</span>
+          <span className="ml-2 text-sm font-medium uppercase tracking-[0.1em] text-fg-2">{next.label}</span>
         </div>
       </div>
 
@@ -27,7 +27,7 @@ export function MissionClock() {
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 sm:ml-auto sm:border-l sm:border-line sm:pl-8">
           {rest.slice(0, 2).map((g) => (
             <div key={g.id} className="flex items-baseline gap-2 text-xs">
-              <span className="font-mono font-medium text-ink-700">T&#8209;{g.tMinus}</span>
+              <span className="font-mono font-medium text-fg-3">T&#8209;{g.tMinus}</span>
               <span className="uppercase tracking-[0.1em] text-[var(--color-muted)]">{g.label}</span>
             </div>
           ))}
@@ -75,7 +75,7 @@ export function ReadinessBoard() {
           return (
             <li key={i.domain} className="flex items-center gap-4 px-5 py-3.5">
               <span className="h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: m.hue }} />
-              <span className="w-24 shrink-0 text-sm font-medium text-ink-900">{i.domain}</span>
+              <span className="w-24 shrink-0 text-sm font-medium text-fg">{i.domain}</span>
               <span
                 className="w-16 shrink-0 font-mono text-[12px] font-semibold uppercase tracking-[0.08em]"
                 style={{ color: m.hue }}
@@ -89,7 +89,7 @@ export function ReadinessBoard() {
       </ul>
 
       <div className="border-t border-line px-5 py-3.5 text-xs leading-relaxed text-[var(--color-muted)]">
-        <span className="font-semibold text-ink-700">Flight director&rsquo;s call</span> — one NO-GO open. Approve the
+        <span className="font-semibold text-fg-3">Flight director&rsquo;s call</span> — one NO-GO open. Approve the
         recovery plan to clear the board.
       </div>
     </Card>

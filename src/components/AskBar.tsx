@@ -23,15 +23,15 @@ export default function AskBar() {
           {turns.map((turn, i) => (
             <div key={i} className="space-y-2">
               <div className="flex justify-end">
-                <p className="max-w-[80%] rounded-xl rounded-br-sm bg-ink-900 px-4 py-2.5 text-sm text-white">
+                <p className="max-w-[80%] rounded-xl rounded-br-sm bg-invert px-4 py-2.5 text-sm text-on-invert">
                   {turn.q}
                 </p>
               </div>
               <div className="flex gap-3">
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line text-ink-700">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line text-fg-3">
                   <SparkleIcon width={16} height={16} />
                 </span>
-                <p className="max-w-[80%] rounded-xl rounded-tl-sm border border-line bg-white px-4 py-3 text-sm leading-relaxed text-ink-800">
+                <p className="max-w-[80%] rounded-xl rounded-tl-sm border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-fg-2">
                   {turn.a}
                 </p>
               </div>
@@ -45,19 +45,19 @@ export default function AskBar() {
           e.preventDefault()
           submit(value)
         }}
-        className="flex items-center gap-3 rounded-xl border border-line bg-white px-4 py-2.5 transition-colors focus-within:border-ink-700"
+        className="flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-2.5 transition-colors focus-within:border-fg-3"
       >
-        <SparkleIcon className="shrink-0 text-ink-700" width={19} height={19} />
+        <SparkleIcon className="shrink-0 text-fg-3" width={19} height={19} />
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Ask Mission Control anything..."
-          className="flex-1 bg-transparent text-sm text-ink-900 outline-none placeholder:text-slate-400"
+          className="flex-1 bg-transparent text-sm text-fg outline-none placeholder:text-dim"
         />
         <button
           type="submit"
           aria-label="Send"
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-[#f4f5f7] hover:text-ink-900"
+          className="flex h-9 w-9 items-center justify-center rounded-lg text-dim transition-colors hover:bg-surface-2 hover:text-fg"
         >
           <SendIcon width={18} height={18} />
         </button>
@@ -68,7 +68,7 @@ export default function AskBar() {
           <button
             key={p}
             onClick={() => submit(p)}
-            className="rounded-full border border-line bg-white px-3.5 py-1.5 text-xs font-medium text-[var(--color-muted)] transition-colors hover:border-line-strong hover:text-ink-900"
+            className="rounded-full border border-line bg-surface px-3.5 py-1.5 text-xs font-medium text-[var(--color-muted)] transition-colors hover:border-line-strong hover:text-fg"
           >
             {p}
           </button>
