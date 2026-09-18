@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { projects, missions, missionsForProject, flightReadiness, activity, decisions, type Status } from '../data'
+import Planet from '../components/Planet'
+import { useCountUp } from '../lib/motion'
 
 /* ── time / scale helpers ─────────────────────────────────────────────── */
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -34,27 +36,9 @@ const Label = ({ children, className = '' }: { children: React.ReactNode; classN
   <div className={`text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--hud-dim)] ${className}`}>{children}</div>
 )
 
-/** Thin monochrome arc — SpaceX webcast style. */
-function Arc({ label, value, display, unit }: { label: string; value: number; display: string; unit?: string }) {
-  const r = 30
-  const c = 2 * Math.PI * r
-  const arc = c * 0.75
-  const frac = Math.max(0, Math.min(1, value / 100))
-  return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="relative h-[76px] w-[76px]">
-        <svg viewBox="0 0 72 72" className="h-full w-full rotate-[135deg]">
-          <circle cx="36" cy="36" r={r} fill="none" stroke="#2a2a2a" strokeWidth="1.25" strokeDasharray={`${arc} ${c}`} />
-          <circle cx="36" cy="36" r={r} fill="none" stroke="#f2f2f2" strokeWidth="1.25" strokeDasharray={`${frac * arc} ${c}`} />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-          <span className="font-mono text-[15px] text-[var(--hud-text)]">{display}</span>
-          {unit && <span className="mt-1 text-[8px] uppercase tracking-[0.14em] text-[var(--hud-dim)]">{unit}</span>}
-        </div>
-      </div>
-      <Label>{label}</Label>
-    </div>
-  )
+function Num({ value }: { value: number }) {
+  const v = useCountUp(value)
+  return <>{v}</>
 }
 
 /* ── page ─────────────────────────────────────────────────────────────── */
@@ -67,7 +51,6 @@ export default function ControlRoom() {
   const anomalies = missions.filter((m) => m.status !== 'on-track')
   const readyGo = flightReadiness.filter((r) => r.status === 'go').length
   const avgUtil = 84
-  const riskPct = Math.round((anomalies.length / missions.length) * 100)
 
   const upcoming = projects
     .map((p) => ({ p, d: gateDate(p) }))
@@ -85,14 +68,6 @@ export default function ControlRoom() {
     countdown = `${pad(days)}:${pad(hrs)}:${pad(mins)}:${pad(secs)}`
   }
 
-  const telemetry = [
-    { k: 'On track', v: `${onTrack}`, u: `/ ${projects.length}` },
-    { k: 'Stations go', v: `${readyGo}`, u: `/ ${flightReadiness.length}` },
-    { k: 'Utilisation', v: `${avgUtil}`, u: '%' },
-    { k: 'Anomalies', v: `${anomalies.length}`, u: 'open', warn: anomalies.length > 0 },
-    { k: 'Next gate', v: next ? `T-${dayT(next.d)}` : '—', u: next ? next.p.code : '' },
-  ]
-
   const log = [
     ...activity.slice(0, 4).map((a) => ({ t: a.time, m: a.title })),
     ...anomalies.map((m) => ({ t: 'RISK', m: `${m.name} · due ${m.due}` })),
@@ -102,7 +77,7 @@ export default function ControlRoom() {
   const nowL = pct(now)
 
   return (
-    <div className="hud relative -mx-8 -my-8 min-h-screen bg-[#050505] px-8 py-6 xl:-mx-12 xl:px-10">
+    <div className="hud relative -mx-8 -my-8 min-h-screen bg-[var(--color-canvas)] px-8 py-6 xl:-mx-12 xl:px-10">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-baseline gap-4">
@@ -119,61 +94,75 @@ export default function ControlRoom() {
             <span className="font-mono text-[12px] text-[var(--hud-text)]">{local}</span>
           </div>
           <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[var(--hud-muted)]">
-            <span className="h-1 w-1 rounded-full" style={{ background: anomalies.length ? 'var(--hud-warn)' : 'var(--hud-ok)' }} />
+            <span className="pulse h-1 w-1 rounded-full" style={{ background: anomalies.length ? 'var(--hud-warn)' : 'var(--hud-ok)' }} />
             {anomalies.length ? 'Hold' : 'Nominal'}
           </div>
         </div>
       </div>
 
-      {/* Telemetry strip */}
-      <div className="mt-6 grid grid-cols-2 border-y border-[var(--hud-line)] sm:grid-cols-3 xl:grid-cols-5">
-        {telemetry.map((t, i) => (
-          <div key={t.k} className={`py-5 pr-6 ${i > 0 ? 'xl:border-l xl:border-[var(--hud-line)] xl:pl-6' : ''}`}>
-            <Label>{t.k}</Label>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="font-display text-[34px] font-medium leading-none tracking-tight" style={{ color: t.warn ? 'var(--hud-warn)' : 'var(--hud-text)' }}>
-                {t.v}
+      {/* Orbit view — the portfolio as a mission around the planet */}
+      <div className="rise relative mt-6 h-[580px] overflow-hidden rounded-[8px] border border-[var(--hud-line)]" style={{ animationDelay: '80ms' }}>
+        <div className="stars absolute inset-0 opacity-80" />
+        {/* sun, off-frame left */}
+        <div
+          className="pointer-events-none absolute -left-[14%] top-[6%] h-[560px] w-[560px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(255,178,70,0.34) 0%, rgba(255,140,40,0.12) 34%, transparent 62%)' }}
+        />
+        {/* planet, centered */}
+        <Planet className="pointer-events-none absolute left-[54%] top-1/2 h-[470px] w-[470px] -translate-x-1/2 -translate-y-1/2" radius={0.44} light={[-0.85, 0.3, 0.45]} />
+        {/* orbit ring, mission marker, leader lines */}
+        <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 250 100" preserveAspectRatio="xMidYMid slice">
+          <g transform="rotate(-16 135 50)">
+            <ellipse cx="135" cy="50" rx="52" ry="46" fill="none" stroke="rgba(116,220,182,0.55)" strokeWidth="0.35" />
+            <circle r="1.1" fill="#dffff2">
+              <animateMotion dur="22s" repeatCount="indefinite" path="M 135,4 A 52 46 0 1 1 134.99,4" />
+            </circle>
+            <circle r="2.6" fill="none" stroke="rgba(223,255,242,0.35)" strokeWidth="0.3">
+              <animateMotion dur="22s" repeatCount="indefinite" path="M 135,4 A 52 46 0 1 1 134.99,4" />
+            </circle>
+          </g>
+          {[
+            [44, 24, 92, 30],
+            [205, 20, 170, 28],
+            [205, 47, 188, 50],
+            [195, 80, 168, 71],
+            [60, 80, 98, 72],
+          ].map(([x1, y1, x2, y2], i) => (
+            <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(116,220,182,0.45)" strokeWidth="0.3" />
+          ))}
+        </svg>
+
+        {/* countdown */}
+        <div className="absolute left-[3.5%] top-1/2 -translate-y-1/2">
+          <Label>T-minus · {next ? next.p.gate : '—'}</Label>
+          <div className="mt-2 font-display text-[44px] font-semibold leading-none tracking-tight" style={{ color: 'var(--color-amber)' }}>{countdown}</div>
+          <div className="mt-2 text-[12px]" style={{ color: 'var(--color-sky)' }}>{next ? next.p.name.toUpperCase() : ''}</div>
+          <div className="mt-1 text-[12px] text-[var(--hud-muted)]">{next ? `${next.p.kind === 'product' ? 'Product' : 'In testing'} · ${next.p.stage} · ${next.p.lead}` : ''}</div>
+        </div>
+
+        {/* orbiting stats */}
+        {[
+          { x: '17%', y: '12%', n: onTrack, v: `${onTrack}`, u: `/ ${projects.length}`, k: 'On track', d: `${projects.length - onTrack} project needs attention` },
+          { x: '81%', y: '8%', n: readyGo, v: `${readyGo}`, u: `/ ${flightReadiness.length}`, k: 'Stations go', d: 'Engineering holding on the supplier delay' },
+          { x: '83%', y: '44%', v: next ? `T-${dayT(next.d)}` : '—', u: next ? next.p.code : '', k: 'Next gate', d: next ? next.p.gate : '' },
+          { x: '77%', y: '72%', n: anomalies.length, v: `${anomalies.length}`, u: 'open', k: 'Anomalies', d: 'down from 4 last week', warn: true },
+          { x: '24%', y: '70%', n: avgUtil, v: `${avgUtil}`, u: '%', k: 'Utilisation', d: '39 of 42 engineers committed' },
+        ].map((s) => (
+          <div key={s.k} className="absolute w-[190px]" style={{ left: s.x, top: s.y }}>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-display text-[34px] font-semibold leading-none tracking-tight" style={{ color: s.warn ? 'var(--color-amber)' : 'var(--color-amber)' }}>
+                {s.n !== undefined ? <Num value={s.n} /> : s.v}
               </span>
-              <span className="font-mono text-[12px] text-[var(--hud-dim)]">{t.u}</span>
+              <span className="font-mono text-[12px] text-[var(--hud-muted)]">{s.u}</span>
             </div>
+            <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--color-sky)' }}>{s.k}</div>
+            <div className="mt-1 text-[11.5px] leading-snug text-[var(--hud-muted)]">{s.d}</div>
           </div>
         ))}
       </div>
 
-      {/* Hero band: countdown over the planet */}
-      <div className="relative mt-6 h-[300px] overflow-hidden rounded-[6px]">
-        <div
-          className="absolute inset-0 bg-cover bg-bottom"
-          style={{ backgroundImage: 'url(/hero-space.svg)', filter: 'grayscale(1) brightness(0.55) contrast(1.1)' }}
-        />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(5,5,5,0.92) 0%, rgba(5,5,5,0.6) 45%, rgba(5,5,5,0.15) 100%)' }} />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(5,5,5,0.6) 0%, rgba(5,5,5,0) 40%)' }} />
-
-        <div className="relative flex h-full items-end justify-between px-8 pb-8">
-          <div>
-            <Label>T-minus · {next ? next.p.gate : '—'}</Label>
-            <div className="mt-2 font-mono text-[56px] font-light leading-none tracking-[0.04em] text-[var(--hud-text)]">{countdown}</div>
-            <div className="mt-3 text-[13px] text-[var(--hud-muted)]">
-              {next ? (
-                <>
-                  <span className="text-[var(--hud-text)]">{next.p.name}</span> · {next.p.kind === 'product' ? 'Product' : 'In testing'} · {next.p.stage} · {next.p.lead}
-                </>
-              ) : (
-                'No upcoming gates'
-              )}
-            </div>
-          </div>
-          <div className="hidden items-end gap-8 lg:flex">
-            <Arc label="On track" value={Math.round((onTrack / projects.length) * 100)} display={`${Math.round((onTrack / projects.length) * 100)}`} unit="%" />
-            <Arc label="Readiness" value={(readyGo / flightReadiness.length) * 100} display={`${readyGo}/${flightReadiness.length}`} unit="go" />
-            <Arc label="Utilisation" value={avgUtil} display={`${avgUtil}`} unit="%" />
-            <Arc label="Risk" value={riskPct} display={`${riskPct}`} unit="%" />
-          </div>
-        </div>
-      </div>
-
       {/* Mission timeline */}
-      <div className="mt-8 border-t border-[var(--hud-line)] pt-5">
+      <div className="rise mt-8 border-t border-[var(--hud-line)] pt-5" style={{ animationDelay: '220ms' }}>
         <div className="flex items-center justify-between">
           <Label>Portfolio timeline</Label>
           <Label>Gates → year-end</Label>
@@ -219,7 +208,7 @@ export default function ControlRoom() {
                       {ms.map(({ m, d }) => (
                         <span key={m.id} className="absolute top-1/2 h-[5px] w-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ left: `${pct(d)}%`, background: hue(m.status) }} title={m.name} />
                       ))}
-                      <span className="absolute top-1/2 h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[#050505]" style={{ left: `${gl}%`, border: `1px solid ${hue(p.status)}` }} />
+                      <span className="absolute top-1/2 h-[7px] w-[7px] -translate-x-1/2 -translate-y-1/2 rotate-45 bg-[var(--color-canvas)]" style={{ left: `${gl}%`, border: `1px solid ${hue(p.status)}` }} />
                       <span className="absolute top-1/2 -translate-y-1/2 whitespace-nowrap font-mono text-[10px] text-[var(--hud-muted)]" style={{ left: `calc(${gl}% + 0.5rem)` }}>
                         {t >= 0 ? `T-${t}` : 'done'}
                       </span>
@@ -233,7 +222,7 @@ export default function ControlRoom() {
       </div>
 
       {/* Bottom: stations · calls · log */}
-      <div className="mt-8 grid gap-10 border-t border-[var(--hud-line)] pt-5 lg:grid-cols-3">
+      <div className="rise mt-8 grid gap-10 border-t border-[var(--hud-line)] pt-5 lg:grid-cols-3" style={{ animationDelay: '300ms' }}>
         <div>
           <Label>Stations</Label>
           <ul className="mt-3 divide-y divide-[var(--hud-line)]">

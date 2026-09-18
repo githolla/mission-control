@@ -22,6 +22,7 @@ import Greeting from '../components/Greeting'
 import Copilot from '../components/Copilot'
 import AskBar from '../components/AskBar'
 import ChatModal from '../components/ChatModal'
+import Planet from '../components/Planet'
 
 export default function Overview() {
   const { notify } = useToast()
@@ -33,33 +34,35 @@ export default function Overview() {
     <div className="space-y-8">
       {/* Full-bleed space hero — greeting, clock, brief and focus over the planet */}
       <div className="relative -mx-8 -mt-8 overflow-hidden bg-ink-950 text-white xl:-mx-12">
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage: 'url(/hero-space.svg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center bottom',
-          }}
+        {/* Deep space: starfield + a live, lit planet rising over the horizon */}
+        <div className="stars pointer-events-none absolute inset-0 opacity-80" />
+        <Planet
+          className="pointer-events-none absolute left-1/2 top-[56%] h-[1800px] w-[1800px] max-w-none -translate-x-[46%]"
+          radius={0.44}
+          light={[-0.35, 0.75, 0.56]}
         />
-        {/* Legibility overlay: darkens the left where the copy sits, lets the planet breathe on the right */}
+        {/* Legibility overlays: darken the left where the copy sits, let the planet breathe on the right */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'linear-gradient(90deg, rgba(6,8,13,0.95) 0%, rgba(6,8,13,0.82) 40%, rgba(6,8,13,0.42) 64%, rgba(6,8,13,0.12) 100%)',
+              'linear-gradient(90deg, rgba(6,10,18,0.96) 0%, rgba(6,10,18,0.84) 38%, rgba(6,10,18,0.35) 62%, rgba(6,10,18,0.05) 100%)',
           }}
         />
         <div
           className="pointer-events-none absolute inset-x-0 top-0 h-28"
-          style={{ background: 'linear-gradient(180deg, rgba(6,8,13,0.7) 0%, rgba(6,8,13,0) 100%)' }}
+          style={{ background: 'linear-gradient(180deg, rgba(6,10,18,0.7) 0%, rgba(6,10,18,0) 100%)' }}
         />
-        {/* Scrim behind the focus list (top-right) for legibility over the bright limb */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-16"
+          style={{ background: 'linear-gradient(0deg, rgba(6,10,18,1) 0%, rgba(6,10,18,0) 100%)' }}
+        />
         <div
           className="pointer-events-none absolute inset-0 hidden lg:block"
-          style={{ background: 'radial-gradient(120% 95% at 100% 0%, rgba(6,8,13,0.62) 0%, rgba(6,8,13,0) 52%)' }}
+          style={{ background: 'radial-gradient(110% 90% at 100% 0%, rgba(6,10,18,0.7) 0%, rgba(6,10,18,0) 50%)' }}
         />
 
-        <div className="relative px-8 pb-10 pt-9 sm:px-12 sm:pb-12 sm:pt-10 xl:px-14">
+        <div className="relative px-8 pb-28 pt-9 sm:px-12 sm:pb-36 sm:pt-10 xl:px-14">
           <Greeting onDark />
 
           <div className="mt-9 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
@@ -112,7 +115,7 @@ export default function Overview() {
             </div>
           </div>
 
-          <div className="relative lg:border-l lg:border-white/10 lg:pl-8">
+          <div className="relative rounded-xl border border-white/10 bg-[rgba(6,10,18,0.55)] p-6 backdrop-blur-md">
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-fg-3">
                 Your focus today
@@ -146,23 +149,23 @@ export default function Overview() {
       </div>
 
       {/* Mission clock — T-minus to the nearest gate */}
-      <MissionClock />
+      <div className="rise" style={{ animationDelay: '80ms' }}><MissionClock /></div>
 
       {/* KPI cards */}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="rise grid gap-4 sm:grid-cols-2 xl:grid-cols-4" style={{ animationDelay: '160ms' }}>
         {stats.map((s) => {
           const arrow = s.trend === 'up' ? '↑' : s.trend === 'down' ? '↓' : '→'
           const trendColor = s.trend === 'flat' ? 'text-[var(--color-muted)]' : 'text-[var(--color-ok)]'
           return (
             <Link key={s.id} to={s.to} className="card lift group block p-5">
               <div className="flex items-center justify-between">
-                <span className="eyebrow">{s.label}</span>
+                <span className="eyebrow" style={{ color: 'var(--color-sky)' }}>{s.label}</span>
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-dim transition-colors group-hover:text-fg-3">
                   <StatIcon name={s.icon} width={15} height={15} />
                 </span>
               </div>
               <div className="mt-4 flex items-end justify-between gap-2">
-                <div className="font-mono text-[2rem] font-medium leading-none tracking-tight text-fg">{s.value}</div>
+                <div className="font-display text-[2.1rem] font-semibold leading-none tracking-tight" style={{ color: 'var(--color-amber)' }}>{s.value}</div>
                 <span className={`mb-0.5 inline-flex items-center gap-1 font-mono text-[11px] font-medium ${trendColor}`}>
                   {arrow} {s.delta}
                 </span>
@@ -174,7 +177,7 @@ export default function Overview() {
       </div>
 
       {/* Project portfolio — the six base projects */}
-      <section className="space-y-4">
+      <section className="rise space-y-4" style={{ animationDelay: '240ms' }}>
         <div className="flex items-end justify-between">
           <div>
             <div className="eyebrow mb-2">Project portfolio</div>

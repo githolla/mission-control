@@ -6,35 +6,38 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   /* SpaceX / Tesla: pure black canvas, white type, hairlines, monochrome status. */
-  --color-canvas: #050505;
-  --color-surface: #0c0c0c;
-  --color-surface-2: #141414;
-  --color-line: #1c1c1c;
-  --color-line-strong: #2a2a2a;
+  --color-canvas: #060a12;
+  --color-surface: #0b111c;
+  --color-surface-2: #111a2a;
+  --color-line: #172033;
+  --color-line-strong: #223050;
 
-  --color-fg: #f2f2f2;
-  --color-fg-2: #d6d6d6;
-  --color-fg-3: #b0b0b0;
-  --color-muted: #8b8b8b;
-  --color-dim: #6a6a6a;
+  --color-fg: #eef2f9;
+  --color-fg-2: #cfd7e6;
+  --color-fg-3: #a7b3c8;
+  --color-muted: #7f8ba3;
+  --color-dim: #5b6780;
 
   /* Inverted chips / primary actions (white on black) */
   --color-invert: #f2f2f2;
   --color-on-invert: #050505;
 
   /* Legacy ink ramp — kept dark for surfaces still referencing it */
-  --color-ink-950: #0a0a0a;
-  --color-ink-900: #121212;
-  --color-ink-800: #1a1a1a;
-  --color-ink-700: #262626;
-  --color-ink-500: #6a6a6a;
+  --color-ink-950: #05080f;
+  --color-ink-900: #0b111c;
+  --color-ink-800: #111a2a;
+  --color-ink-700: #1a2438;
+  --color-ink-500: #5b6780;
 
   /* Single accent: white. Status hues are monochrome except a muted amber/red. */
-  --color-accent: #ffffff;
-  --color-accent-soft: rgba(255, 255, 255, 0.08);
-  --color-ok: #e6e6e6;
-  --color-warn: #d2a24a;
-  --color-bad: #d46a6a;
+  --color-accent: #6fa8ff;
+  --color-amber: #f2a93b;
+  --color-sky: #6fb1ff;
+  --color-teal: #74dcb6;
+  --color-accent-soft: rgba(111, 168, 255, 0.12);
+  --color-ok: #9cc7ff;
+  --color-warn: #d9a54b;
+  --color-bad: #e07070;
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.6);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
@@ -121,9 +124,11 @@ body {
   }
 
   .card {
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid var(--color-line);
-    background: var(--color-surface);
+    background: rgba(11, 17, 28, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .lift {
@@ -138,16 +143,16 @@ body {
 /* ── HUD / telemetry console (dark Control Room) ─────────────────────────── */
 .hud {
   /* SpaceX / Tesla: pure black, white type, hairlines, monochrome status. */
-  --hud-accent: #ffffff;
-  --hud-accent-dim: rgba(255, 255, 255, 0.45);
-  --hud-line: #1c1c1c;
-  --hud-line-strong: #2a2a2a;
-  --hud-ok: #e6e6e6;
-  --hud-warn: #d2a24a;
-  --hud-bad: #d46a6a;
-  --hud-text: #f2f2f2;
-  --hud-muted: #8b8b8b;
-  --hud-dim: #5c5c5c;
+  --hud-accent: #6fa8ff;
+  --hud-accent-dim: rgba(111, 168, 255, 0.5);
+  --hud-line: #172033;
+  --hud-line-strong: #223050;
+  --hud-ok: #9cc7ff;
+  --hud-warn: #d9a54b;
+  --hud-bad: #e07070;
+  --hud-text: #eef2f9;
+  --hud-muted: #7f8ba3;
+  --hud-dim: #5b6780;
   color: var(--hud-text);
   font-size: 12px;
 }
@@ -199,17 +204,43 @@ body {
   }
 }
 
+/* ── Motion + atmosphere ────────────────────────────────────────────────── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.pulse { animation: pulse-dot 2.2s ease-in-out infinite; }
+.stars {
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 28% 62%, rgba(255,255,255,0.45) 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 41% 8%, rgba(255,255,255,0.8) 50%, transparent 51%),
+    radial-gradient(1px 1px at 57% 34%, rgba(255,255,255,0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 66% 74%, rgba(255,255,255,0.35) 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 78% 22%, rgba(255,255,255,0.85) 50%, transparent 51%),
+    radial-gradient(1px 1px at 88% 52%, rgba(255,255,255,0.45) 50%, transparent 51%),
+    radial-gradient(1px 1px at 93% 12%, rgba(255,255,255,0.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 8% 82%, rgba(255,255,255,0.4) 50%, transparent 51%),
+    radial-gradient(1px 1px at 48% 88%, rgba(255,255,255,0.3) 50%, transparent 51%);
+  background-size: 100% 100%;
+}
+
 /* Thin, unobtrusive scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2a2a2a transparent;
+  scrollbar-color: #223050 transparent;
 }
 *::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #2a2a2a;
+  background: #223050;
   border-radius: 999px;
   border: 3px solid transparent;
   background-clip: content-box;
