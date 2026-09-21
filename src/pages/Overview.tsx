@@ -32,7 +32,7 @@ export default function Overview() {
   const overviewDecisions = decisions
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Full-bleed space hero — greeting, clock, brief and focus over the planet */}
       <div className="relative -mt-[96px] overflow-hidden bg-ink-950 text-white" style={{ marginLeft: 'calc(50% - 50vw)', marginRight: 'calc(50% - 50vw)' }}>
         {/* Deep space: starfield + a live, lit planet rising over the horizon */}
@@ -161,19 +161,17 @@ export default function Overview() {
           const trendColor = s.trend === 'flat' ? 'text-[var(--color-muted)]' : 'text-[var(--color-ok)]'
           return (
             <Link key={s.id} to={s.to} className="card lift group block p-5">
-              <div className="flex items-center justify-between">
-                <span className="eyebrow" style={{ color: 'var(--color-sky)' }}>{s.label}</span>
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-dim transition-colors group-hover:text-fg-3">
-                  <StatIcon name={s.icon} width={15} height={15} />
-                </span>
+              <div className="flex items-center gap-2 text-[12.5px] font-medium text-[var(--color-muted)]">
+                <StatIcon name={s.icon} width={14} height={14} className="text-dim" />
+                {s.label}
               </div>
-              <div className="mt-4 flex items-end justify-between gap-2">
-                <div className="font-display text-[2.1rem] font-semibold leading-none tracking-tight" style={{ color: 'var(--color-amber)' }}>{s.value}</div>
-                <span className={`mb-0.5 inline-flex items-center gap-1 font-mono text-[11px] font-medium ${trendColor}`}>
+              <div className="mt-3 flex items-baseline gap-3">
+                <div className="font-display text-[2.25rem] font-semibold leading-none tracking-tight text-fg">{s.value}</div>
+                <span className={`inline-flex items-center gap-1 rounded-md bg-white/[0.05] px-1.5 py-0.5 font-mono text-[10.5px] font-medium ${trendColor}`}>
                   {arrow} {s.delta}
                 </span>
               </div>
-              <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">{s.detail}</p>
+              <p className="mt-3 text-[12.5px] leading-relaxed text-[var(--color-muted)]">{s.detail}</p>
             </Link>
           )
         })}
@@ -199,7 +197,7 @@ export default function Overview() {
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {projects.map((p) => (
             <Link key={p.id} to={`/projects/${p.id}`} className="card lift group flex items-center gap-3.5 p-4">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-line font-mono text-[12px] font-semibold text-fg-2">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/[0.05] font-mono text-[11.5px] font-semibold text-fg-2">
                 {p.code}
               </span>
               <div className="min-w-0 flex-1">
@@ -217,12 +215,8 @@ export default function Overview() {
                     }}
                   />
                 </div>
-                <div className="mt-0.5 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em]">
-                  <span className={p.kind === 'product' ? 'text-fg-3' : 'text-[var(--color-muted)]'}>
-                    {p.kind === 'product' ? 'Product' : 'In testing'}
-                  </span>
-                  <span className="text-fg-3">·</span>
-                  <span className="truncate text-[var(--color-muted)]">{p.stage}</span>
+                <div className="mt-0.5 truncate text-[12px] text-[var(--color-muted)]">
+                  {p.kind === 'product' ? 'Product' : 'In testing'} · {p.stage}
                 </div>
                 <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
                   <div
@@ -424,8 +418,8 @@ function AnalysisStrip() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {items.map((it) => (
           <Link key={it.k} to="/analysis" className="card lift p-5">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--color-sky)' }}>{it.k}</div>
-            <div className="mt-2 font-display text-[1.45rem] font-semibold leading-none tracking-tight" style={{ color: 'var(--color-amber)' }}>{it.v}</div>
+            <div className="text-[12.5px] font-medium text-[var(--color-muted)]">{it.k}</div>
+            <div className="mt-2 font-display text-[1.45rem] font-semibold leading-none tracking-tight text-fg">{it.v}</div>
             <div className="mt-2 text-xs leading-snug text-[var(--color-muted)]">{it.d}</div>
           </Link>
         ))}

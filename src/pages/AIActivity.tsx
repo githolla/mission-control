@@ -20,7 +20,7 @@ export default function AIActivity() {
             </span>
             <div className="flex flex-wrap items-baseline justify-between gap-x-3">
               <h3 className="text-sm font-semibold text-fg">{a.title}</h3>
-              <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-dim">{a.time}</span>
+              <span className="font-mono text-[11px] text-dim">{a.time}</span>
             </div>
             <p className="mt-1 max-w-2xl text-sm leading-relaxed text-[var(--color-muted)]">{a.detail}</p>
           </li>

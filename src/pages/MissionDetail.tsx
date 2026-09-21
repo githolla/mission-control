@@ -124,7 +124,7 @@ export default function MissionDetail() {
         <div>
           <div className="eyebrow mb-2">{mission.team} mission</div>
           <h1 className="font-display text-3xl font-semibold tracking-tight text-fg">{mission.name}</h1>
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-[0.08em] text-dim">
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px] text-[var(--color-muted)]">
             <StatusPill status={mission.status} />
             <span>Owner · {mission.owner}</span>
             <span>Due · {mission.due}</span>
@@ -149,7 +149,7 @@ export default function MissionDetail() {
 
             <div className="mt-6">
               <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
-                <span className="uppercase tracking-[0.1em]">Progress</span>
+                <span>Progress</span>
                 <span className="tabular-nums text-fg">{mission.progress}%</span>
               </div>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
@@ -271,7 +271,7 @@ export default function MissionDetail() {
               { k: 'Completion', v: `${mission.progress}%` },
             ].map((row) => (
               <div key={row.k} className="flex items-center justify-between px-5 py-3">
-                <span className="text-xs uppercase tracking-[0.1em] text-dim">{row.k}</span>
+                <span className="text-[12.5px] text-[var(--color-muted)]">{row.k}</span>
                 <span className="text-sm font-medium text-fg">{row.v}</span>
               </div>
             ))}

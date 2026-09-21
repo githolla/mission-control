@@ -22,9 +22,9 @@ const Eyebrow = ({ children }: { children: React.ReactNode }) => (
 function Tile({ label, value, unit, note, warn }: { label: string; value: string | number; unit?: string; note: string; warn?: boolean }) {
   return (
     <Card className="p-5">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--color-sky)' }}>{label}</div>
+      <div className="text-[12.5px] font-medium text-[var(--color-muted)]">{label}</div>
       <div className="mt-2 flex items-baseline gap-1.5">
-        <span className="font-display text-[2rem] font-semibold leading-none tracking-tight" style={{ color: warn ? 'var(--color-warn)' : 'var(--color-amber)' }}>{value}</span>
+        <span className="font-display text-[2rem] font-semibold leading-none tracking-tight" style={{ color: warn ? 'var(--color-warn)' : 'var(--color-fg)' }}>{value}</span>
         {unit && <span className="font-mono text-xs text-[var(--color-muted)]">{unit}</span>}
       </div>
       <div className="mt-2 text-xs leading-snug text-[var(--color-muted)]">{note}</div>

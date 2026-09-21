@@ -87,9 +87,10 @@ off‑nominal) throughout.
 A deep-space, typography-led system in the SpaceX / Tesla idiom: a live WebGL
 planet fills the entire top of the Overview under a wide, tracked uppercase tab
 bar (brand left, tabs on a hairline, status and profile right — no sidebar).
-Glass panels, hairlines instead of boxes, amber numerals with sky-blue labels
-for readouts. Montserrat for display and tabs, Inter for UI, JetBrains Mono for
-every readout.
+Flat surfaces with soft 14px corners and faint hairlines, sentence-case meta,
+quiet chips instead of boxes, white numerals with amber reserved for the
+mission-control readouts and warnings. Montserrat for display and tabs, Inter
+for UI, JetBrains Mono for every readout.
 
 ## Tech
 

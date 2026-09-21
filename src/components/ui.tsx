@@ -23,7 +23,7 @@ export function StatusPill({ status }: { status: Status }) {
 export function PriorityPill({ priority }: { priority: 'high' | 'normal' }) {
   if (priority !== 'high') return null
   return (
-    <span className="inline-flex items-center rounded-full border border-[var(--color-bad)]/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--color-bad)]">
+    <span className="inline-flex items-center rounded-md bg-[rgba(224,112,112,0.14)] px-1.5 py-0.5 text-[10.5px] font-semibold text-[var(--color-bad)]">
       High priority
     </span>
   )
@@ -51,7 +51,7 @@ export function StatIcon({ name, ...rest }: { name: keyof typeof statIcons } & I
 export function IconTile({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
     <span
-      className={`flex items-center justify-center rounded-lg border border-line text-fg-3 ${className}`}
+      className={`flex items-center justify-center rounded-lg bg-white/[0.05] text-fg-3 ${className}`}
     >
       {children}
     </span>

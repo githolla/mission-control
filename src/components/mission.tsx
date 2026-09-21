@@ -11,15 +11,13 @@ export function MissionClock() {
   const [next, ...rest] = gates
 
   return (
-    <div className="flex flex-wrap items-center gap-x-8 gap-y-3 rounded-xl border border-line bg-surface px-5 py-4">
+    <div className="card flex flex-wrap items-center gap-x-8 gap-y-3 px-5 py-4">
       <div className="flex items-center gap-4">
         <span className="eyebrow">Next gate</span>
         <div className="flex items-baseline gap-2">
           <span className="font-mono text-2xl font-medium tracking-tight text-fg">T&#8209;{next.tMinus}</span>
-          <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-muted)]">
-            {next.tMinus === 1 ? 'day' : 'days'}
-          </span>
-          <span className="ml-2 text-sm font-medium uppercase tracking-[0.1em] text-fg-2">{next.label}</span>
+          <span className="text-[12px] text-[var(--color-muted)]">{next.tMinus === 1 ? 'day' : 'days'}</span>
+          <span className="ml-2 text-sm font-medium text-fg-2">{next.label}</span>
         </div>
       </div>
 
@@ -28,7 +26,7 @@ export function MissionClock() {
           {rest.slice(0, 2).map((g) => (
             <div key={g.id} className="flex items-baseline gap-2 text-xs">
               <span className="font-mono font-medium text-fg-3">T&#8209;{g.tMinus}</span>
-              <span className="uppercase tracking-[0.1em] text-[var(--color-muted)]">{g.label}</span>
+              <span className="text-[var(--color-muted)]">{g.label}</span>
             </div>
           ))}
         </div>

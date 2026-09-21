@@ -59,7 +59,7 @@ function DecisionCard({ decision }: { decision: Decision }) {
             <label
               key={i}
               className={`flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-colors ${
-                active ? 'border-fg bg-surface-2' : 'border-line hover:border-line-strong'
+                active ? 'border-white/25 bg-surface-2' : 'border-white/[0.06] hover:border-white/15'
               } ${decided ? 'cursor-default opacity-80' : ''}`}
             >
               <input
@@ -73,7 +73,7 @@ function DecisionCard({ decision }: { decision: Decision }) {
                 <span className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-semibold text-fg">{o.label}</span>
                   {o.recommended && (
-                    <span className="rounded-full border border-line-strong px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--color-muted)]">
+                    <span className="rounded-md bg-[rgba(242,169,59,0.14)] px-1.5 py-0.5 text-[10.5px] font-semibold text-[var(--color-amber)]">
                       Recommended
                     </span>
                   )}

@@ -62,7 +62,7 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
               <h3 className="font-display text-lg font-semibold text-fg">{t.name}</h3>
               <StatusPill status={t.status} />
             </div>
-            <p className="mt-1 text-xs uppercase tracking-[0.08em] text-dim">
+            <p className="mt-1 text-[12.5px] text-[var(--color-muted)]">
               {t.lead} · {t.headcount} people · {t.missions} active missions
             </p>
           </div>
@@ -78,7 +78,7 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
         {t.disciplines.map((d) => (
           <span
             key={d}
-            className="rounded-full border border-line bg-surface-2 px-2.5 py-1 text-[11px] font-medium text-[var(--color-muted)]"
+            className="chip"
           >
             {d}
           </span>
@@ -135,7 +135,7 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
           </div>
 
           <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
-            <span className="uppercase tracking-[0.1em]">Utilization</span>
+            <span>Utilization</span>
             <span className="font-mono text-fg">{r.utilization}%</span>
           </div>
           <div className="mt-2 flex h-2 overflow-hidden rounded-full bg-line">
@@ -160,7 +160,7 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
           </ul>
 
           <div className="mt-4 flex items-center gap-2 border-t border-line pt-3 text-xs text-[var(--color-muted)]">
-            <span className="inline-flex h-5 items-center rounded-full border border-line-strong px-2 font-semibold text-fg-2">
+            <span className="inline-flex h-5 items-center rounded-full bg-white/[0.06] px-2 font-semibold text-fg-2">
               {r.openRoles}
             </span>
             open {r.openRoles === 1 ? 'role' : 'roles'} in hiring
@@ -179,7 +179,7 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-baseline justify-between gap-x-2">
                     <span className="text-sm font-medium text-fg">{p.name}</span>
-                    <span className="text-[11px] uppercase tracking-[0.1em] text-dim">{p.period}</span>
+                    <span className="text-[11.5px] text-dim">{p.period}</span>
                   </div>
                   <p className="text-sm leading-relaxed text-[var(--color-muted)]">{p.outcome}</p>
                 </div>
@@ -212,7 +212,7 @@ function TeamCard({ team: t, onMessage }: { team: Team; onMessage: () => void })
                     title={m.status === 'on-track' ? 'On track' : m.status === 'at-risk' ? 'At risk' : 'Blocked'}
                   />
                 </div>
-                <div className="mt-0.5 truncate text-[10px] font-semibold uppercase tracking-[0.1em] text-dim">
+                <div className="mt-0.5 truncate text-[11.5px] text-[var(--color-muted)]">
                   {m.title}
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-[var(--color-muted)]">{m.focus}</p>

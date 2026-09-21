@@ -61,13 +61,13 @@ export default function Missions() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {list.map((m) => (
           <Link key={m.id} to={`/missions/${m.id}`} className="card lift group block p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="font-display text-base font-semibold text-fg">{m.name}</h3>
-                <p className="mt-1 text-xs uppercase tracking-[0.08em] text-dim">
+                <p className="mt-1 text-[12.5px] text-[var(--color-muted)]">
                   {m.team} · {m.owner} · Due {m.due}
                 </p>
               </div>
@@ -77,7 +77,7 @@ export default function Missions() {
 
             <div className="mt-5">
               <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
-                <span className="uppercase tracking-[0.1em]">Progress</span>
+                <span>Progress</span>
                 <span className="font-mono text-fg">{m.progress}%</span>
               </div>
               <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
@@ -85,10 +85,10 @@ export default function Missions() {
               </div>
             </div>
 
-            <div className="mt-5 flex items-center justify-end border-t border-line pt-4">
-              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-fg">
-                Open mission
-                <ArrowRightIcon width={15} height={15} className="transition-transform group-hover:translate-x-0.5" />
+            <div className="mt-4 flex items-center justify-end">
+              <span className="inline-flex items-center gap-1 text-[12.5px] font-medium text-[var(--color-muted)] transition-colors group-hover:text-fg">
+                Open
+                <ArrowRightIcon width={14} height={14} className="transition-transform group-hover:translate-x-0.5" />
               </span>
             </div>
           </Link>

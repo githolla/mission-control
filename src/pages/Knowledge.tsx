@@ -45,15 +45,11 @@ export default function Knowledge() {
                 <IconTile className="h-9 w-9">
                   <BookIcon width={17} height={17} />
                 </IconTile>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-dim">
-                  {k.category}
-                </span>
+                <span className="chip !py-1 text-[11px]">{k.category}</span>
               </div>
               <h3 className="mt-4 font-display text-base font-semibold text-fg">{k.title}</h3>
               <p className="mt-1.5 flex-1 text-sm leading-relaxed text-[var(--color-muted)]">{k.summary}</p>
-              <p className="mt-4 border-t border-line pt-3 text-[11px] uppercase tracking-[0.1em] text-dim">
-                Updated {k.updated}
-              </p>
+              <p className="mt-4 text-[11.5px] text-dim">Updated {k.updated}</p>
             </Card>
           </button>
         ))}

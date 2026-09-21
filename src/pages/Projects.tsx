@@ -11,12 +11,8 @@ const barColor: Record<Status, string> = {
 
 function KindTag({ kind, stage }: { kind: Project['kind']; stage: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.1em]">
-      <span className={kind === 'product' ? 'text-fg' : 'text-[var(--color-muted)]'}>
-        {kind === 'product' ? 'Product' : 'In testing'}
-      </span>
-      <span className="text-fg-3">·</span>
-      <span className="text-[var(--color-muted)]">{stage}</span>
+    <span className="text-[12.5px] text-[var(--color-muted)]">
+      <span className={kind === 'product' ? 'text-fg-2' : ''}>{kind === 'product' ? 'Product' : 'In testing'}</span> · {stage}
     </span>
   )
 }
@@ -26,7 +22,7 @@ function ProjectCard({ p }: { p: Project }) {
     <Link to={`/projects/${p.id}`} className="card lift group flex flex-col p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-line font-mono text-[12px] font-semibold text-fg-2">
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.05] font-mono text-[11.5px] font-semibold text-fg-2">
             {p.code}
           </span>
           <div>
@@ -43,7 +39,7 @@ function ProjectCard({ p }: { p: Project }) {
 
       <div className="mt-4">
         <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
-          <span className="uppercase tracking-[0.1em]">Progress</span>
+          <span>Progress</span>
           <span className="font-mono text-fg">{p.progress}%</span>
         </div>
         <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
@@ -52,7 +48,7 @@ function ProjectCard({ p }: { p: Project }) {
       </div>
 
       <div className="mt-4 flex items-center justify-between border-t border-line pt-4 text-xs">
-        <span className="uppercase tracking-[0.08em] text-dim">
+        <span className="text-[var(--color-muted)]">
           {p.team} · {p.lead}
         </span>
         <span className="inline-flex items-center gap-1.5 font-medium text-fg">

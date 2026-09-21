@@ -29,18 +29,18 @@ type State = 'open' | 'accepted' | 'dismissed'
 function ImpactTag({ impact }: { impact: Recommendation['impact'] }) {
   if (impact === 'high')
     return (
-      <span className="rounded-full bg-invert px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-on-invert">
+      <span className="rounded-md bg-[rgba(242,169,59,0.14)] px-1.5 py-0.5 text-[10.5px] font-semibold text-[var(--color-amber)]">
         High impact
       </span>
     )
   if (impact === 'medium')
     return (
-      <span className="rounded-full border border-line-strong px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-fg-3">
+      <span className="rounded-md bg-white/[0.06] px-1.5 py-0.5 text-[10.5px] font-semibold text-fg-3">
         Medium
       </span>
     )
   return (
-    <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--color-muted)]">Low</span>
+    <span className="rounded-md bg-white/[0.04] px-1.5 py-0.5 text-[10.5px] font-semibold text-[var(--color-muted)]">Low</span>
   )
 }
 
@@ -76,7 +76,7 @@ export default function Copilot() {
         </div>
       </div>
 
-      <div className="grid gap-3">
+      <div className="grid gap-2.5">
         {allClear && (
           <div className="card flex items-center gap-3 p-5">
             <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-invert text-on-invert">
@@ -113,45 +113,37 @@ export default function Copilot() {
           }
 
           return (
-            <div key={r.id} className="card p-5">
-              <div className="flex items-start gap-4">
-                <IconTile className="h-10 w-10 shrink-0">
-                  <Icon width={19} height={19} />
-                </IconTile>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-[15px] font-semibold text-fg">{r.title}</h3>
-                    <ImpactTag impact={r.impact} />
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-dim">
-                      {r.category}
-                    </span>
-                  </div>
-                  <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-[var(--color-muted)]">{r.rationale}</p>
-
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <button
-                      onClick={() => {
-                        set(r.id, 'accepted')
-                        notify(`${r.actionLabel === 'Approve' ? 'Approved' : 'Actioned'}: ${r.title}.`, 'done')
-                      }}
-                      className="btn btn-primary"
-                    >
-                      {r.actionLabel}
-                    </button>
-                    {r.to && (
-                      <button onClick={() => navigate(r.to!)} className="btn btn-secondary">
-                        View
-                        <ArrowRightIcon width={15} height={15} />
-                      </button>
-                    )}
-                    <button
-                      onClick={() => set(r.id, 'dismissed')}
-                      className="ml-auto text-xs font-medium text-[var(--color-muted)] hover:text-fg"
-                    >
-                      Dismiss
-                    </button>
-                  </div>
+            <div key={r.id} className="card flex items-start gap-4 px-5 py-4">
+              <IconTile className="mt-0.5 h-9 w-9 shrink-0 border-0 bg-white/[0.05]">
+                <Icon width={17} height={17} />
+              </IconTile>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="text-[14.5px] font-semibold text-fg">{r.title}</h3>
+                  <ImpactTag impact={r.impact} />
+                  <span className="text-[11.5px] text-dim">{r.category}</span>
                 </div>
+                <p className="mt-1 max-w-3xl text-[13px] leading-relaxed text-[var(--color-muted)]">{r.rationale}</p>
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <button
+                  onClick={() => {
+                    set(r.id, 'accepted')
+                    notify(`${r.actionLabel === 'Approve' ? 'Approved' : 'Actioned'}: ${r.title}.`, 'done')
+                  }}
+                  className="btn btn-primary !py-2"
+                >
+                  {r.actionLabel}
+                </button>
+                {r.to && (
+                  <button onClick={() => navigate(r.to!)} className="btn btn-secondary !py-2">
+                    View
+                    <ArrowRightIcon width={15} height={15} />
+                  </button>
+                )}
+                <button onClick={() => set(r.id, 'dismissed')} className="px-2 text-xs font-medium text-[var(--color-muted)] hover:text-fg">
+                  Dismiss
+                </button>
               </div>
             </div>
           )

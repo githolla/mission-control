@@ -61,7 +61,7 @@ export default function ProjectDetail() {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-start gap-4">
-          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-line font-mono text-base font-semibold text-fg-2">
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/[0.05] font-mono text-base font-semibold text-fg-2">
             {project.code}
           </span>
           <div>
@@ -69,7 +69,7 @@ export default function ProjectDetail() {
               {project.kind === 'product' ? 'Product' : 'Exploration'} · {project.stage}
             </div>
             <h1 className="font-display text-3xl font-semibold tracking-tight text-fg">{project.name}</h1>
-            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-[0.08em] text-dim">
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px] text-[var(--color-muted)]">
               <StatusPill status={project.status} />
               <span>{project.team} · {project.lead}</span>
               <span className="font-mono normal-case tracking-normal text-[var(--color-muted)]">Gate · {project.gate}</span>
@@ -95,7 +95,7 @@ export default function ProjectDetail() {
 
             <div className="mt-6">
               <div className="flex items-center justify-between text-xs font-medium text-[var(--color-muted)]">
-                <span className="uppercase tracking-[0.1em]">Progress</span>
+                <span>Progress</span>
                 <span className="font-mono text-fg">{project.progress}%</span>
               </div>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
@@ -130,15 +130,15 @@ export default function ProjectDetail() {
                 { k: 'Risk score', v: `${f.riskScore}`, d: `${f.confidence} confidence`, warn: f.riskScore >= 50 },
               ].map((c) => (
                 <div key={c.k} className="bg-surface px-4 py-3.5">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--color-sky)' }}>{c.k}</div>
-                  <div className="mt-1.5 font-display text-xl font-semibold tracking-tight" style={{ color: c.warn ? 'var(--color-warn)' : 'var(--color-amber)' }}>{c.v}</div>
+                  <div className="text-[12px] font-medium text-[var(--color-muted)]">{c.k}</div>
+                  <div className="mt-1.5 font-display text-xl font-semibold tracking-tight" style={{ color: c.warn ? 'var(--color-warn)' : 'var(--color-fg)' }}>{c.v}</div>
                   <div className="mt-1 text-[11px] text-[var(--color-muted)]">{c.d}</div>
                 </div>
               ))}
             </div>
             <div className="mt-5 grid gap-5 sm:grid-cols-2">
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">Risk drivers</div>
+                <div className="text-[12px] font-medium text-[var(--color-muted)]">Risk drivers</div>
                 <ul className="mt-2 space-y-1.5">
                   {f.drivers.map((d) => (
                     <li key={d} className="flex gap-2 text-[12.5px] leading-snug text-fg-2">
@@ -149,7 +149,7 @@ export default function ProjectDetail() {
                 </ul>
               </div>
               <div>
-                <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">Risk profile</div>
+                <div className="text-[12px] font-medium text-[var(--color-muted)]">Risk profile</div>
                 <ul className="mt-2 space-y-1.5">
                   {risks &&
                     riskCategories.map((c) => (
@@ -269,7 +269,7 @@ export default function ProjectDetail() {
               { k: 'Progress', v: `${project.progress}%` },
             ].map((row) => (
               <div key={row.k} className="flex items-center justify-between px-5 py-3">
-                <span className="text-xs uppercase tracking-[0.1em] text-dim">{row.k}</span>
+                <span className="text-[12.5px] text-[var(--color-muted)]">{row.k}</span>
                 <span className="text-sm font-medium text-fg">{row.v}</span>
               </div>
             ))}
