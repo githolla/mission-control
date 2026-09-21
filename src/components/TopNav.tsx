@@ -10,6 +10,7 @@ const tabs = [
   { to: '/teams', label: 'Teams' },
   { to: '/decisions', label: 'Decisions', badge: 3 },
   { to: '/analysis', label: 'AI Analysis' },
+  { to: '/network', label: 'Network' },
   { to: '/ai-activity', label: 'AI Activity' },
   { to: '/knowledge', label: 'Knowledge' },
 ]
@@ -37,14 +38,14 @@ export default function TopNav() {
         </Link>
 
         {/* Tabs */}
-        <nav className="ml-auto hidden items-end gap-5 border-b border-white/25 pb-3 lg:flex xl:gap-8">
+        <nav className="ml-auto hidden items-end gap-4 border-b border-white/25 pb-3 lg:flex xl:gap-7">
           {tabs.map(({ to, label, end, badge }) => (
             <NavLink
               key={to}
               to={to}
               end={end}
               className={({ isActive }) =>
-                `relative whitespace-nowrap font-display text-[10.5px] font-semibold uppercase tracking-[0.18em] transition-colors ${
+                `relative whitespace-nowrap font-display text-[10.5px] font-semibold uppercase tracking-[0.16em] transition-colors ${
                   isActive ? 'text-white' : 'text-fg-3 hover:text-white'
                 }`
               }

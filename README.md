@@ -52,6 +52,17 @@ off‑nominal) throughout.
   and see both gates move), an 8-week **resource forecast** per team, a
   **briefing generator** (board / team leads / for me — copy or send) and the
   **questions worth asking**, each answerable in chat.
+- **Network** — the whole company as a live, clickable force-directed graph
+  drawn on a canvas (no library). Every dot is a real record: the six projects
+  and three teams as hubs, every mission, every crew member, decisions, gates,
+  readiness stations, knowledge docs, detected anomalies, AI actions, and
+  hundreds of individually named **signals** the AI ingested (Jira, GitHub,
+  Slack, email, calendar, lab log, supplier, test rig) linked to the mission
+  they were read against, plus an outer ring of **ambient** market / research /
+  regulatory / supplier / hiring signals being watched. Click a dot for its
+  record and connections, hover for a tooltip, drag nodes, scroll to zoom,
+  search to jump, and toggle layers with the legend chips. Every project page
+  embeds its own **project network** (two hops around the project).
 - **AI Activity** — a timeline of what the assistant did on your behalf.
 - **Knowledge** — a searchable library of company docs.
 
@@ -102,6 +113,8 @@ src/
   data.ts             # single source of demo data
   lib/intel.ts        # forecasts, risk, anomalies, simulator, briefings (computed)
   lib/assistant.ts    # data-aware answer engine for the chat / ask bar
+  lib/graph.ts        # the company as a graph: nodes, links, named signals
+  components/Graph.tsx # canvas force simulation + node detail panel
   App.tsx             # routes
   components/         # Layout, TopNav, Planet (WebGL), AskBar, ChatModal, Toast, icons, ui
   pages/             # Overview, Missions, Teams, Decisions, AIActivity, Knowledge

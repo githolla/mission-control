@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { projects, teams, missionsForProject, type Status } from '../data'
 import { Card, StatusPill, IconTile } from '../components/ui'
@@ -6,6 +6,8 @@ import { ArrowRightIcon, SparkleIcon, UsersIcon, RocketIcon } from '../component
 import { useToast } from '../components/Toast'
 import ChatModal from '../components/ChatModal'
 import { forecastProject, riskMatrix, riskCategories, fmt } from '../lib/intel'
+import { egoGraph, type GraphNode } from '../lib/graph'
+import Graph, { NodePanel } from '../components/Graph'
 
 const barColor: Record<Status, string> = {
   'on-track': 'bg-[var(--color-ok)]',
@@ -18,6 +20,8 @@ export default function ProjectDetail() {
   const navigate = useNavigate()
   const { notify } = useToast()
   const [chat, setChat] = useState<{ open: boolean; seed?: string }>({ open: false })
+  const [picked, setPicked] = useState<GraphNode | null>(null)
+  const ego = useMemo(() => (id ? egoGraph(id, 2) : { nodes: [], links: [] }), [id])
   const project = projects.find((p) => p.id === id)
 
   if (!project) {
@@ -168,6 +172,29 @@ export default function ProjectDetail() {
                   {q}
                 </button>
               ))}
+            </div>
+          </Card>
+
+          {/* Network — everything this project touches */}
+          <Card className="overflow-hidden p-0">
+            <div className="flex items-center justify-between px-6 pt-5">
+              <div className="eyebrow flex items-center gap-2">
+                <SparkleIcon width={13} height={13} className="text-fg-3" />
+                Project network
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-[10.5px] text-dim">{ego.nodes.length} nodes · {ego.links.length} links</span>
+                <Link to="/network" className="text-xs font-medium text-[var(--color-muted)] hover:text-fg">Whole company →</Link>
+              </div>
+            </div>
+            <div className="mt-3 grid lg:grid-cols-[1fr_260px]">
+              <div className="relative">
+                <div className="stars absolute inset-0 opacity-30" />
+                <Graph nodes={ego.nodes} links={ego.links} height={440} ring={false} rootId={project.id} selectedId={picked?.id ?? project.id} onSelect={setPicked} className="relative" />
+              </div>
+              <div className="flex h-[440px] flex-col overflow-hidden border-l border-line p-4">
+                <NodePanel node={picked ?? ego.nodes.find((n) => n.id === project.id)!} nodes={ego.nodes} links={ego.links} onSelect={setPicked} onAsk={(q) => setChat({ open: true, seed: q })} />
+              </div>
             </div>
           </Card>
 
