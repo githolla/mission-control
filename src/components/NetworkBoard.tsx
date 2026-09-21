@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react'
 import { buildGraph, typeMeta, type GraphNode, type NodeType } from '../lib/graph'
-import Graph, { NodePanel } from '../components/Graph'
-import ChatModal from '../components/ChatModal'
-import { SparkleIcon } from '../components/icons'
+import Graph, { NodePanel } from './Graph'
+import ChatModal from './ChatModal'
 
 const order: NodeType[] = ['project', 'team', 'mission', 'person', 'decision', 'anomaly', 'gate', 'station', 'doc', 'action', 'signal', 'ambient']
 
-export default function Network() {
+export default function NetworkBoard({ height = 640 }: { height?: number | string }) {
   const graph = useMemo(() => buildGraph(), [])
   const [selected, setSelected] = useState<GraphNode | null>(null)
   const [hidden, setHidden] = useState<Set<NodeType>>(new Set())
@@ -37,18 +36,12 @@ export default function Network() {
   const visibleCount = graph.nodes.filter((n) => !hidden.has(n.type)).length
 
   return (
-    <div className="-mb-8 flex flex-col" style={{ height: 'calc(100vh - 96px)' }}>
-      {/* header */}
-      <div className="flex flex-wrap items-end justify-between gap-4 pb-4">
-        <div>
-          <div className="eyebrow mb-2 flex items-center gap-2">
-            <SparkleIcon width={12} height={12} className="text-fg-3" />
-            Company network
-          </div>
-          <h2 className="font-display text-2xl font-semibold text-fg">Everything, connected</h2>
-          <p className="mt-1.5 max-w-2xl text-sm text-[var(--color-muted)]">
-            Every dot is a real record — a project, mission, person, decision, gate, station, document, anomaly, AI action or an ingested signal. Every line is a real relationship. Click a dot to see what it is and what it touches; drag to move, scroll to zoom.
-          </p>
+    <div className="flex flex-col" style={{ height }}>
+      {/* toolbar: search + counts */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3">
+        <div className="flex items-baseline gap-3">
+          <span className="font-display text-[10px] font-semibold uppercase tracking-[0.28em] text-[var(--hud-text)]">Company network</span>
+          <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--hud-dim)]">Every dot is a record · every line a relationship · click, drag, scroll</span>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -56,7 +49,7 @@ export default function Network() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Find a node…"
-              className="w-56 rounded-lg border border-line bg-surface px-3 py-2 text-sm text-fg outline-none placeholder:text-dim focus:border-fg-3"
+              className="w-56 rounded-lg border border-line bg-surface px-3 py-1.5 text-sm text-fg outline-none placeholder:text-dim focus:border-fg-3"
             />
             {matches.length > 0 && (
               <ul className="absolute right-0 top-full z-20 mt-1 w-80 overflow-hidden rounded-lg border border-line bg-surface shadow-2xl">

@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Overview from './pages/Overview'
 import ControlRoom from './pages/ControlRoom'
@@ -11,7 +11,6 @@ import Decisions from './pages/Decisions'
 import AIActivity from './pages/AIActivity'
 import Knowledge from './pages/Knowledge'
 import Analysis from './pages/Analysis'
-import Network from './pages/Network'
 
 export default function App() {
   return (
@@ -26,7 +25,7 @@ export default function App() {
         <Route path="teams" element={<Teams />} />
         <Route path="decisions" element={<Decisions />} />
         <Route path="analysis" element={<Analysis />} />
-        <Route path="network" element={<Network />} />
+        <Route path="network" element={<Navigate to="/control-room" replace />} />
         <Route path="ai-activity" element={<AIActivity />} />
         <Route path="knowledge" element={<Knowledge />} />
         <Route path="*" element={<Overview />} />

@@ -20,13 +20,22 @@ Potential Labs, running the company from the director's console — so it uses a
 mission-control language (T‑minus gates, Go / No‑Go readiness, nominal /
 off‑nominal) throughout.
 
-- **Control Room** — the mission-control "big board": an **orbit view** with the
-  six base projects as the reference point — each block sits on an orbit ring
-  around a live T‑minus hub for the next gate, with portfolio stats (on track,
-  stations go, next gate, anomalies, utilisation) on leader lines outside the
-  ring — then a **portfolio timeline** (each project's gates and mission
-  milestones on a Now → year-end axis), the Go/No-Go **stations** board, a
-  **"Needs your call"** panel (open decisions + anomalies) and an **event log**.
+- **Control Room** — the mission-control "big board". A readouts strip (on
+  track, stations go, a live T‑minus to the next gate, anomalies, utilisation)
+  sits above the **company network**: a live, clickable force-directed graph
+  drawn on a canvas (no library). Every dot is a real record: the six projects
+  and three teams as hubs, every mission, every crew member, decisions, gates,
+  readiness stations, knowledge docs, detected anomalies, AI actions, and
+  hundreds of individually named **signals** the AI ingested (Jira, GitHub,
+  Slack, email, calendar, lab log, supplier, test rig) linked to the mission
+  they were read against, plus an outer ring of **ambient** market / research /
+  regulatory / supplier / hiring signals being watched. Click a dot for its
+  record and connections, hover for a tooltip, drag nodes, scroll to zoom,
+  search to jump, and toggle layers with the legend chips. Below it: the
+  **portfolio timeline** (each project's gates and mission milestones on a
+  Now → year-end axis), the Go/No-Go **stations** board, a **"Needs your
+  call"** panel and an **event log**. Every project page embeds its own
+  **project network** (two hops around the project).
 - **Overview** — a **T‑minus mission clock** to the next gate, an AI morning
   brief, today's focus, clickable headline stats (missions, decisions, risks,
   hours saved), a **Flight Readiness (Go / No‑Go) board**, a company overview
@@ -52,17 +61,6 @@ off‑nominal) throughout.
   and see both gates move), an 8-week **resource forecast** per team, a
   **briefing generator** (board / team leads / for me — copy or send) and the
   **questions worth asking**, each answerable in chat.
-- **Network** — the whole company as a live, clickable force-directed graph
-  drawn on a canvas (no library). Every dot is a real record: the six projects
-  and three teams as hubs, every mission, every crew member, decisions, gates,
-  readiness stations, knowledge docs, detected anomalies, AI actions, and
-  hundreds of individually named **signals** the AI ingested (Jira, GitHub,
-  Slack, email, calendar, lab log, supplier, test rig) linked to the mission
-  they were read against, plus an outer ring of **ambient** market / research /
-  regulatory / supplier / hiring signals being watched. Click a dot for its
-  record and connections, hover for a tooltip, drag nodes, scroll to zoom,
-  search to jump, and toggle layers with the legend chips. Every project page
-  embeds its own **project network** (two hops around the project).
 - **AI Activity** — a timeline of what the assistant did on your behalf.
 - **Knowledge** — a searchable library of company docs.
 

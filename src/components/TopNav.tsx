@@ -10,7 +10,6 @@ const tabs = [
   { to: '/teams', label: 'Teams' },
   { to: '/decisions', label: 'Decisions', badge: 3 },
   { to: '/analysis', label: 'AI Analysis' },
-  { to: '/network', label: 'Network' },
   { to: '/ai-activity', label: 'AI Activity' },
   { to: '/knowledge', label: 'Knowledge' },
 ]

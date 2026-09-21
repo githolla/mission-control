@@ -184,7 +184,7 @@ export default function ProjectDetail() {
               </div>
               <div className="flex items-center gap-3">
                 <span className="font-mono text-[10.5px] text-dim">{ego.nodes.length} nodes · {ego.links.length} links</span>
-                <Link to="/network" className="text-xs font-medium text-[var(--color-muted)] hover:text-fg">Whole company →</Link>
+                <Link to="/control-room" className="text-xs font-medium text-[var(--color-muted)] hover:text-fg">Whole company →</Link>
               </div>
             </div>
             <div className="mt-3 grid lg:grid-cols-[1fr_260px]">
