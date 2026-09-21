@@ -77,6 +77,7 @@ function physics(S: Sim, W: number, H: number, visible: (n: SimNode) => boolean)
       const d = Math.sqrt(d2)
       const minD = p.size + q.size + 5
       let f = ((p.size * q.size * 2.4 + 1.5) * a) / d2
+      if (p.size >= 9 && q.size >= 9) f *= 7
       if (d < minD) f += ((minD - d) / d) * 0.5 * a
       dx *= f
       dy *= f
@@ -87,10 +88,11 @@ function physics(S: Sim, W: number, H: number, visible: (n: SimNode) => boolean)
     }
   }
   // gravity + integrate
-  const limit = S.R - 30
   for (const n of ns) {
-    n.vx += (cx - n.x) * 0.012 * a
-    n.vy += (cy - n.y) * 0.012 * a
+    const limit = S.R * (n.size >= 9 ? 0.6 : 0.84)
+    const g = 0.012 * (1 + n.size / 12)
+    n.vx += (cx - n.x) * g * a
+    n.vy += (cy - n.y) * g * a
     if (n.fx !== undefined && n.fy !== undefined) {
       n.x = n.fx
       n.y = n.fy
@@ -105,8 +107,9 @@ function physics(S: Sim, W: number, H: number, visible: (n: SimNode) => boolean)
     const dy = n.y - cy
     const r = Math.hypot(dx, dy)
     if (r > limit) {
-      n.x = cx + (dx / r) * limit
-      n.y = cy + (dy / r) * limit
+      const over = r - limit
+      n.x -= (dx / r) * over * 0.5
+      n.y -= (dy / r) * over * 0.5
     }
   }
 }
@@ -172,8 +175,8 @@ export default function Graph({ nodes, links, height = 600, ring = true, selecte
     const sn: SimNode[] = nodes.map((n) => {
       let x: number, y: number, fx: number | undefined, fy: number | undefined
       if (n.ring) {
-        const a = (ri / ringNodes.length) * Math.PI * 2
-        const rr = R * (ri % 2 === 0 ? 1.0 : 0.955)
+        const a = (ri / ringNodes.length) * Math.PI * 2 - Math.PI / 2
+        const rr = R * (ri % 2 === 0 ? 1.0 : 0.965)
         ri++
         x = fx = cx + Math.cos(a) * rr
         y = fy = cy + Math.sin(a) * rr
@@ -243,6 +246,20 @@ export default function Graph({ nodes, links, height = 600, ring = true, selecte
       raf.current = requestAnimationFrame(tick)
     }
 
+    const STRUCT = new Set(['owns', 'rolls-up', 'team', 'leads', 'member', 'owner', 'protects', 'gates', 'polls', 'documents', 'flags', 'recommends'])
+    const arcLabel = (text: string, cx: number, cy: number, r: number, ang: number, k: number) => {
+      ctx.save()
+      ctx.translate(cx + Math.cos(ang) * r, cy + Math.sin(ang) * r)
+      const flip = Math.cos(ang) < 0
+      ctx.rotate(ang + (flip ? -Math.PI / 2 : Math.PI / 2))
+      ctx.font = `600 ${8.5 / k}px Montserrat, sans-serif`
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillStyle = 'rgba(160,175,205,0.7)'
+      ctx.fillText(text.toUpperCase().split('').join(String.fromCharCode(8202)), 0, 0)
+      ctx.restore()
+    }
+
     const draw = () => {
       const S = sim.current
       const W = wrap.clientWidth
@@ -256,6 +273,8 @@ export default function Graph({ nodes, links, height = 600, ring = true, selecte
       const v = view.current
       ctx.translate(v.x, v.y)
       ctx.scale(v.k, v.k)
+      const cx = W / 2
+      const cy = H / 2
 
       const sel = selectedRef.current ? S.byId.get(selectedRef.current) : undefined
       const hov = hoverRef.current
@@ -263,96 +282,209 @@ export default function Graph({ nodes, links, height = 600, ring = true, selecte
       const neigh = focus ? S.adj.get(focus.id) ?? new Set<string>() : null
       const inFocus = (n: SimNode) => !focus || n.id === focus.id || neigh!.has(n.id)
 
-      // ring guide
-      if (ring) {
+      // radar backdrop: centre glow, range rings, cross ticks
+      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, S.R)
+      glow.addColorStop(0, 'rgba(111,168,255,0.10)')
+      glow.addColorStop(0.6, 'rgba(111,168,255,0.03)')
+      glow.addColorStop(1, 'rgba(111,168,255,0)')
+      ctx.fillStyle = glow
+      ctx.fillRect(cx - S.R * 1.2, cy - S.R * 1.2, S.R * 2.4, S.R * 2.4)
+      ctx.lineWidth = 1 / v.k
+      for (const f of [0.28, 0.56, 0.84]) {
         ctx.beginPath()
-        ctx.arc(W / 2, H / 2, S.R * 0.978, 0, Math.PI * 2)
-        ctx.strokeStyle = 'rgba(120,140,200,0.08)'
-        ctx.lineWidth = 1 / v.k
+        ctx.arc(cx, cy, S.R * f, 0, Math.PI * 2)
+        ctx.strokeStyle = f === 0.84 ? 'rgba(120,140,200,0.16)' : 'rgba(120,140,200,0.07)'
+        ctx.setLineDash(f === 0.84 ? [] : [2 / v.k, 6 / v.k])
         ctx.stroke()
       }
-
-      // links
-      ctx.lineWidth = 0.7 / v.k
-      ctx.beginPath()
-      for (const l of S.links) {
-        if (!visible(l.s) || !visible(l.t)) continue
-        if (focus && !(l.s.id === focus.id || l.t.id === focus.id)) {
-          ctx.moveTo(l.s.x, l.s.y)
-          ctx.lineTo(l.t.x, l.t.y)
-        } else if (!focus) {
-          ctx.moveTo(l.s.x, l.s.y)
-          ctx.lineTo(l.t.x, l.t.y)
-        }
-      }
-      ctx.strokeStyle = focus ? 'rgba(130,150,210,0.07)' : 'rgba(130,150,210,0.2)'
-      ctx.stroke()
-      if (focus) {
+      ctx.setLineDash([])
+      ctx.strokeStyle = 'rgba(120,140,200,0.10)'
+      for (let i = 0; i < 24; i++) {
+        const ang = (i / 24) * Math.PI * 2
+        const r0 = S.R * (i % 6 === 0 ? 0.86 : 0.88)
+        const r1 = S.R * 0.9
         ctx.beginPath()
-        for (const l of S.links) {
-          if (!visible(l.s) || !visible(l.t)) continue
-          if (l.s.id === focus.id || l.t.id === focus.id) {
-            ctx.moveTo(l.s.x, l.s.y)
-            ctx.lineTo(l.t.x, l.t.y)
+        ctx.moveTo(cx + Math.cos(ang) * r0, cy + Math.sin(ang) * r0)
+        ctx.lineTo(cx + Math.cos(ang) * r1, cy + Math.sin(ang) * r1)
+        ctx.stroke()
+      }
+      if (ring) {
+        // ambient ring: segment arcs + category labels
+        const ringNodes = S.nodes.filter((n) => n.ring)
+        if (ringNodes.length) {
+          const cats: { name: string; from: number; to: number; color: string }[] = []
+          ringNodes.forEach((n, i) => {
+            const name = (n.sub ?? '').split(' · ')[0]
+            const ang = (i / ringNodes.length) * Math.PI * 2 - Math.PI / 2
+            const last = cats[cats.length - 1]
+            if (last && last.name === name) last.to = ang
+            else cats.push({ name, from: ang, to: ang, color: n.color })
+          })
+          const step = (Math.PI * 2) / ringNodes.length
+          for (const c of cats) {
+            ctx.beginPath()
+            ctx.arc(cx, cy, S.R * 1.06, c.from - step * 0.3, c.to + step * 0.3)
+            ctx.strokeStyle = c.color + '55'
+            ctx.lineWidth = 1.2 / v.k
+            ctx.stroke()
+            arcLabel(c.name, cx, cy, S.R * 1.11, (c.from + c.to) / 2, v.k)
           }
         }
-        ctx.strokeStyle = 'rgba(160,190,255,0.75)'
-        ctx.lineWidth = 1.1 / v.k
+      }
+
+      // links: structural (weighted) vs signal hairlines tinted by source
+      const paths = new Map<string, Path2D>()
+      const seg = (key: string, l: SimLink) => {
+        let p = paths.get(key)
+        if (!p) {
+          p = new Path2D()
+          paths.set(key, p)
+        }
+        p.moveTo(l.s.x, l.s.y)
+        p.lineTo(l.t.x, l.t.y)
+      }
+      const hot: SimLink[] = []
+      for (const l of S.links) {
+        if (!visible(l.s) || !visible(l.t)) continue
+        if (focus && (l.s.id === focus.id || l.t.id === focus.id)) {
+          hot.push(l)
+          continue
+        }
+        if (STRUCT.has(l.kind)) seg('struct', l)
+        else seg(`sig:${l.s.type === 'signal' ? l.s.color : l.t.color}`, l)
+      }
+      const dimF = focus ? 0.35 : 1
+      for (const [key, p] of paths) {
+        if (key === 'struct') {
+          ctx.lineWidth = 0.9 / v.k
+          ctx.strokeStyle = `rgba(150,170,225,${0.3 * dimF})`
+        } else {
+          ctx.lineWidth = 0.55 / v.k
+          ctx.strokeStyle = key.slice(4) + (focus ? '18' : '2e')
+        }
+        ctx.stroke(p)
+      }
+      if (hot.length) {
+        ctx.beginPath()
+        for (const l of hot) {
+          ctx.moveTo(l.s.x, l.s.y)
+          ctx.lineTo(l.t.x, l.t.y)
+        }
+        ctx.strokeStyle = 'rgba(190,210,255,0.85)'
+        ctx.lineWidth = 1.2 / v.k
         ctx.stroke()
       }
 
-      // nodes
+      // nodes: outlined discs; hubs get a halo + ring + code
       for (const n of S.nodes) {
         if (!visible(n)) continue
         const dim = focus ? !inFocus(n) : false
-        ctx.globalAlpha = dim ? 0.18 : 1
-        if (n.size >= 9) {
+        ctx.globalAlpha = dim ? 0.16 : 1
+        const isHub = n.type === 'project' || n.type === 'team'
+        if (isHub) {
           ctx.beginPath()
-          ctx.arc(n.x, n.y, n.size * 2.2, 0, Math.PI * 2)
-          ctx.fillStyle = n.color + '22'
+          ctx.arc(n.x, n.y, n.size * 2.4, 0, Math.PI * 2)
+          ctx.fillStyle = n.color + '1a'
           ctx.fill()
+          ctx.beginPath()
+          ctx.arc(n.x, n.y, n.size + 5 / v.k, 0, Math.PI * 2)
+          ctx.strokeStyle = n.color + '66'
+          ctx.lineWidth = 1 / v.k
+          ctx.stroke()
         }
         ctx.beginPath()
         ctx.arc(n.x, n.y, n.size, 0, Math.PI * 2)
-        ctx.fillStyle = n.color
+        ctx.fillStyle = n.type === 'team' ? '#0b111c' : n.color
         ctx.fill()
+        ctx.lineWidth = (n.type === 'team' ? 2.2 : n.size >= 4 ? 1.1 : 0.6) / v.k
+        ctx.strokeStyle = n.type === 'team' ? n.color : 'rgba(6,10,18,0.9)'
+        ctx.stroke()
+        if (n.type === 'project') {
+          const code = (n.sub ?? '').split(' · ')[0]
+          ctx.font = `700 ${8 / Math.max(v.k, 0.9)}px "JetBrains Mono", monospace`
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'middle'
+          ctx.fillStyle = '#0b111c'
+          ctx.fillText(code, n.x, n.y + 0.5 / v.k)
+          ctx.textAlign = 'left'
+        }
         if (focus && n.id === focus.id) {
           ctx.beginPath()
-          ctx.arc(n.x, n.y, n.size + 4 / v.k, 0, Math.PI * 2)
+          ctx.arc(n.x, n.y, n.size + 9 / v.k, 0, Math.PI * 2)
           ctx.strokeStyle = '#ffffff'
-          ctx.lineWidth = 1.2 / v.k
+          ctx.lineWidth = 1.4 / v.k
+          ctx.setLineDash([3 / v.k, 3 / v.k])
           ctx.stroke()
+          ctx.setLineDash([])
         }
       }
       ctx.globalAlpha = 1
 
-      // labels
+      // labels: pills for hubs + missions, plain for the rest, revealed with zoom
       const showLabel = (n: SimNode) => {
         if (labels === 'all') return n.type !== 'signal' && n.type !== 'ambient'
         if (focus && n.id === focus.id) return true
         if (focus && neigh!.has(n.id)) return (n.type !== 'signal' && n.type !== 'ambient') || v.k > 1.4
-        if (n.type === 'project' || n.type === 'team') return true
-        if (v.k > 1.5 && (n.type === 'mission' || n.type === 'decision' || n.type === 'anomaly' || n.type === 'gate' || n.type === 'doc' || n.type === 'station' || n.type === 'action')) return true
-        if (v.k > 2.6 && n.type === 'person') return true
-        if (v.k > 3.4) return true
+        if (n.type === 'project' || n.type === 'team' || n.type === 'mission') return true
+        if (v.k > 1.25 && (n.type === 'decision' || n.type === 'anomaly' || n.type === 'gate' || n.type === 'doc' || n.type === 'station' || n.type === 'action')) return true
+        if (v.k > 2.4 && n.type === 'person') return true
+        if (v.k > 3.2) return true
         return false
       }
       ctx.textBaseline = 'middle'
-      for (const n of S.nodes) {
-        if (!visible(n) || !showLabel(n)) continue
-        const big = n.type === 'project' || n.type === 'team'
-        const fs = (big ? 11.5 : n.type === 'signal' || n.type === 'ambient' ? 8.5 : 9.5) / v.k
-        ctx.font = `${big ? 600 : 500} ${fs}px ${big ? 'Montserrat' : 'Inter'}, sans-serif`
+      ctx.textAlign = 'left'
+      const placed: { x: number; y: number; w: number; h: number }[] = []
+      const rank = (n: SimNode) => (n.type === 'project' ? 0 : n.type === 'team' ? 1 : n.type === 'mission' ? 2 : focus && n.id === focus.id ? 0 : 3)
+      const labelled = S.nodes.filter((n) => visible(n) && showLabel(n)).sort((p, q) => rank(p) - rank(q))
+      for (const n of labelled) {
+        const hub = n.type === 'project' || n.type === 'team'
+        const pill = hub || n.type === 'mission'
+        const fs = (hub ? 10.5 : n.type === 'mission' ? 9 : n.type === 'signal' || n.type === 'ambient' ? 8.5 : 9.5) / v.k
+        ctx.font = `${hub ? 700 : n.type === 'mission' ? 600 : 500} ${fs}px ${pill ? 'Montserrat' : 'Inter'}, sans-serif`
         const dim = focus ? !inFocus(n) : false
-        ctx.globalAlpha = dim ? 0.15 : 1
-        const text = big ? n.label.toUpperCase() : n.label
-        const tx = n.x + n.size + 4 / v.k
-        const ty = n.y
-        ctx.lineWidth = 3 / v.k
-        ctx.strokeStyle = 'rgba(6,10,18,0.85)'
-        ctx.strokeText(text, tx, ty)
-        ctx.fillStyle = big ? '#ffffff' : '#cfd7e6'
-        ctx.fillText(text, tx, ty)
+        ctx.globalAlpha = dim ? 0.14 : 1
+        const text = pill ? n.label.toUpperCase() : n.label
+        const w = ctx.measureText(text).width
+        const h = fs + 8 / v.k
+        const hits = (bx: { x: number; y: number; w: number; h: number }) => placed.some((r) => bx.x < r.x + r.w && bx.x + bx.w > r.x && bx.y < r.y + r.h && bx.y + bx.h > r.y)
+        // candidate anchors: right of the node, then below, above and left (hubs and the focused node never drop)
+        const cands = [
+          { tx: n.x + n.size + 7 / v.k, ty: n.y },
+          { tx: n.x - w / 2, ty: n.y + n.size + h / 2 + 4 / v.k },
+          { tx: n.x - w / 2, ty: n.y - n.size - h / 2 - 4 / v.k },
+          { tx: n.x - n.size - 7 / v.k - w, ty: n.y },
+        ]
+        let tx = cands[0].tx
+        let ty = cands[0].ty
+        let box = { x: tx - 5 / v.k, y: ty - h / 2, w: w + 10 / v.k, h }
+        if (hits(box)) {
+          const must = hub || (focus && n.id === focus.id)
+          const alt = cands.slice(1).map((c) => ({ ...c, box: { x: c.tx - 5 / v.k, y: c.ty - h / 2, w: w + 10 / v.k, h } })).find((c) => !hits(c.box))
+          if (alt) {
+            tx = alt.tx
+            ty = alt.ty
+            box = alt.box
+          } else if (!must) continue
+        }
+        placed.push(box)
+        if (pill) {
+          const padX = 5 / v.k
+          ctx.fillStyle = 'rgba(8,13,24,0.86)'
+          ctx.strokeStyle = (hub ? n.color : 'rgba(255,255,255,0.35)') + (hub ? '88' : '')
+          ctx.lineWidth = 0.8 / v.k
+          ctx.beginPath()
+          ctx.roundRect(tx - padX, ty - h / 2, w + padX * 2, h, 3 / v.k)
+          ctx.fill()
+          ctx.stroke()
+          ctx.fillStyle = hub ? '#ffffff' : '#dfe6f3'
+          ctx.fillText(text, tx, ty + 0.5 / v.k)
+        } else {
+          ctx.lineWidth = 3 / v.k
+          ctx.strokeStyle = 'rgba(6,10,18,0.85)'
+          ctx.strokeText(text, tx, ty)
+          ctx.fillStyle = '#cfd7e6'
+          ctx.fillText(text, tx, ty)
+        }
       }
       ctx.globalAlpha = 1
     }

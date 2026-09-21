@@ -4,6 +4,20 @@ import Graph, { NodePanel } from './Graph'
 import ChatModal from './ChatModal'
 
 const order: NodeType[] = ['project', 'team', 'mission', 'person', 'decision', 'anomaly', 'gate', 'station', 'doc', 'action', 'signal', 'ambient']
+const layerNote: Record<NodeType, string> = {
+  project: 'The six base projects — the hubs everything rolls up to.',
+  team: 'Engineering, Operations, Commercial and their crews.',
+  mission: 'Dated deliverables under each project.',
+  person: 'Every crew member, on the team they belong to.',
+  decision: 'Calls waiting on the director.',
+  anomaly: 'What the AI flagged as off-nominal.',
+  gate: 'Milestones the portfolio counts down to.',
+  station: 'The Go / No-Go readiness poll.',
+  doc: 'Knowledge the missions cite.',
+  action: 'What the AI recommends doing next.',
+  signal: 'Ingested tickets, commits, threads, runs and notices.',
+  ambient: 'Outer ring: watched, not yet linked to a mission.',
+}
 
 export default function NetworkBoard({ height = 640 }: { height?: number | string }) {
   const graph = useMemo(() => buildGraph(), [])
@@ -99,7 +113,7 @@ export default function NetworkBoard({ height = 640 }: { height?: number | strin
 
       {/* graph + panel */}
       <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[1fr_320px]">
-        <div className="card relative min-h-0 overflow-hidden p-0">
+        <div className="card relative min-h-0 overflow-hidden border-line-strong p-0">
           <div className="stars absolute inset-0 opacity-40" />
           <Graph nodes={graph.nodes} links={graph.links} height="100%" selectedId={selected?.id ?? null} onSelect={setSelected} hidden={hidden} centerOn={centerOn} className="relative h-full" />
         </div>
@@ -108,22 +122,25 @@ export default function NetworkBoard({ height = 640 }: { height?: number | strin
             <NodePanel node={selected} nodes={graph.nodes} links={graph.links} onSelect={setSelected} onAsk={(q) => setChat({ open: true, seed: q })} />
           ) : (
             <div className="flex h-full flex-col">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-dim">Reading the graph</div>
-              <ul className="mt-3 space-y-3 text-[12.5px] leading-relaxed text-fg-2">
-                <li>
-                  <span className="text-white">Six amber hubs</span> are the base projects. Purple hubs are the three teams. Everything else orbits what it belongs to.
-                </li>
-                <li>
-                  <span className="text-white">Small dots</span> are individual signals the AI ingested — Jira tickets, commits, Slack threads, lab runs, supplier notices — each linked to the mission it was read against.
-                </li>
-                <li>
-                  <span className="text-white">The outer ring</span> is ambient: market, research, regulatory, supplier and hiring signals being watched but not yet tied to a mission.
-                </li>
-                <li>
-                  <span className="text-white">Colour is status</span> where it matters: amber-tinted missions and people are at risk, red is blocked or NO-GO.
-                </li>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-dim">Layers</span>
+                <span className="font-mono text-[10px] text-dim">{graph.nodes.length}</span>
+              </div>
+              <ul className="mt-2 divide-y divide-white/[0.06]">
+                {order.map((t) => (
+                  <li key={t} className="flex items-start gap-2.5 py-2">
+                    <span className="mt-[5px] h-2 w-2 shrink-0 rounded-full" style={{ background: typeMeta[t].color, boxShadow: `0 0 0 1px rgba(6,10,18,0.9)` }} />
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-baseline justify-between gap-2">
+                        <span className="text-[11.5px] font-semibold uppercase tracking-[0.1em] text-fg">{typeMeta[t].label}</span>
+                        <span className="font-mono text-[10px] text-dim">{counts.get(t) ?? 0}</span>
+                      </span>
+                      <span className="block text-[11px] leading-snug text-[var(--color-muted)]">{layerNote[t]}</span>
+                    </span>
+                  </li>
+                ))}
               </ul>
-              <div className="mt-auto border-t border-line pt-4 text-[11px] text-dim">Click any dot for its record and connections. Toggle the chips above to isolate a layer.</div>
+              <div className="mt-auto border-t border-line pt-3 text-[10.5px] leading-snug text-dim">Click a dot for its record. Amber-tinted or red dots are at risk or NO-GO. Labels reveal as you zoom.</div>
             </div>
           )}
         </div>
